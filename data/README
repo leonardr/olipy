@@ -1,0 +1,39 @@
+= About the datasets
+
+== english_words.json
+
+A consolidated list of English words from the FRELI project.
+
+Data source:
+ http://www.nkuitse.com/freli/
+
+== english_words.common.json
+
+A subset of the list of words in english_words, focusing on relatively
+common words shorter than 10 characters.
+
+Data source:
+ http://www.nkuitse.com/freli/
+
+== minor_planets.orig.json
+
+'name', 'number' and IAU 'citation' for named minor planets
+(e.g. asteroids) as of July 2013. The 'discovery' field contains
+discovery circumstances. The 'suggested_by' field, when present, has
+been split out from the end of the original IAU citation with a simple
+heuristic. The 'citation' field has then been tokenized into sentences
+using NLTK's Punkt tokenizer and a set of custom abbreviations.
+
+Data sources: 
+ http://www.minorplanetcenter.net/iau/lists/NumberedMPs.html
+ http://ssd.jpl.nasa.gov/sbdb.cgi
+
+== minor_planets.min.json
+
+The same dataset as minor_planets.orig.json, but minimized to contain
+only the data used by the Mashteroids project. Only 'name' and
+'citation' are present. Minor planets with no citation are omitted.
+
+Data sources: 
+ http://www.minorplanetcenter.net/iau/lists/NumberedMPs.html
+ http://ssd.jpl.nasa.gov/sbdb.cgi
