@@ -25,7 +25,7 @@ class Assembler(object):
                 raise ValueError(
                     "Dictionary added to corpus must put tokens in '%s'." % tokens_in)
             tokens = item[tokens_in]
-        elif not isinstance(item, tuple) or isinstance(item, list):
+        elif not (isinstance(item, tuple) or isinstance(item, list)):
             raise ValueError(
                 "Only lists, tuples, and dicts may be added to the corpus.")
         else:
@@ -195,7 +195,7 @@ class Assembler(object):
 
 class WordAssembler(Assembler):
 
-    def __init__(self, initial):
+    def __init__(self, initial=[]):
         self.vowel_runs_by_position = self.empty_bucket()
         self.consonant_runs_by_position = self.empty_bucket()
         super(WordAssembler, self).__init__(initial)
@@ -263,3 +263,29 @@ class DialogueAssembler(Assembler):
         speaker = random.choice(self.transitions_by_speaker[last_speaker])
         subassembler = self.assembler_by_speaker[speaker]
         return speaker, list(subassembler.assemble(pattern))
+
+
+class CompositeAssembler(Assembler):
+    """Choose from a number of assemblers based on their relative sizes."""
+
+    def __init__(self, initial):
+        self.assemblers = []
+        for i in initial:
+            self.add(i)
+
+    def add(self, assembler):
+        self.assemblers.append(assembler)
+
+    def assemble(self, *args):
+        total = 0
+        sizes = []
+        for i in self.assemblers:
+            size = len(i.items)
+            total += size
+            sizes.append(size)
+
+        choice = random.randint(0, total)
+        for i, assembler in enumerate(self.assemblers):
+            choice -= sizes[i]
+            if choice <= 0:
+                return assembler, assembler.assemble(*args)

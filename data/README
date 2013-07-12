@@ -1,5 +1,13 @@
 = About the datasets
 
+== boardgames.txt
+
+Information about board games, collected from BoardGameGeek in July
+2013. One JSON object per line.
+
+Data source:
+ http://boardgamegeek.com/wiki/page/BGG_XML_API2
+
 == english_words.json
 
 A consolidated list of English words from the FRELI project.
