@@ -37,3 +37,10 @@ only the data used by the Mashteroids project. Only 'name' and
 Data sources: 
  http://www.minorplanetcenter.net/iau/lists/NumberedMPs.html
  http://ssd.jpl.nasa.gov/sbdb.cgi
+
+== shakespeare_sonnets.json
+
+The sonnets of William Shakespeare.
+
+Data source:
+ http://www.gutenberg.org/ebooks/1041
