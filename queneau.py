@@ -144,9 +144,6 @@ class Assembler(object):
         if length < min_length:
             length = min_length
 
-        if length > 10:
-            length = 10
-
         pattern = self.expand_pattern(pattern, length)
 
         so_far = []
