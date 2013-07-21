@@ -14,3 +14,10 @@ words. Demonstrates Queneau assembly on parts of a word.
 
 example.mashteroids.py: Generates names and IAU citations for minor
 planets. Demonstrates Queneau assembly on sentences.
+
+example.apollo.py: Generates dialogue between astronauts and Mission
+Control. Demonstrates Queneau assembly on dialogue.
+
+example.boardgame.py: Generates board game names and descriptions.
+
+example.sonnet.py: Generates Shakespearean sonnets.
