@@ -1,5 +1,16 @@
 = About the datasets
 
+== apollo_11.txt
+
+Transcripts of the Apollo 11 mission, presented as dialogue, tokenized
+into sentences using NLTK's Punkt tokenizer. One JSON object per line.
+
+Data sources:
+ The Apollo 11 Flight Journal: http://history.nasa.gov/ap11fj/
+ The Apollo 11 Surface Journal: http://history.nasa.gov/alsj/
+ "Intended to be a resource for all those interested in the Apollo
+  program, whether in a passing or scholarly capacity."
+
 == boardgames.txt
 
 Information about board games, collected from BoardGameGeek in July

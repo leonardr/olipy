@@ -167,7 +167,7 @@ class Assembler(object):
     @classmethod
     def loadlines(cls, f, tokens_in='tokens'):
         """Load from a filehandle that defines a JSON object on every line."""
-        corpus = Assembler()
+        corpus = cls()
         for i in f.readlines():
             o = json.loads(i)
             if tokens_in in o:
@@ -236,35 +236,6 @@ class WordAssembler(Assembler):
         return word
 
 
-class DialogueAssembler(Assembler):
-    """All incoming dicts are expected to have a 'speaker' attribute.
-
-    A separate corpus is established for each speaker.
-    """
-
-    def __init__(self, initial=[]):
-        self.assembler_by_speaker = {}
-        self.transitions_by_speaker = {}
-        self.last_speaker = None
-        self.last_section = None
-        super(DialogueAssembler, self).__init__(initial)
-
-    def add(self, speaker, section):
-        if speaker not in self.assembler_by_speaker:
-            self.assembler_by_speaker[speaker] = Assembler()
-        assembler = self.assembler_by_speaker[speaker]
-        if self.last_speaker is not None:
-            self.transitions_by_speaker.setdefault(self.last_speaker, []).append(speaker)
-            self.transitions_by_speaker.setdefault(None, []).append(speaker)
-        self.last_speaker = speaker
-        assembler.add(section)
-
-    def assemble(self, last_speaker=None, pattern="f.l"):
-        speaker = random.choice(self.transitions_by_speaker[last_speaker])
-        subassembler = self.assembler_by_speaker[speaker]
-        return speaker, list(subassembler.assemble(pattern))
-
-
 class CompositeAssembler(Assembler):
     """Choose from a number of assemblers based on their relative sizes."""
 
@@ -289,3 +260,31 @@ class CompositeAssembler(Assembler):
             choice -= sizes[i]
             if choice <= 0:
                 return assembler, assembler.assemble(*args)
+
+
+class DialogueAssembler(Assembler):
+    """A separate corpus is established for each speaker.
+    """
+
+    def __init__(self, initial=[]):
+        self.assembler_by_speaker = {} # Lines for each speaker
+        self.transitions_by_speaker = {} # Which speaker tends to follow a given speaker?
+        self.last_speaker = None
+        self.last_section = None
+        super(DialogueAssembler, self).__init__(initial)
+
+    def add(self, o, tokens_in="tokens", speaker_in="speaker"):
+        speaker = o[speaker_in]
+        if speaker not in self.assembler_by_speaker:
+            self.assembler_by_speaker[speaker] = Assembler()
+        assembler = self.assembler_by_speaker[speaker]
+        if self.last_speaker is not None:
+            self.transitions_by_speaker.setdefault(self.last_speaker, []).append(speaker)
+            self.transitions_by_speaker.setdefault(None, []).append(speaker)
+        self.last_speaker = speaker
+        assembler.add(o, tokens_in)
+
+    def assemble(self, last_speaker=None, pattern="f.l"):
+        speaker = random.choice(self.transitions_by_speaker[last_speaker])
+        subassembler = self.assembler_by_speaker[speaker]
+        return speaker, list(subassembler.assemble(pattern))
