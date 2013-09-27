@@ -174,9 +174,10 @@ class Alphabet:
     # Ways to modify characters.
     DIACRITICAL = ["Combining Diacritical Marks"]
     DIACRITICAL_FULL = DIACRITICAL + [
-        "Combining Diacritical Marks Supplement", "Combining Half Marks",
+        "Combining Diacritical Marks Supplement",
+        "Combining Half Marks",
         "Combining Diacritical Marks for Symbols"]
-    MODIFIERS = DIACRITICAL + DIACRITICAL_FULL
+    MODIFIERS = DIACRITICAL_FULL
 
     # "Weird Twitter" versions of Latin characters
     WEIRD_TWITTER_LATIN = [
@@ -367,6 +368,29 @@ class WordLength:
     @classmethod
     def long_words(cls):
         return int(random.gauss(50,20))
+
+class Corruptor(object):
+    """Corrupt text by adding diacritical marks."""
+    def __init__(self, factor=2):
+        """`factor` is the mean number of diacritical marks to be
+        added to each character."""
+        if factor == 0:
+            self.factor = 0
+        else:
+            self.factor = 1.0/factor
+        self.diacritics = Alphabet.characters(
+            [Alphabet.DIACRITICAL[0], Alphabet.DIACRITICAL[0],
+            "Combining Diacritical Marks for Symbols"])
+
+    def corrupt(self, text):
+        if self.factor == 0:
+            return text
+        new_chars = []
+        for i in text:
+            new_chars.append(i)
+            for j in range(int(random.expovariate(self.factor))):
+                new_chars.append(random.choice(self.diacritics))
+        return ''.join(new_chars)
 
 class Gibberish(object):
 
@@ -637,8 +661,6 @@ print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
 print "</head>"
 print "<body>"
 for i in range(10):
-    print "<li>%s</li>" % Gibberish.random().tweet()
-    # how_weird = int(random.gauss(6,2))
-    # print "<li>%s</li>" % Gibberish.weird_twitter_japanese(how_weird).tweet()
+    print "<li>%s</li>" % Corruptor(i).corrupt("HI MY NAME IS BRAK").encode("utf-8")
 print "</body>"
 print "</html>"
