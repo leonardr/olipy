@@ -344,7 +344,7 @@ class Gibberish(object):
     def __init__(self, charset,
                  word_length=default_word_length):
         self.charset = charset
-        self.word_length = word_length
+        self.word_length = None
 
     def word(self, length=None):
         length = length or self.word_length()
@@ -374,6 +374,10 @@ class Gibberish(object):
 
     def tweet(self):
         return self.words(140)
+
+    @classmethod
+    def one_language(cls):
+        return Gibberish(Alphabet.random_choice(*Alphabet.ALL_LANGUAGE_ALPHABETS_S))
 
     @classmethod
     def weird_twitter_alphabet(cls, base_alphabets, alternate_alphabets,
@@ -511,6 +515,25 @@ class Gibberish(object):
         alphabet.word_length = math_word_length
         return alphabet
 
+    @classmethod
+    def a_little_weirder_than(self, base_charset):
+        """Make the given charset a little more weird."""
+        choices = (Alphabet.CUSTOM_S + [Alphabet.YIJING]
+                   + [Alphabet.GEOMETRIC_ALPHABETS]
+                   + [Alphabet.GAMING_ALPHABETS]
+                   + [Alphabet.SYMBOLIC_ALPHABETS]
+                   + [Alphabet.WEIRD_TWITTER_MATH_MIXINS])
+        choice = random.choice(choices)
+        extra = Alphabet.characters(choice)
+            
+        destination = len(extra) * 3
+        multiplied_base_charset = base_charset
+        while len(multiplied_base_charset) < destination:
+            multiplied_base_charset += base_charset
+        return Gibberish(multiplied_base_charset + extra)
+
 data = json.load(open(os.path.join("data", "unicode_code_sheets.json")))
 Alphabet._fill_by_name(data)
 
+print Gibberish.one_language().tweet()
+print Gibberish.a_little_weirder_than(string.uppercase + string.lowercase).tweet()
