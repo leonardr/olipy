@@ -44,6 +44,8 @@ class Alphabet:
     CYRILLIC = ["Cyrillic"]
     CYRILLIC_FULL = ["Cyrillic", "Cyrillic Supplement", "Cyrillic Extended-A", "Cyrillic Extended-B"]
 
+    LATIN_S = [ASCII, LATIN_1, LATIN_FULL]
+
     # A set of European alphabets.
     EUROPEAN_S = [
         ASCII, LATIN_1, LATIN_FULL, CYRILLIC, CYRILLIC_FULL,
@@ -522,7 +524,9 @@ class Gibberish(object):
                    + [Alphabet.GEOMETRIC_ALPHABETS]
                    + [Alphabet.GAMING_ALPHABETS]
                    + [Alphabet.SYMBOLIC_ALPHABETS]
-                   + [Alphabet.WEIRD_TWITTER_MATH_MIXINS])
+                   + [Alphabet.WEIRD_TWITTER_MATH_MIXINS]
+                   + [Alphabet.DIACRITICAL]
+                   + [Alphabet.DIACRITICAL_FULL])
         choice = random.choice(choices)
         extra = Alphabet.characters(choice)
             
@@ -532,8 +536,64 @@ class Gibberish(object):
             multiplied_base_charset += base_charset
         return Gibberish(multiplied_base_charset + extra)
 
+
+    @classmethod
+    def random(self):
+        """Choose a random charset to make gibberish with."""
+        i = random.randint(0,100)
+        if i < 10:
+            # 10%: A randomly selected Latin alphabet.
+            choices = Alphabet.LATIN_S
+        elif i < 30:
+            # 20%: A randomly selected linguistic alphabet.
+            choice = Alphabet.ALL_LANGUAGE_ALPHABETS_S
+        elif i < 40:
+            # 10%: A randomly selected geometric alphabet.
+            choice = [[x] for x in Alphabet.GEOMETRIC_ALPHABETS]
+        elif i < 50:
+            # 10%: A custom alphabet.
+            choice = Alphabet.CUSTOM_S
+        elif i < 55:
+            # 5%: The combination of all geometric alphabets.
+            gibberish = Gibberish(
+                Alphabet.characters(*Alphabet.GEOMETRIC_ALPHABETS))
+        else:
+            # Weird Twitter.
+            how_weird = random.randint(2,8)
+            if i < 75:
+                # 20%: Weird Latin Twitter.
+                c = Gibberish.weird_twitter_latin
+            elif i < 85:
+                # 10%: Weird Japanese Twitter.
+                c = Gibberish.weird_twitter_japanese
+            elif i < 90:
+                # 5%: Weird CJK Twitter.
+                c = Gibberish.weird.twitter_cjk
+            else:
+                # 10%: Weird Math Twitter.
+                c = Gibberish.weird_twitter_math
+            gibberish = c(how_weird)
+
+        if i < 50:
+            # All characters to be from one alphabet. Make your choice.
+            charset = Alphabet.random_choice(choice)
+            if randint(0,1) == 0:
+                # 50% chance to make it a little weirder.
+                gibberish = Gibberish.a_little_weirder_than(charset)
+            else:
+                gibberish = Gibberish(charset)
+
+        # Blanket 10% chance to add 10% glitches
+        if randint(0, 10) == 0:
+            glitches = ''
+            while len(glitches) < len(gibberish.charset) / 10:
+                glitches += Alphabet.random_choice(Alphabet.GLITCHES)
+            gibberish.charset += glitches
+
 data = json.load(open(os.path.join("data", "unicode_code_sheets.json")))
 Alphabet._fill_by_name(data)
 
 print Gibberish.one_language().tweet()
 print Gibberish.a_little_weirder_than(string.uppercase + string.lowercase).tweet()
+for i in range(100):
+    print Gibberish.random().tweet()
