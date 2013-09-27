@@ -156,7 +156,7 @@ class Alphabet:
         ]
 
     # Some combination American alphabets
-    UCAS = "Unified Canadian Aboriginal Syllabics",
+    UCAS = "Unified Canadian Aboriginal Syllabics"
     UCAS_ALL = ["Unified Canadian Aboriginal Syllabics", "UCAS Extended"]
 
     # A set of American alphabets
@@ -308,6 +308,7 @@ class Alphabet:
     # Custom alphabets 
     CUSTOM_S = [
         "Geometric Shapes",
+        ["Geometric Shapes", "Arrows"],
         ["Geometric Shapes", "Additional Shapes"],
         ["Geometric Shapes", "Additional Shapes", "Box Drawing", "Block Elements"],
         "Box Drawing",
@@ -334,19 +335,18 @@ class Alphabet:
         ["Hiragana", "Katakana"],
         ]
 
+def natural_word_length():
+    return random.choice([1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11])
+
 class Gibberish(object):
 
     @classmethod
     def from_alphabets(cls, alphabets):
         return cls("".join(Alphabet.characters(alphabets)))
 
-    def default_word_length():
-        return random.choice([1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11])
-
-    def __init__(self, charset,
-                 word_length=default_word_length):
+    def __init__(self, charset, word_length=None):
         self.charset = charset
-        self.word_length = None
+        self.word_length = word_length
 
     def word(self, length=None):
         length = length or self.word_length()
@@ -543,7 +543,7 @@ class Gibberish(object):
         i = random.randint(0,100)
         if i < 10:
             # 10%: A randomly selected Latin alphabet.
-            choices = Alphabet.LATIN_S
+            choice = Alphabet.LATIN_S
         elif i < 30:
             # 20%: A randomly selected linguistic alphabet.
             choice = Alphabet.ALL_LANGUAGE_ALPHABETS_S
@@ -556,7 +556,7 @@ class Gibberish(object):
         elif i < 55:
             # 5%: The combination of all geometric alphabets.
             gibberish = Gibberish(
-                Alphabet.characters(*Alphabet.GEOMETRIC_ALPHABETS))
+                Alphabet.characters(Alphabet.GEOMETRIC_ALPHABETS))
         else:
             # Weird Twitter.
             how_weird = random.randint(2,8)
@@ -568,7 +568,7 @@ class Gibberish(object):
                 c = Gibberish.weird_twitter_japanese
             elif i < 90:
                 # 5%: Weird CJK Twitter.
-                c = Gibberish.weird.twitter_cjk
+                c = Gibberish.weird_twitter_cjk
             else:
                 # 10%: Weird Math Twitter.
                 c = Gibberish.weird_twitter_math
@@ -576,24 +576,38 @@ class Gibberish(object):
 
         if i < 50:
             # All characters to be from one alphabet. Make your choice.
-            charset = Alphabet.random_choice(choice)
-            if randint(0,1) == 0:
-                # 50% chance to make it a little weirder.
+            alphabet = random.choice(choice)
+            if isinstance(alphabet, basestring):
+                alphabet = [alphabet]
+            charset = Alphabet.characters(alphabet)
+
+            if random.randint(0,3) == 0:
+                # 25% chance to make it a little weirder.
                 gibberish = Gibberish.a_little_weirder_than(charset)
             else:
                 gibberish = Gibberish(charset)
 
+            # 50% chance to add semi-natural word boundaries.
+            if random.randint(0,1) == 0:
+                gibberish.word_length = natural_word_length
+
         # Blanket 10% chance to add 10% glitches
-        if randint(0, 10) == 0:
+        if random.randint(0, 10) == 0:
             glitches = ''
             while len(glitches) < len(gibberish.charset) / 10:
                 glitches += Alphabet.random_choice(Alphabet.GLITCHES)
             gibberish.charset += glitches
+        return gibberish
 
 data = json.load(open(os.path.join("data", "unicode_code_sheets.json")))
 Alphabet._fill_by_name(data)
 
-print Gibberish.one_language().tweet()
-print Gibberish.a_little_weirder_than(string.uppercase + string.lowercase).tweet()
+print "<html>"
+print "<head>"
+print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
+print "</head>"
+print "<body>"
 for i in range(100):
-    print Gibberish.random().tweet()
+    print "<li>%s</li>" % Gibberish.random().tweet()
+print "</body>"
+print "</html>"
