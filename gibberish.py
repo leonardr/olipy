@@ -211,20 +211,42 @@ class Alphabet:
         "CJK Compatibility",
         ]
 
-    # "Weird Twitter" versions of, and mixins for, CJK characters
-    WEIRD_TWITTER_CJK = [
+    # "Weird Twitter" versions of Japanese characters
+    WEIRD_TWITTER_JAPANESE = [
         "Halfwidth and Fullwidth Forms",
+        "Fullwidth ASCII Digits",
         "Halfwidth Katakana",
+        ]
+
+    # "Weird Twitter" mixins for Japanese characters
+    WEIRD_TWITTER_JAPANESE_MIXINS = [
+        "CJK Compatibility Ideographs",
+        "Fullwidth ASCII Punctuation",
+        "Vertical Forms",
         "CJK Symbols and Punctuation",
         "CJK Compatibility Forms",
-        "CJK Compatibility",
         "Enclosed CJK Letters and Months",
         ]
+
+    # "Weird Twitter" for the Han unification plane
+    WEIRD_TWITTER_CJK = [
+        "Bopomofo",
+        "CJK Compatibility Ideographs",
+        "CJK Radicals / KangXi Radicals"
+        ]
+
+    # "Weird Twitter" mixins for Chinese characters
+    WEIRD_TWITTER_CJK_MIXINS = WEIRD_TWITTER_JAPANESE_MIXINS + [
+        "CJK Compatibility"]
 
     # "Weird Twitter" math glyphs
     WEIRD_TWITTER_MATH = [
         "Number Forms",
         "Fullwidth ASCII Digits",
+        "Superscripts and Subscripts",
+        ]
+
+    WEIRD_TWITTER_MATH_MIXINS = [
         "Mathematical Operators",
         "Supplemental Mathematical Operators",
         "Miscellaneous Mathematical Symbols-A",
@@ -316,14 +338,75 @@ class Gibberish(object):
     def from_alphabets(cls, alphabets):
         return cls("".join(Alphabet.characters(alphabets)))
 
+    def default_word_length():
+        return random.choice([1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11])
+
+    def __init__(self, charset,
+                 word_length=default_word_length):
+        self.charset = charset
+        self.word_length = word_length
+
+    def word(self, length=None):
+        length = length or self.word_length()
+        t = []
+        for i in range(length):
+            t.append(random.choice(self.charset))
+        return ''.join(t)
+
+    def words(self, length, exact=True):
+        t = None
+        while True:
+            word_length = None
+            if self.word_length is None:
+                word_length = length
+            word = self.word(word_length)
+            if t is None:
+                potential = word
+            else:
+                potential = t + ' ' + word
+            if exact:
+                if len(potential) >= length:
+                    return potential[:length].encode("utf8")
+            else:
+                if len(potential) > length:
+                    return t.encode("utf8")
+            t = potential
+
+    def tweet(self):
+        return self.words(140)
+
     @classmethod
-    def weird_twitter_latin(cls, how_weird=1):
-        """Create a "Weird Twitter" type alphabet based on Latin characters.
+    def weird_twitter_alphabet(cls, base_alphabets, alternate_alphabets,
+                               mixin_alphabets, how_weird=1):
+        """Give an alphabet the "Weird Twitter" treatment.
 
-        0 is not weird at all. Higher numbers are weirder.
+        A technique borrowed from the namesake Twitter community, in
+        which an alphabet's glyphs are replaced by similar glyphs
+        and/or junk glyphs.
+
+        `base_alphabets` is a set of alphabets used in normal
+        communcation. One of them will be chosen as the base alphabet.
+
+        `alternate_alphabets` is a set of alphabets providing
+        strange-looking versions of the glyphs in the base alphabets.
+
+        `mixin alphabets` is a set of alphabets providing unusual
+        glyphs that are thematically related to the base alphabet, but
+        not normally used.
+
+        `how_weird` is a way to weight the base alphabets against the
+        "weird" alphabets. how_weird=0 is not weird at all. Higher
+        numbers are weirder.
+
+        Higher numbers for `how_weird` will also tend to introduce
+        diacritical marks, symbolic characters, and completely random
+        scripts into the alphabet.
         """
-
-        letters = Alphabet.random_choice(Alphabet.ASCII, Alphabet.LATIN_1)
+        if isinstance(base_alphabets, basestring):
+            # The base alphabet is a literal string
+            letters = base_alphabets
+        else:
+            letters = Alphabet.random_choice(*base_alphabets)
 
         if how_weird <= 0:
             return Gibberish(letters)
@@ -331,60 +414,103 @@ class Gibberish(object):
         # Choose a random number of mixins.
         mixins = ''
         for i in range(1, random.randint(1, how_weird+1)):
-            mixins += Alphabet.random_choice(
-                *Alphabet.WEIRD_TWITTER_LATIN_MIXINS)
+            mixins += Alphabet.random_choice(*mixin_alphabets)
 
-        # Add either normal-looking Latin-1 letters or weird alternate
+        # Add either normal-looking letters or weird alternate
         # letters, until the size of the letters matches the size of
         # the mixins.
         while len(letters) < len(mixins):
             if random.randint(0, how_weird) == 0:
-                choices = (Alphabet.ASCII, Alphabet.LATIN_1)
+                choices = base_alphabets
             else:
-                choices = Alphabet.WEIRD_TWITTER_LATIN
-            letters += Alphabet.random_choice(*choices)
+                choices = alternate_alphabets
+
+            if choices == base_alphabets and isinstance(base_alphabets, basestring):
+                # Again, the base alphabet is a literal string
+                letters += base_alphabets
+            else:
+                letters += Alphabet.random_choice(*choices)
 
         alphabet = letters + mixins
+
         # Possibly throw in some diacritical marks.
-        count = 0
-        while random.random() * how_weird > 1 and count < 3:
-            alphabet += Alphabet.random_choice(*Alphabet.MODIFIERS)
-            count += 1
+        max_size_of_marks = len(alphabet) / 2
+        marks = ''
+        while random.random() * how_weird > 1 and len(marks) < max_size_of_marks:
+            marks += Alphabet.random_choice(*Alphabet.MODIFIERS)
+        alphabet += marks
+
+        # There is a very small chance that a random symbolic or geometric
+        # alphabet will be included.
+        approximate_size_of_symbolic_alphabet = len(alphabet) / 10
+        symbols = ''
+        if random.random() * how_weird > 5:
+            s = Alphabet.random_choice(*(Alphabet.SYMBOLIC_ALPHABETS + Alphabet.GEOMETRIC_ALPHABETS))
+            while len(symbols) < approximate_size_of_symbolic_alphabet:
+                symbols += s
+        alphabet += symbols
+
+        # And an even smaller chance that part of a random linguistic
+        # alphabet will be included. If a large alphabet like "Hangul
+        # Syllables" is chosen, this may dominate the rest of the
+        # character set!
+        approximate_size_of_foreign_alphabet = len(alphabet) / 5
+        if random.random() * how_weird > 7:
+            c = random.choice(Alphabet.ALL_LANGUAGE_ALPHABETS_S)
+            if isinstance(c, basestring):
+                c = [c]
+            foreign_alphabet = Alphabet.random_choice(*c)
+            f = ''
+            while len(f) < approximate_size_of_foreign_alphabet:
+                f += foreign_alphabet
+            alphabet += f
+
         return Gibberish(alphabet)
 
-    def default_word_length_distribution():
-        return random.choice([1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11])
+    @classmethod
+    def weird_twitter_latin(cls, how_weird=1):
+        """Create a "Weird Twitter" type alphabet based on Latin characters.
 
-    def __init__(self, charset,
-                 word_length_distribution=default_word_length_distribution):
-        self.charset = charset
-        self.word_length_distribution = word_length_distribution
+        0 is not weird at all. Higher numbers are weirder.
+        """
 
-    def word(self, length=None):
-        length = length or self.word_length_distribution()
-        t = []
-        for i in range(length):
-            t.append(random.choice(self.charset))
-        return ''.join(t)
+        return cls.weird_twitter_alphabet(
+            [Alphabet.ASCII, Alphabet.LATIN_1],
+            Alphabet.WEIRD_TWITTER_LATIN,
+            Alphabet.WEIRD_TWITTER_LATIN_MIXINS, how_weird)
 
-    def words(self, length, exact=False):
-        t = ''
-        while True:
-            word = self.word()
-            potential = t + ' ' + word
-            if exact:
-                if len(potential) >= length:
-                    return potential[:length]
-            else:
-                if len(potential) > length:
-                    return t
-            t = potential
+    @classmethod
+    def weird_twitter_japanese(cls, how_weird=1):
+        """Gives the "Weird Twitter" treatment to hiragana and/or katakana"""
+        return cls.weird_twitter_alphabet(
+            ["Hiragana", Alphabet.KATAKANA, Alphabet.KATAKANA_ALL],
+            Alphabet.WEIRD_TWITTER_CJK,
+            Alphabet.WEIRD_TWITTER_CJK_MIXINS, how_weird)
 
-    def tweet(self):
-        return self.words(140)
+    @classmethod
+    def weird_twitter_cjk(cls, how_weird=1):
+        """Gives the "Weird Twitter" treatment to Han-unified ideographs"""
+        # We must scale up the weirdness factor because the Han plane
+        # is so huge.
+        how_weird *= 10
+        alphabet = cls.weird_twitter_alphabet(
+            ["CJK Unified Ideographs (Han)"],
+            Alphabet.WEIRD_TWITTER_CJK,
+            Alphabet.WEIRD_TWITTER_CJK_MIXINS, how_weird)
+        alphabet.word_length = None
+        return alphabet
+
+    @classmethod
+    def weird_twitter_math(cls, how_weird=1):
+        """Gives the "Weird Twitter" treatment to hiragana and/or katakana"""
+        alphabet = cls.weird_twitter_alphabet(
+            "1234567890", Alphabet.WEIRD_TWITTER_MATH,
+            Alphabet.WEIRD_TWITTER_MATH_MIXINS, how_weird)
+        def math_word_length():
+            return random.choice([1,1,1,1,1,1,2,2,2,3,3,3,4,4,5])
+        alphabet.word_length = math_word_length
+        return alphabet
 
 data = json.load(open(os.path.join("data", "unicode_code_sheets.json")))
 Alphabet._fill_by_name(data)
 
-for i in 0, 1, 2, 4, 8, 16:
-    print i, Gibberish.weird_twitter_latin(i).tweet()
