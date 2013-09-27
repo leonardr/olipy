@@ -235,7 +235,7 @@ class Alphabet:
         "CJK Radicals / KangXi Radicals"
         ]
 
-    # "Weird Twitter" mixins for Chinese characters
+    # "Weird Twitter" mixins for the Han unification plane
     WEIRD_TWITTER_CJK_MIXINS = WEIRD_TWITTER_JAPANESE_MIXINS + [
         "CJK Compatibility"]
 
