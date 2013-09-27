@@ -335,8 +335,38 @@ class Alphabet:
         ["Hiragana", "Katakana"],
         ]
 
-def natural_word_length():
-    return random.choice([1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11])
+class WordLength:
+
+    @classmethod
+    def random(cls):
+        c = random.choice([cls.natural_word_length, cls.completely_random,
+                             cls.ten_characters, cls.twenty_characters,
+                             cls.short_words, cls.long_words])
+        return c
+
+    @classmethod
+    def natural_word_length(cls):
+        return random.choice([1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,7,7,8,8,9,9,10,10,11])
+
+    @classmethod
+    def completely_random(cls):
+        return random.randint(1, 140)
+
+    @classmethod
+    def ten_characters(cls):
+        return 10
+
+    @classmethod
+    def twenty_characters(cls):
+        return 20
+
+    @classmethod
+    def short_words(cls):
+        return int(random.gauss(5, 2))
+
+    @classmethod
+    def long_words(cls):
+        return int(random.gauss(50,20))
 
 class Gibberish(object):
 
@@ -440,9 +470,8 @@ class Gibberish(object):
         alphabet = letters + mixins
 
         # Possibly throw in some diacritical marks.
-        max_size_of_marks = len(alphabet) / 2
         marks = ''
-        while random.random() * how_weird > 1 and len(marks) < max_size_of_marks:
+        while random.random() * how_weird > 0.5:
             marks += Alphabet.random_choice(*Alphabet.MODIFIERS)
         alphabet += marks
 
@@ -541,30 +570,30 @@ class Gibberish(object):
     def random(self):
         """Choose a random charset to make gibberish with."""
         i = random.randint(0,100)
-        if i < 10:
-            # 10%: A randomly selected Latin alphabet.
+        if i < 15:
+            # 15%: A randomly selected Latin alphabet.
             choice = Alphabet.LATIN_S
-        elif i < 30:
+        elif i < 35:
             # 20%: A randomly selected linguistic alphabet.
             choice = Alphabet.ALL_LANGUAGE_ALPHABETS_S
-        elif i < 40:
+        elif i < 45:
             # 10%: A randomly selected geometric alphabet.
             choice = [[x] for x in Alphabet.GEOMETRIC_ALPHABETS]
-        elif i < 50:
+        elif i < 55:
             # 10%: A custom alphabet.
             choice = Alphabet.CUSTOM_S
-        elif i < 55:
+        elif i < 60:
             # 5%: The combination of all geometric alphabets.
             gibberish = Gibberish(
                 Alphabet.characters(Alphabet.GEOMETRIC_ALPHABETS))
         else:
             # Weird Twitter.
-            how_weird = random.randint(2,8)
-            if i < 75:
+            how_weird = int(random.expovariate(1.0/6))
+            if i < 80:
                 # 20%: Weird Latin Twitter.
                 c = Gibberish.weird_twitter_latin
             elif i < 85:
-                # 10%: Weird Japanese Twitter.
+                # 5%: Weird Japanese Twitter.
                 c = Gibberish.weird_twitter_japanese
             elif i < 90:
                 # 5%: Weird CJK Twitter.
@@ -587,9 +616,9 @@ class Gibberish(object):
             else:
                 gibberish = Gibberish(charset)
 
-            # 50% chance to add semi-natural word boundaries.
-            if random.randint(0,1) == 0:
-                gibberish.word_length = natural_word_length
+        # 75% chance to add some kind of word boundary algorithm.
+        if random.randint(0,100) < 75:
+            gibberish.word_length = WordLength.random()
 
         # Blanket 10% chance to add 10% glitches
         if random.randint(0, 10) == 0:
@@ -607,7 +636,9 @@ print "<head>"
 print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
 print "</head>"
 print "<body>"
-for i in range(100):
+for i in range(10):
     print "<li>%s</li>" % Gibberish.random().tweet()
+    # how_weird = int(random.gauss(6,2))
+    # print "<li>%s</li>" % Gibberish.weird_twitter_japanese(how_weird).tweet()
 print "</body>"
 print "</html>"
