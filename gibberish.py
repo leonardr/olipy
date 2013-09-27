@@ -1,3 +1,4 @@
+# coding=utf-8
 """Create gibberish from source alphabets."""
 
 import os
@@ -593,7 +594,8 @@ class Gibberish(object):
     @classmethod
     def random(self):
         """Choose a random charset to make gibberish with."""
-        i = random.randint(0,100)
+        i = random.randint(0,99)
+        choice = None
         if i < 15:
             # 15%: A randomly selected Latin alphabet.
             choice = Alphabet.LATIN_S
@@ -627,7 +629,7 @@ class Gibberish(object):
                 c = Gibberish.weird_twitter_math
             gibberish = c(how_weird)
 
-        if i < 50:
+        if choice is not None:
             # All characters to be from one alphabet. Make your choice.
             alphabet = random.choice(choice)
             if isinstance(alphabet, basestring):
@@ -654,13 +656,3 @@ class Gibberish(object):
 
 data = json.load(open(os.path.join("data", "unicode_code_sheets.json")))
 Alphabet._fill_by_name(data)
-
-print "<html>"
-print "<head>"
-print '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
-print "</head>"
-print "<body>"
-for i in range(10):
-    print "<li>%s</li>" % Corruptor(i).corrupt("HI MY NAME IS BRAK").encode("utf-8")
-print "</body>"
-print "</html>"
