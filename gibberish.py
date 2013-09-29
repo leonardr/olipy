@@ -4,7 +4,8 @@
 import os
 import json
 import random
-import string
+import sys
+import data
 
 class Alphabet:
 
@@ -654,5 +655,4 @@ class Gibberish(object):
             gibberish.charset += glitches
         return gibberish
 
-data = json.load(open(os.path.join("data", "unicode_code_sheets.json")))
-Alphabet._fill_by_name(data)
+Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
