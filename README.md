@@ -7,7 +7,7 @@ main modules.
 queneau.py
 ----------
 
-A library for Queneau assembly, a technique pioneered by Raymond
+A module for Queneau assembly, a technique pioneered by Raymond
 Queneau in his 1961 book "Cent mille milliards de poèmes" ("One
 hundred million million poems"). Queneau assembly randomly creates new
 texts from a collection of existing texts with identical structure.
@@ -30,7 +30,7 @@ Control. Demonstrates Queneau assembly on dialogue.
 gibberish.py
 ------------
 
-A library for those interested in the appearance of Unicode
+A module for those interested in the appearance of Unicode
 glyphs. Its main use is generating aesthetically pleasing gibberish
 using selected combinations of Unicode code charts.
 
@@ -41,3 +41,13 @@ Example scripts for gibberish.py:
 * example.corrupt.py: "Corrupts" whatever text is typed in by adding
 increasing numbers of diacritical marks.
 
+integration.py
+--------------
+
+A module for integrating Olipy with other pieces of software (notably
+the Twitter API).
+
+data/
+-----
+
+This directory contains data files used by the example scripts.
