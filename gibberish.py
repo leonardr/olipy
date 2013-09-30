@@ -5,6 +5,8 @@ import os
 import json
 import random
 import sys
+import unicodedata
+
 import data
 
 class Alphabet:
@@ -409,29 +411,30 @@ class Gibberish(object):
         t = []
         for i in range(length):
             t.append(random.choice(self.charset))
-        return ''.join(t)
+        return unicodedata.normalize("NFC", u''.join(t))
 
-    def words(self, length, exact=True):
-        t = None
+    def words(self, length):
+        words = ''
         while True:
             word_length = None
             if self.word_length is None:
                 word_length = length
             word = self.word(word_length)
-            if t is None:
-                potential = word
+            if not words:
+                words = word
             else:
-                potential = t + ' ' + word
-            if exact:
-                if len(potential) >= length:
-                    return potential[:length].encode("utf8")
-            else:
-                if len(potential) > length:
-                    return t.encode("utf8")
-            t = potential
+                words += ' ' + word
+            if len(words) >= length:
+                break
 
+        return words[:length]
+       
     def tweet(self):
-        return self.words(140)
+        if random.randint(0,4) == 0:
+            length = 140
+        else:
+            length = int(max(15, min(random.gauss(90, 30), 140)))
+        return self.words(length)
 
     @classmethod
     def one_language(cls):
