@@ -15,7 +15,8 @@ class Alphabet:
     def _fill_by_name(cls, data=None):
         for c in data:
             name = c['name']
-            cls.by_name[name] = c
+            if 'characters' in c and len(c['characters']) > 0:
+                cls.by_name[name] = c
             if 'child' in c:
                 cls._fill_by_name(c['child'])
 
@@ -23,8 +24,22 @@ class Alphabet:
 
     @classmethod
     def random_choice(cls, *alphabets):
-        """A random choice between alphabets"""
-        return cls.characters(random.choice(alphabets))
+        """A random choice among alphabets"""
+        if not alphabets:
+            alphabets = cls.by_name.keys()
+        choice = random.choice(alphabets)
+        return cls.characters([choice])
+
+    @classmethod
+    def random_choice_no_modifiers(cls):
+        """A completely random choice among non-modifier alphabets."""
+        choice = None
+        while choice is None:
+            choice = random.choice(Alphabet.by_name.keys())
+            if choice in Alphabet.MODIFIERS:
+                choice = None
+        # print "Choice: %s, len: %s" % (choice, len(cls.characters(choice)))
+        return cls.characters(choice)
 
     @classmethod
     def characters(cls, alphabets):
@@ -34,7 +49,10 @@ class Alphabet:
         # print "Character lookup for %r" % alphabets
         for alphabet in alphabets:
             # print "Looking up %s" % alphabet
-            char.extend(cls.by_name[alphabet]['characters'])
+            if isinstance(alphabet, list):
+                char.extend(cls.characters(alphabet))
+            else:
+                char.extend(cls.by_name[alphabet]['characters'])
         return ''.join(char)
 
     # Some combination European alphabets
@@ -406,6 +424,13 @@ class Gibberish(object):
         self.charset = charset
         self.word_length = word_length
 
+    @classmethod
+    def characters_from_set(cls, choices, characters):
+        chosen = ''
+        for i in range(choices):
+            chosen += random.choice(characters)
+        return cls(chosen)
+
     def word(self, length=None):
         length = length or self.word_length()
         t = []
@@ -576,6 +601,16 @@ class Gibberish(object):
         return alphabet
 
     @classmethod
+    def limited_vocabulary(cls, how_many_characters=None):
+        full = Alphabet.random_choice_no_modifiers()
+        limited = ''
+        if not how_many_characters:
+            how_many_characters = max(2, int(random.gauss(4, 2)))
+        for i in range(how_many_characters):
+            limited += random.choice(full)
+        return cls(limited)
+
+    @classmethod
     def a_little_weirder_than(self, base_charset):
         """Make the given charset a little more weird."""
         choices = (Alphabet.CUSTOM_S + [Alphabet.YIJING]
@@ -596,7 +631,7 @@ class Gibberish(object):
 
 
     @classmethod
-    def random(self):
+    def random(cls):
         """Choose a random charset to make gibberish with."""
         i = random.randint(0,99)
         choice = None
@@ -616,20 +651,26 @@ class Gibberish(object):
             # 5%: The combination of all geometric alphabets.
             gibberish = Gibberish(
                 Alphabet.characters(Alphabet.GEOMETRIC_ALPHABETS))
+        elif i < 61:
+            # 1%: An emoticon
+            gibberish = EmoticonGibberish([Alphabet.random_choice_no_modifiers()])
+        elif i < 65:
+            # 4%: A limited subset of one script.
+            gibberish = cls.limited_vocabulary()
         else:
             # Weird Twitter.
             how_weird = int(random.expovariate(1.0/6))
-            if i < 80:
+            if i < 85:
                 # 20%: Weird Latin Twitter.
                 c = Gibberish.weird_twitter_latin
-            elif i < 85:
+            elif i < 90:
                 # 5%: Weird Japanese Twitter.
                 c = Gibberish.weird_twitter_japanese
-            elif i < 90:
+            elif i < 95:
                 # 5%: Weird CJK Twitter.
                 c = Gibberish.weird_twitter_cjk
             else:
-                # 10%: Weird Math Twitter.
+                # 5%: Weird Math Twitter.
                 c = Gibberish.weird_twitter_math
             gibberish = c(how_weird)
 
@@ -646,6 +687,10 @@ class Gibberish(object):
             else:
                 gibberish = Gibberish(charset)
 
+        if gibberish.charset is None:
+            # Custom gibberish; don't mess with it.
+            return gibberish
+
         # 75% chance to add some kind of word boundary algorithm.
         if random.randint(0,100) < 75:
             gibberish.word_length = WordLength.random()
@@ -658,4 +703,22 @@ class Gibberish(object):
             gibberish.charset += glitches
         return gibberish
 
+class EmoticonGibberish(Gibberish):
+
+    def __init__(self, charsets):
+        self.charsets = charsets
+        super(EmoticonGibberish, self).__init__(None)
+
+    def word(self, word_length=None):
+        charset = random.choice(self.charsets)
+        eye = random.choice(charset)
+        return eye + "_" + eye
+
+    def tweet(self):
+        num_words = random.randint(1,3)
+        return ' '.join(self.word() for word in range(num_words))
+
 Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
+
+if __name__ == '__main__':
+    print Gibberish.random().tweet()
