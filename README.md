@@ -27,6 +27,8 @@ Control. Demonstrates Queneau assembly on dialogue.
 
 * example.sonnet.py: Generates Shakespearean sonnets.
 
+* example.dinosaurs.py: Generates dinosaur names.
+
 gibberish.py
 ------------
 
