@@ -7,7 +7,7 @@ assembler = WordAssembler(load_json("dinosaurs.json"))
 dinos = []
 for i in range(2):
     dino = assembler.assemble_word()
-    if dino[0] in ['AEIO']:
+    if dino[0] in 'AEIO':
         dino = "an " + dino
     else:
         dino = "a " + dino
