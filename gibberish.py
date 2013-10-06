@@ -358,6 +358,218 @@ class Alphabet:
         ["Hiragana", "Katakana"],
         ]
 
+    # Custom alphabets
+    UP_POINTING_TRIANGLES = map(
+        unicodedata.lookup, [
+            "Apl functional symbol delta stile",
+            "Black lower left triangle",
+            "Black lower right triangle",
+            "Black up-pointing small triangle",
+            "Black up-pointing triangle",
+            "Canadian syllabics glottal stop",
+            "Canadian syllabics i",
+            "Combining enclosing upward pointing triangle",
+            "Coptic capital letter dalda",
+            "Coptic small letter dalda",
+            "Cyrillic capital letter closed little yus",
+            "Cyrillic small letter little yus",
+            "Greek capital letter delta",
+            "Increment",
+            "Mathematical bold capital delta",
+            "Mathematical bold italic capital delta",
+            "Minus sign in triangle",
+            "Segment",
+            "Tifinagh letter yav",
+            "Triangle with dot above",
+            "Triangle with serifs at bottom",
+            "Triangle with underbar",
+            "Up-pointing triangle with left half black",
+            "Up-pointing triangle with right half black",
+            "Lower left triangle",
+            "Lower right triangle",
+            "White trapezium",
+            "White up-pointing small triangle",
+            "White up-pointing small triangle",
+            "White up-pointing triangle",
+#            "Alchemical symbol for fire",
+            ])
+
+    DOWN_POINTING_TRIANGLES = map(
+        unicodedata.lookup, [
+            "Apl functional symbol del stile",
+            "Black down-pointing small triangle",
+            "Black down-pointing triangle",
+            "Canadian syllabics carrier ru",
+            "Canadian syllabics e",
+            "Canadian syllabics pe",
+            "Down-pointing triangle with left half black",
+            "Down-pointing triangle with right half black",
+            "For all",
+            "Latin capital letter v",
+            "Mathematical bold capital v",
+            "Mathematical bold italic nabla",
+            "Mathematical bold nabla",
+            "Mathematical bold small v",
+            "Mathematical italic nabla",
+            "Mathematical monospace capital v",
+            "Mathematical monospace small v",
+            "Mathematical sans-serif bold nabla",
+            "Mathematical sans-serif capital v",
+            "Nabla",
+            "Tifinagh letter yadh",
+            "Vai symbol kung",
+            "White down-pointing small triangle",
+            "White down-pointing triangle",
+#            "Alchemical symbol for aquafortis"
+#            "Alchemical symbol for dissolve-2",
+#            "Alchemical symbol for water",
+#            "Greek vocal notation symbol-21",
+#            "Heavy white down-pointing triangle",
+            ])
+
+    LEFT_POINTING_TRIANGLES = map(unicodedata.lookup, [
+            "Apl functional symbol quad less-than",
+            "Black left-pointing pointer",
+            "Black left-pointing small triangle",
+            "Black left-pointing triangle",
+            "Canadian syllabics a",
+            "Canadian syllabics carrier ra",
+            "Canadian syllabics p",
+            "Canadian syllabics pa",
+            "Normal subgroup of",
+            "Spherical angle",
+            "Lower right triangle",
+            "Upper right triangle",
+            "Black upper right triangle",
+            "Black lower right triangle",
+            "Vai syllable gboo",
+            "White left-pointing pointer",
+            "White left-pointing small triangle",
+            "White left-pointing triangle",
+            # "Closed subset",
+            # "Greek instrumental notation symbol-38",
+            # "Large left triangle operator",
+            # "Less-than closed by curve",
+            #"Z notation domain antirestriction",
+            ])
+
+    RIGHT_POINTING_TRIANGLES = map(unicodedata.lookup, [
+            "Apl functional symbol quad greater-than",
+            "Black lower right triangle",
+            "Black right-pointing small triangle",
+            "Black right-pointing triangle",
+            "Black upper left triangle",
+            "Canadian syllabics carrier hwee",
+            "Canadian syllabics carrier i",
+            "Canadian syllabics carrier re",
+            "Canadian syllabics carrier we",
+            "Canadian syllabics fo",
+            "Canadian syllabics o",
+            "Contains as normal subgroup",
+            "Greater-than sign",
+            "Lower right triangle",
+            "Spherical angle opening left",
+            "Succeeds",
+            "Triangular bullet",
+            "Upper left triangle",
+            "White right-pointing pointer",
+            "White right-pointing small triangle",
+            "White right-pointing triangle",
+            # "Closed superset",
+            # "Conical taper",
+            # "Greater-than closed by curve",
+            # "Greek instrumental notation symbol-37",
+            # "Z notation range antirestriction",
+            ])
+
+    TRIANGLES = list(set((UP_POINTING_TRIANGLES + DOWN_POINTING_TRIANGLES + LEFT_POINTING_TRIANGLES + RIGHT_POINTING_TRIANGLES)))
+
+    # TODO: Squares
+
+    PENTAGONS_AND_LARGER_POLYGONS = map(unicodedata.lookup, [
+            "Software-function symbol",
+            "White pentagon",
+            "Black pentagon",
+            "White horizontal ellipse",
+            "Black horizontal ellipse",
+            "White right-pointing pentagon",
+            "Black right-pointing pentagon",
+            "House",
+            "White shogi piece",
+            "Black shogi piece",
+            "Canadian syllabics carrier tho",
+            # "Chestnut",
+            ])
+
+    # TODO: Circles
+
+    # Small custom charsets that make nice mosaics when combined.
+    TRIANGLE_MOSAIC = map(unicodedata.lookup, [
+            "Black lower left triangle",
+            "Black lower right triangle",
+            "Black upper left triangle",
+            "Black upper right triangle",
+            ])
+
+    BLOCK_MOSAIC = map(unicodedata.lookup, [
+            "UPPER HALF BLOCK",
+            "LOWER HALF BLOCK",
+            "FULL BLOCK",
+            "LEFT HALF BLOCK",
+            "RIGHT HALF BLOCK",
+            ])
+
+    VERTICAL_BLOCK_MOSAIC = map(unicodedata.lookup, [
+            "UPPER HALF BLOCK",
+            "LOWER HALF BLOCK",
+            "FULL BLOCK",
+            ])
+
+    HORIZONTAL_BLOCK_MOSAIC = map(unicodedata.lookup, [
+            "LEFT HALF BLOCK",
+            "RIGHT HALF BLOCK",
+            "FULL BLOCK",
+            ])
+    TERMINAL_GRAPHIC_MOSAIC = map(unicodedata.lookup, [
+            "QUADRANT LOWER LEFT",
+            "QUADRANT LOWER RIGHT",
+            "QUADRANT UPPER LEFT",
+            "QUADRANT UPPER LEFT AND LOWER LEFT AND LOWER RIGHT",
+            "QUADRANT UPPER LEFT AND LOWER RIGHT",
+            "QUADRANT UPPER LEFT AND UPPER RIGHT AND LOWER LEFT",
+            "QUADRANT UPPER LEFT AND UPPER RIGHT AND LOWER RIGHT",
+            "QUADRANT UPPER RIGHT",
+            "QUADRANT UPPER RIGHT AND LOWER LEFT",
+            "QUADRANT UPPER RIGHT AND LOWER LEFT AND LOWER RIGHT",
+            ])
+
+    SHADING_MOSAIC = map(unicodedata.lookup, [
+            "LIGHT SHADE",
+            "MEDIUM SHADE",
+            "DARK SHADE",
+            "FULL BLOCK",
+            ])
+
+    BOX_DRAWING_MOSAIC = map(unicodedata.lookup, [
+            "BOX DRAWINGS LIGHT DOWN AND RIGHT",
+            "BOX DRAWINGS LIGHT DOWN AND LEFT",
+            "BOX DRAWINGS LIGHT UP AND LEFT",
+            "BOX DRAWINGS LIGHT UP AND RIGHT",
+            ])
+
+    BOX_DRAWING_ARC_MOSAIC = map(unicodedata.lookup, [
+            "BOX DRAWINGS LIGHT ARC DOWN AND RIGHT",
+            "BOX DRAWINGS LIGHT ARC DOWN AND LEFT",
+            "BOX DRAWINGS LIGHT ARC UP AND LEFT",
+            "BOX DRAWINGS LIGHT ARC UP AND RIGHT",
+            ])
+
+    CHARACTER_CELL_DIAGONAL_MOSAIC = map(unicodedata.lookup, [
+            "BOX DRAWINGS LIGHT DIAGONAL UPPER RIGHT TO LOWER LEFT",
+            "BOX DRAWINGS LIGHT DIAGONAL UPPER LEFT TO LOWER RIGHT",
+            "BOX DRAWINGS LIGHT DIAGONAL CROSS",
+            ])
+
 class WordLength:
 
     @classmethod
