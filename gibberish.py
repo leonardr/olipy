@@ -6,6 +6,7 @@ import json
 import random
 import sys
 import unicodedata
+from randomness import WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
 
 import data
 
@@ -358,179 +359,476 @@ class Alphabet:
         ["Hiragana", "Katakana"],
         ]
 
+    def unicode_charset(*chrs):
+        return "".join(map(unicodedata.lookup, chrs))
+
     # Custom alphabets
-    UP_POINTING_TRIANGLES = map(
-        unicodedata.lookup, [
-            "Apl functional symbol delta stile",
-            "Black lower left triangle",
-            "Black lower right triangle",
-            "Black up-pointing small triangle",
-            "Black up-pointing triangle",
-            "Canadian syllabics glottal stop",
-            "Canadian syllabics i",
-            "Combining enclosing upward pointing triangle",
-            "Coptic capital letter dalda",
-            "Coptic small letter dalda",
-            "Cyrillic capital letter closed little yus",
-            "Cyrillic small letter little yus",
-            "Greek capital letter delta",
-            "Increment",
-            "Mathematical bold capital delta",
-            "Mathematical bold italic capital delta",
-            "Minus sign in triangle",
-            "Segment",
-            "Tifinagh letter yav",
-            "Triangle with dot above",
-            "Triangle with serifs at bottom",
-            "Triangle with underbar",
-            "Up-pointing triangle with left half black",
-            "Up-pointing triangle with right half black",
-            "Lower left triangle",
-            "Lower right triangle",
-            "White trapezium",
-            "White up-pointing small triangle",
-            "White up-pointing small triangle",
-            "White up-pointing triangle",
-#            "Alchemical symbol for fire",
-            ])
+    UP_POINTING_TRIANGLES = unicode_charset(
+        "Apl functional symbol delta stile",
+        "Black lower left triangle",
+        "Black lower right triangle",
+        "Black up-pointing small triangle",
+        "Black up-pointing triangle",
+        "Canadian syllabics glottal stop",
+        "Canadian syllabics i",
+        "Combining enclosing upward pointing triangle",
+        "Coptic capital letter dalda",
+        "Coptic small letter dalda",
+        "Cyrillic capital letter closed little yus",
+        "Cyrillic small letter little yus",
+        "Greek capital letter delta",
+        "Increment",
+        "Mathematical bold capital delta",
+        "Mathematical bold italic capital delta",
+        "Minus sign in triangle",
+        "Segment",
+        "Tifinagh letter yav",
+        "Triangle with dot above",
+        "Triangle with serifs at bottom",
+        "Triangle with underbar",
+        "Up-pointing triangle with left half black",
+        "Up-pointing triangle with right half black",
+        "Lower left triangle",
+        "Lower right triangle",
+        "White trapezium",
+        "White up-pointing small triangle",
+        "White up-pointing small triangle",
+        "White up-pointing triangle",
+        #            "Alchemical symbol for fire",
+        )
 
-    DOWN_POINTING_TRIANGLES = map(
-        unicodedata.lookup, [
-            "Apl functional symbol del stile",
-            "Black down-pointing small triangle",
-            "Black down-pointing triangle",
-            "Canadian syllabics carrier ru",
-            "Canadian syllabics e",
-            "Canadian syllabics pe",
-            "Down-pointing triangle with left half black",
-            "Down-pointing triangle with right half black",
-            "For all",
-            "Latin capital letter v",
-            "Mathematical bold capital v",
-            "Mathematical bold italic nabla",
-            "Mathematical bold nabla",
-            "Mathematical bold small v",
-            "Mathematical italic nabla",
-            "Mathematical monospace capital v",
-            "Mathematical monospace small v",
-            "Mathematical sans-serif bold nabla",
-            "Mathematical sans-serif capital v",
-            "Nabla",
-            "Tifinagh letter yadh",
-            "Vai symbol kung",
-            "White down-pointing small triangle",
-            "White down-pointing triangle",
-#            "Alchemical symbol for aquafortis"
-#            "Alchemical symbol for dissolve-2",
-#            "Alchemical symbol for water",
-#            "Greek vocal notation symbol-21",
-#            "Heavy white down-pointing triangle",
-            ])
+    DOWN_POINTING_TRIANGLES = unicode_charset(
+        "Apl functional symbol del stile",
+        "Black down-pointing small triangle",
+        "Black down-pointing triangle",
+        "Canadian syllabics carrier ru",
+        "Canadian syllabics e",
+        "Canadian syllabics pe",
+        "Down-pointing triangle with left half black",
+        "Down-pointing triangle with right half black",
+        "For all",
+        "Latin capital letter v",
+        "Mathematical bold capital v",
+        "Mathematical bold italic nabla",
+        "Mathematical bold nabla",
+        "Mathematical bold small v",
+        "Mathematical italic nabla",
+        "Mathematical monospace capital v",
+        "Mathematical monospace small v",
+        "Mathematical sans-serif bold nabla",
+        "Mathematical sans-serif capital v",
+        "Nabla",
+        "Tifinagh letter yadh",
+        "Vai symbol kung",
+        "White down-pointing small triangle",
+        "White down-pointing triangle",
+        #            "Alchemical symbol for aquafortis"
+        #            "Alchemical symbol for dissolve-2",
+        #            "Alchemical symbol for water",
+        #            "Greek vocal notation symbol-21",
+        #            "Heavy white down-pointing triangle",
+        )
 
-    LEFT_POINTING_TRIANGLES = map(unicodedata.lookup, [
-            "Apl functional symbol quad less-than",
-            "Black left-pointing pointer",
-            "Black left-pointing small triangle",
-            "Black left-pointing triangle",
-            "Canadian syllabics a",
-            "Canadian syllabics carrier ra",
-            "Canadian syllabics p",
-            "Canadian syllabics pa",
-            "Normal subgroup of",
-            "Spherical angle",
-            "Lower right triangle",
-            "Upper right triangle",
-            "Black upper right triangle",
-            "Black lower right triangle",
-            "Vai syllable gboo",
-            "White left-pointing pointer",
-            "White left-pointing small triangle",
-            "White left-pointing triangle",
-            # "Closed subset",
-            # "Greek instrumental notation symbol-38",
-            # "Large left triangle operator",
-            # "Less-than closed by curve",
-            #"Z notation domain antirestriction",
-            ])
+    LEFT_POINTING_TRIANGLES = unicode_charset(
+        "Apl functional symbol quad less-than",
+        "Black left-pointing pointer",
+        "Black left-pointing small triangle",
+        "Black left-pointing triangle",
+        "Canadian syllabics a",
+        "Canadian syllabics carrier ra",
+        "Canadian syllabics p",
+        "Canadian syllabics pa",
+        "Normal subgroup of",
+        "Spherical angle",
+        "Lower right triangle",
+        "Upper right triangle",
+        "Black upper right triangle",
+        "Black lower right triangle",
+        "Vai syllable gboo",
+        "White left-pointing pointer",
+        "White left-pointing small triangle",
+        "White left-pointing triangle",
+        # "Closed subset",
+        # "Greek instrumental notation symbol-38",
+        # "Large left triangle operator",
+        # "Less-than closed by curve",
+        #"Z notation domain antirestriction",
+        )
 
-    RIGHT_POINTING_TRIANGLES = map(unicodedata.lookup, [
-            "Apl functional symbol quad greater-than",
-            "Black lower right triangle",
-            "Black right-pointing small triangle",
-            "Black right-pointing triangle",
-            "Black upper left triangle",
-            "Canadian syllabics carrier hwee",
-            "Canadian syllabics carrier i",
-            "Canadian syllabics carrier re",
-            "Canadian syllabics carrier we",
-            "Canadian syllabics fo",
-            "Canadian syllabics o",
-            "Contains as normal subgroup",
-            "Greater-than sign",
-            "Lower right triangle",
-            "Spherical angle opening left",
-            "Succeeds",
-            "Triangular bullet",
-            "Upper left triangle",
-            "White right-pointing pointer",
-            "White right-pointing small triangle",
-            "White right-pointing triangle",
-            # "Closed superset",
-            # "Conical taper",
-            # "Greater-than closed by curve",
-            # "Greek instrumental notation symbol-37",
-            # "Z notation range antirestriction",
-            ])
+    RIGHT_POINTING_TRIANGLES = unicode_charset(
+        "Apl functional symbol quad greater-than",
+        "Black lower right triangle",
+        "Black right-pointing small triangle",
+        "Black right-pointing triangle",
+        "Black upper left triangle",
+        "Canadian syllabics carrier hwee",
+        "Canadian syllabics carrier i",
+        "Canadian syllabics carrier re",
+        "Canadian syllabics carrier we",
+        "Canadian syllabics fo",
+        "Canadian syllabics o",
+        "Contains as normal subgroup",
+        "Greater-than sign",
+        "Lower right triangle",
+        "Spherical angle opening left",
+        "Succeeds",
+        "Triangular bullet",
+        "Upper left triangle",
+        "White right-pointing pointer",
+        "White right-pointing small triangle",
+        "White right-pointing triangle",
+        # "Closed superset",
+        # "Conical taper",
+        # "Greater-than closed by curve",
+        # "Greek instrumental notation symbol-37",
+        # "Z notation range antirestriction",
+        )
 
-    TRIANGLES = list(set((UP_POINTING_TRIANGLES + DOWN_POINTING_TRIANGLES + LEFT_POINTING_TRIANGLES + RIGHT_POINTING_TRIANGLES)))
+    TRIANGLES = UP_POINTING_TRIANGLES + DOWN_POINTING_TRIANGLES + LEFT_POINTING_TRIANGLES + RIGHT_POINTING_TRIANGLES
 
-    # TODO: Squares
+    QUADRILATERALS = unicode_charset(
+        "Apl functional symbol quad backslash",
+        "Apl functional symbol quad slash",
+        "Apl functional symbol quad",
+        "Apl functional symbol quote quad",
+        "Apl functional symbol squish quad",
+        "Ballot box",
+        "Black large square",
+        "Black medium small square",
+        "Black medium square",
+        "Black parallelogram",
+        "Black small square",
+        "Black square",
+        "Combining enclosing screen",
+        "Combining enclosing square",
+        "Flatness",
+        "Hebrew letter wide final mem",
+        "Katakana letter ro",
+        "Lower right drop-shadowed white square",
+        "Lower right shadowed white square",
+        "Square lozenge",
+        "Upper right drop-shadowed white square",
+        "Upper right shadowed white square",
+        "Viewdata square",
+        "White large square",
+        "White medium small square",
+        "White medium square",
+        "White parallelogram",
+        "White small square",
+        "White square with rounded corners",
+        "White square",
+        "White trapezium",
+        "X in a rectangle box",
+        #"Square with contoured outline",
+        #"Ticket",
+        "BALLOT BOX WITH CHECK", #☑
+        "BALLOT BOX WITH X", #☒
+        "MUSICAL SYMBOL SQUARE NOTEHEAD WHITE", #𝅆
+        "MUSICAL SYMBOL SQUARE NOTEHEAD BLACK", #𝅇
+        "SQUARE WITH TOP HALF BLACK", #⬒
+        "SQUARE WITH BOTTOM HALF BLACK", #⬓
+        "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
+        "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        "DOTTED SQUARE", #⬚
+        "TWO JOINED SQUARES", #⧉
+        "WHITE SQUARE WITH LEFTWARDS TICK", #⟤
+        "WHITE SQUARE WITH RIGHTWARDS TICK", #⟥
+        "SQUARE WITH LEFT HALF BLACK", #◧
+        "SQUARE WITH RIGHT HALF BLACK", #◨
+        "SQUARE WITH UPPER LEFT DIAGONAL HALF BLACK", #◩
+        "SQUARE WITH LOWER RIGHT DIAGONAL HALF BLACK", #◪
+        "WHITE SQUARE CONTAINING BLACK SMALL SQUARE", #▣
+        "SQUARE WITH HORIZONTAL FILL", #▤
+        "SQUARE WITH VERTICAL FILL", #▥
+        "SQUARE WITH ORTHOGONAL CROSSHATCH FILL", #▦
+        "SQUARE WITH UPPER LEFT TO LOWER RIGHT FILL", #▧
+        "SQUARE WITH UPPER RIGHT TO LOWER LEFT FILL", #▨
+        "SQUARE WITH DIAGONAL CROSSHATCH FILL", #▩
+        "WHITE SQUARE WITH CENTRE VERTICAL LINE", #⎅
+        "SQUARE FOOT", #⏍
+        "BLACK RECTANGLE", #▬
+        "WHITE RECTANGLE", #▭
+        "BLACK VERTICAL RECTANGLE", #▮
+        "WHITE VERTICAL RECTANGLE", #▯
+        )
 
-    PENTAGONS_AND_LARGER_POLYGONS = map(unicodedata.lookup, [
-            "Software-function symbol",
-            "White pentagon",
-            "Black pentagon",
-            "White horizontal ellipse",
-            "Black horizontal ellipse",
-            "White right-pointing pentagon",
-            "Black right-pointing pentagon",
-            "House",
-            "White shogi piece",
-            "Black shogi piece",
-            "Canadian syllabics carrier tho",
-            # "Chestnut",
-            ])
+    PENTAGONS_AND_LARGER_POLYGONS = unicode_charset(
+        "Benzene ring with circle",
+        "Benzene ring",
+        "Black horizontal ellipse",
+        "Black shogi piece",
+        "Canadian syllabics carrier tho",
+        "House",
+        "Software-function symbol",
+        "White horizontal ellipse",
+        "White shogi piece",
+        "BLACK PENTAGON", #⬟
+        "WHITE PENTAGON", #⬠
+        "WHITE HEXAGON", #⬡
+        "BLACK HEXAGON", #⬢
+        "HORIZONTAL BLACK HEXAGON", #⬣
+        "BLACK RIGHT-POINTING PENTAGON", #⭓
+        "WHITE RIGHT-POINTING PENTAGON", #⭔
+        # "Chestnut",
+        )
 
-    # TODO: Circles
+    CIRCLES = unicode_charset(
+        "HEBREW MARK MASORA CIRCLE", #֯
+        "COMBINING ENCLOSING CIRCLE", #⃝
+        "COMBINING ENCLOSING CIRCLE BACKSLASH", #⃠
+        "APL FUNCTIONAL SYMBOL CIRCLE STILE", #⌽
+        "APL FUNCTIONAL SYMBOL CIRCLE JOT", #⌾
+        "APL FUNCTIONAL SYMBOL CIRCLE BACKSLASH", #⍉
+        "APL FUNCTIONAL SYMBOL CIRCLE UNDERBAR", #⍜
+        "APL FUNCTIONAL SYMBOL CIRCLE STAR", #⍟
+        "APL FUNCTIONAL SYMBOL CIRCLE DIAERESIS", #⍥
+        "BROKEN CIRCLE WITH NORTHWEST ARROW", #⎋
+        "DENTISTRY SYMBOL LIGHT VERTICAL WITH CIRCLE", #⏀
+        "DENTISTRY SYMBOL LIGHT DOWN AND HORIZONTAL WITH CIRCLE", #⏁
+        "DENTISTRY SYMBOL LIGHT UP AND HORIZONTAL WITH CIRCLE", #⏂
+        "BENZENE RING WITH CIRCLE", #⏣
+        "WHITE CIRCLE", #○
+        "DOTTED CIRCLE", #◌
+        "CIRCLE WITH VERTICAL FILL", #◍
+        "BLACK CIRCLE", #●
+        "CIRCLE WITH LEFT HALF BLACK", #◐
+        "CIRCLE WITH RIGHT HALF BLACK", #◑
+        "CIRCLE WITH LOWER HALF BLACK", #◒
+        "CIRCLE WITH UPPER HALF BLACK", #◓
+        "CIRCLE WITH UPPER RIGHT QUADRANT BLACK", #◔
+        "CIRCLE WITH ALL BUT UPPER LEFT QUADRANT BLACK", #◕
+        "INVERSE WHITE CIRCLE", #◙
+        "LARGE CIRCLE", #◯
+        "WHITE CIRCLE WITH UPPER LEFT QUADRANT", #◴
+        "WHITE CIRCLE WITH LOWER LEFT QUADRANT", #◵
+        "WHITE CIRCLE WITH LOWER RIGHT QUADRANT", #◶
+        "WHITE CIRCLE WITH UPPER RIGHT QUADRANT", #◷
+        "WHITE CIRCLE WITH DOT RIGHT", #⚆
+        "WHITE CIRCLE WITH TWO DOTS", #⚇
+        "BLACK CIRCLE WITH WHITE DOT RIGHT", #⚈
+        "BLACK CIRCLE WITH TWO WHITE DOTS", #⚉
+        "MEDIUM WHITE CIRCLE", #⚪
+        "MEDIUM BLACK CIRCLE", #⚫
+        "MEDIUM SMALL WHITE CIRCLE", #⚬
+        "SHADOWED WHITE CIRCLE", #❍
+        "ANTICLOCKWISE GAPPED CIRCLE ARROW", #⟲
+        "CLOCKWISE GAPPED CIRCLE ARROW", #⟳
+        "ANTICLOCKWISE CLOSED CIRCLE ARROW", #⥀
+        "CLOCKWISE CLOSED CIRCLE ARROW", #⥁
+        "EMPTY SET WITH SMALL CIRCLE ABOVE", #⦲
+        "CIRCLE WITH HORIZONTAL BAR", #⦵
+        "CIRCLE WITH SMALL CIRCLE TO THE RIGHT", #⧂
+        "CIRCLE WITH TWO HORIZONTAL STROKES TO THE RIGHT", #⧃
+        "BLACK LARGE CIRCLE", #⬤
+        )
+
+    SHAPE_CHARSET_S = [UP_POINTING_TRIANGLES, DOWN_POINTING_TRIANGLES, LEFT_POINTING_TRIANGLES, RIGHT_POINTING_TRIANGLES, PENTAGONS_AND_LARGER_POLYGONS, QUADRILATERALS, CIRCLES]
+
+    ONE_DOT = unicode_charset(
+        "Braille pattern dots-3",
+        "Braille pattern dots-7",
+        "Bullet operator",
+        "Bullet",
+        "Canadian syllabics final middle dot",
+        "Canadian syllabics y-cree w",
+        "Combining dot above right",
+        "Combining dot above",
+        "Combining dot below",
+        "Dot above",
+        "Full stop",
+        "Greek ano teleia",
+        "Hebrew mark lower dot",
+        "Hebrew point dagesh or mapiq",
+        "Hebrew point holam haser for vav",
+        "Hebrew point sin dot",
+        "Hyphenation point",
+        "Medium black circle",
+        "Middle dot",
+        "Nko combining nasalization mark",
+        "Nko combining short rising tone",
+        "One dot leader",
+        "Syriac feminine dot",
+        "Syriac hbasa-esasa dotted",
+        "Syriac qushshaya",
+        "Syriac rukkakha",
+        #"Raised dot",
+        )
+
+    TWO_DOTS_HORIZONTAL = unicode_charset(
+        "Braille pattern dots-14",
+        "Braille pattern dots-25",
+        "Braille pattern dots-36",
+        "Braille pattern dots-78",
+        "Byzantine musical symbol dipli",
+        "Byzantine musical symbol isakia telous ichimatos",
+        "Combining diaeresis below",
+        "Combining diaeresis",
+        "Diaeresis",
+        "Double prime",
+        "Double low-9 quotation mark",
+        "Hebrew point tsere",
+        "Hebrew punctuation gershayim",
+        "Left double quotation mark",
+        "Nko combining double dot above",
+        "Right double quotation mark",
+        "Syriac dotted zlama angular",
+        "Syriac dotted zlama horizontal",
+        "Syriac horizontal colon",
+        "Two dot leader",
+        )
+
+    TWO_DOTS_VERTICAL = unicode_charset(
+        "Arabic semicolon",
+        "Armenian full stop",
+        "Braille pattern dots-13",
+        "Braille pattern dots-17",
+        "Braille pattern dots-27",
+        "Braille pattern dots-46",
+        "Braille pattern dots-48",
+        "Braille pattern dots-58",
+        "Colon",
+        "Greek question mark",
+        "Hebrew punctuation sof pasuq",
+        "Modifier letter colon",
+        "Modifier letter raised colon",
+        "Modifier letter triangular colon",
+        "Musical symbol repeat dots",
+        "Ratio",
+        "Reversed semicolon",
+        "Semicolon",
+        "Syriac pthaha dotted",
+        "Syriac sublinear colon",
+        "Syriac supralinear colon",
+        "Two dot punctuation",
+        )
+
+    TWO_DOTS_DIAGONAL = unicode_charset(
+        "Braille pattern dots-15",
+        "Braille pattern dots-15",
+        "Braille pattern dots-15",
+        "Braille pattern dots-15",
+        "Braille pattern dots-16",
+        "Braille pattern dots-18",
+        "Braille pattern dots-24",
+        "Braille pattern dots-26",
+        "Braille pattern dots-28",
+        "Braille pattern dots-34",
+        "Braille pattern dots-35",
+        "Braille pattern dots-38",
+        "Braille pattern dots-47",
+        "Braille pattern dots-57",
+        "Braille pattern dots-67",
+        "Syriac colon skewed left",
+        "Syriac sublinear colon skewed right",
+        # "Syriac supralinear colon skewed left ",
+        )
+
+    TWO_DOTS = TWO_DOTS_HORIZONTAL + TWO_DOTS_VERTICAL + TWO_DOTS_DIAGONAL
+
+    MULTI_DOTS_VERTICAL = unicode_charset(
+        "Vertical ellipsis",
+        "Tifinagh letter tuareg yagh",
+        "Braille pattern dots-458",
+        # "Triple colon operator",
+        "Braille pattern dots-137",
+        "Braille pattern dots-127",
+        "Braille pattern dots-468",
+        "Tricolon",
+        "Latin small letter i with dot below",
+        "Braille pattern dots-237",
+        "Ethiopic question mark",
+        "Braille pattern dots-456",
+        "Braille pattern dots-568",
+        "Braille pattern dots-123",
+        "Dotted fence",
+        "Tifinagh letter tuareg yah",
+        )
+
+    MULTI_DOTS_HORIZONTAL = unicode_charset(
+        "Horizontal ellipsis",
+        "Midline horizontal ellipsis",
+        "Monogram for earth",
+        "Box drawings light triple dash horizontal",
+        "Combining three dots above",
+        "Tifinagh letter tuareg yaq",
+        "Byzantine musical symbol saximata",
+        "Box drawings heavy triple dash horizontal",
+        "Combining triple underdot",
+        "Byzantine musical symbol tripli",
+        "Box drawings light quadruple dash horizontal",
+        "Combining four dots above",
+        "Ocr customer account number",
+        "Box drawings heavy quadruple dash horizontal",
+        "Byzantine musical symbol tetrapli",
+        "Triple prime",
+        "Vai syllable di",
+        )
+
+    MULTI_DOTS_DIAGONAL = unicode_charset(
+        "Down right diagonal ellipsis",
+        "Hebrew point qubuts",
+        "Buginese pallawa",
+        "Up right diagonal ellipsis",
+        "Ocr amount of check",
+        "Braille pattern dots-347",
+        "Braille pattern dots-457",
+        "Byzantine musical symbol dyo"
+        )
+
+    MULTI_DOTS_MISC = unicode_charset(
+        # "Drive slow sign",
+        "Proportion",
+        "Tifinagh letter tuareg yakh",
+        "Braille pattern dots-1346",
+        "Squared four dot punctuation",
+        "Braille pattern dots-2578",
+        "Braille pattern dots-1478",
+        "Braille pattern dots-1467",
+        "Braille pattern dots-1245",
+        "Ethiopic full stop",
+        "Tifinagh letter ayer yagh",
+        "Braille pattern dots-1358",
+        "Braille pattern dots-13456",
+        "Braille pattern dots-23578",
+        "Digram for earth",
+        "Combining cyrillic ten millions sign",
+        )
+
+    MULTI_DOTS = MULTI_DOTS_HORIZONTAL + MULTI_DOTS_VERTICAL + MULTI_DOTS_DIAGONAL + MULTI_DOTS_MISC
+
+    DOTS = ONE_DOT + TWO_DOTS + MULTI_DOTS
+
+    DOT_CHARSET_S = [ONE_DOT, TWO_DOTS, DOTS]
 
     # Small custom charsets that make nice mosaics when combined.
-    TRIANGLE_MOSAIC = map(unicodedata.lookup, [
+    TRIANGLE_MOSAIC = unicode_charset(
             "Black lower left triangle",
             "Black lower right triangle",
             "Black upper left triangle",
             "Black upper right triangle",
-            ])
+            )
 
-    BLOCK_MOSAIC = map(unicodedata.lookup, [
+    BLOCK_MOSAIC = unicode_charset(
             "UPPER HALF BLOCK",
             "LOWER HALF BLOCK",
             "FULL BLOCK",
             "LEFT HALF BLOCK",
             "RIGHT HALF BLOCK",
-            ])
+            )
 
-    VERTICAL_BLOCK_MOSAIC = map(unicodedata.lookup, [
+    VERTICAL_BLOCK_MOSAIC = unicode_charset(
             "UPPER HALF BLOCK",
             "LOWER HALF BLOCK",
             "FULL BLOCK",
-            ])
+            )
 
-    HORIZONTAL_BLOCK_MOSAIC = map(unicodedata.lookup, [
+    HORIZONTAL_BLOCK_MOSAIC = unicode_charset(
             "LEFT HALF BLOCK",
             "RIGHT HALF BLOCK",
             "FULL BLOCK",
-            ])
-    TERMINAL_GRAPHIC_MOSAIC = map(unicodedata.lookup, [
+            )
+
+    TERMINAL_GRAPHIC_MOSAIC = unicode_charset(
             "QUADRANT LOWER LEFT",
             "QUADRANT LOWER RIGHT",
             "QUADRANT UPPER LEFT",
@@ -541,34 +839,75 @@ class Alphabet:
             "QUADRANT UPPER RIGHT",
             "QUADRANT UPPER RIGHT AND LOWER LEFT",
             "QUADRANT UPPER RIGHT AND LOWER LEFT AND LOWER RIGHT",
-            ])
+            )
 
-    SHADING_MOSAIC = map(unicodedata.lookup, [
+    SHADING_MOSAIC = unicode_charset(
             "LIGHT SHADE",
             "MEDIUM SHADE",
             "DARK SHADE",
             "FULL BLOCK",
-            ])
+            )
 
-    BOX_DRAWING_MOSAIC = map(unicodedata.lookup, [
+    FILL_MOSAIC = unicode_charset(
+        "SQUARE WITH HORIZONTAL FILL", #▤
+        "SQUARE WITH VERTICAL FILL", #▥
+        "SQUARE WITH ORTHOGONAL CROSSHATCH FILL", #▦
+        "SQUARE WITH UPPER LEFT TO LOWER RIGHT FILL", #▧
+        "SQUARE WITH UPPER RIGHT TO LOWER LEFT FILL", #▨
+        "SQUARE WITH DIAGONAL CROSSHATCH FILL", #▩
+        )
+
+    BOX_DRAWING_MOSAIC = unicode_charset(
             "BOX DRAWINGS LIGHT DOWN AND RIGHT",
             "BOX DRAWINGS LIGHT DOWN AND LEFT",
             "BOX DRAWINGS LIGHT UP AND LEFT",
             "BOX DRAWINGS LIGHT UP AND RIGHT",
-            ])
+            )
 
-    BOX_DRAWING_ARC_MOSAIC = map(unicodedata.lookup, [
+    BOX_DRAWING_ARC_MOSAIC = unicode_charset(
             "BOX DRAWINGS LIGHT ARC DOWN AND RIGHT",
             "BOX DRAWINGS LIGHT ARC DOWN AND LEFT",
             "BOX DRAWINGS LIGHT ARC UP AND LEFT",
             "BOX DRAWINGS LIGHT ARC UP AND RIGHT",
-            ])
+            )
 
-    CHARACTER_CELL_DIAGONAL_MOSAIC = map(unicodedata.lookup, [
+    CHARACTER_CELL_DIAGONAL_MOSAIC = unicode_charset(
             "BOX DRAWINGS LIGHT DIAGONAL UPPER RIGHT TO LOWER LEFT",
             "BOX DRAWINGS LIGHT DIAGONAL UPPER LEFT TO LOWER RIGHT",
             "BOX DRAWINGS LIGHT DIAGONAL CROSS",
-            ])
+            )
+
+    PARTIALLY_FILLED_SQUARE_MOSAIC = unicode_charset(
+        "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
+        "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
+        "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        )
+
+    PARTIALLY_FILLED_CIRCLE_MOSAIC = unicode_charset(
+        "BLACK CIRCLE", #●
+        "CIRCLE WITH LEFT HALF BLACK", #◐
+        "CIRCLE WITH RIGHT HALF BLACK", #◑
+        "CIRCLE WITH LOWER HALF BLACK", #◒
+        "CIRCLE WITH UPPER HALF BLACK", #◓
+        "CIRCLE WITH UPPER RIGHT QUADRANT BLACK", #◔
+        "CIRCLE WITH ALL BUT UPPER LEFT QUADRANT BLACK", #◕
+        )
+
+    MOSAIC_CHARSET_S = [
+        BLOCK_MOSAIC,
+        BOX_DRAWING_ARC_MOSAIC,
+        BOX_DRAWING_MOSAIC,
+        CHARACTER_CELL_DIAGONAL_MOSAIC,
+        FILL_MOSAIC,
+        HORIZONTAL_BLOCK_MOSAIC,
+        PARTIALLY_FILLED_CIRCLE_MOSAIC,
+        PARTIALLY_FILLED_SQUARE_MOSAIC,
+        SHADING_MOSAIC,
+        TERMINAL_GRAPHIC_MOSAIC,
+        VERTICAL_BLOCK_MOSAIC,
+        TRIANGLES,
+        ]
 
 class WordLength:
 
@@ -632,6 +971,10 @@ class Gibberish(object):
     def from_alphabets(cls, alphabets):
         return cls("".join(Alphabet.characters(alphabets)))
 
+    @classmethod
+    def random(self):
+        return GibberishTable().choice()
+
     def __init__(self, charset, word_length=None):
         self.charset = charset
         self.word_length = word_length
@@ -665,7 +1008,7 @@ class Gibberish(object):
                 break
 
         return words[:length]
-       
+
     def tweet(self):
         if random.randint(0,4) == 0:
             length = 140
@@ -674,12 +1017,8 @@ class Gibberish(object):
         return self.words(length)
 
     @classmethod
-    def one_language(cls):
-        return Gibberish(Alphabet.random_choice(*Alphabet.ALL_LANGUAGE_ALPHABETS_S))
-
-    @classmethod
-    def weird_twitter_alphabet(cls, base_alphabets, alternate_alphabets,
-                               mixin_alphabets, how_weird=1):
+    def weird_twitter(cls, base_alphabets, alternate_alphabets,
+                      mixin_alphabets, how_weird=1):
         """Give an alphabet the "Weird Twitter" treatment.
 
         A technique borrowed from the namesake Twitter community, in
@@ -769,50 +1108,6 @@ class Gibberish(object):
         return Gibberish(alphabet)
 
     @classmethod
-    def weird_twitter_latin(cls, how_weird=1):
-        """Create a "Weird Twitter" type alphabet based on Latin characters.
-
-        0 is not weird at all. Higher numbers are weirder.
-        """
-
-        return cls.weird_twitter_alphabet(
-            [Alphabet.ASCII, Alphabet.LATIN_1],
-            Alphabet.WEIRD_TWITTER_LATIN,
-            Alphabet.WEIRD_TWITTER_LATIN_MIXINS, how_weird)
-
-    @classmethod
-    def weird_twitter_japanese(cls, how_weird=1):
-        """Gives the "Weird Twitter" treatment to hiragana and/or katakana"""
-        return cls.weird_twitter_alphabet(
-            ["Hiragana", Alphabet.KATAKANA, Alphabet.KATAKANA_ALL],
-            Alphabet.WEIRD_TWITTER_CJK,
-            Alphabet.WEIRD_TWITTER_CJK_MIXINS, how_weird)
-
-    @classmethod
-    def weird_twitter_cjk(cls, how_weird=1):
-        """Gives the "Weird Twitter" treatment to Han-unified ideographs"""
-        # We must scale up the weirdness factor because the Han plane
-        # is so huge.
-        how_weird *= 10
-        alphabet = cls.weird_twitter_alphabet(
-            ["CJK Unified Ideographs (Han)"],
-            Alphabet.WEIRD_TWITTER_CJK,
-            Alphabet.WEIRD_TWITTER_CJK_MIXINS, how_weird)
-        alphabet.word_length = None
-        return alphabet
-
-    @classmethod
-    def weird_twitter_math(cls, how_weird=1):
-        """Gives the "Weird Twitter" treatment to hiragana and/or katakana"""
-        alphabet = cls.weird_twitter_alphabet(
-            "1234567890", Alphabet.WEIRD_TWITTER_MATH,
-            Alphabet.WEIRD_TWITTER_MATH_MIXINS, how_weird)
-        def math_word_length():
-            return random.choice([1,1,1,1,1,1,2,2,2,3,3,3,4,4,5])
-        alphabet.word_length = math_word_length
-        return alphabet
-
-    @classmethod
     def limited_vocabulary(cls, how_many_characters=None):
         full = Alphabet.random_choice_no_modifiers()
         limited = ''
@@ -834,7 +1129,7 @@ class Gibberish(object):
                    + [Alphabet.DIACRITICAL_FULL])
         choice = random.choice(choices)
         extra = Alphabet.characters(choice)
-            
+
         destination = len(extra) * 3
         multiplied_base_charset = base_charset
         while len(multiplied_base_charset) < destination:
@@ -842,82 +1137,11 @@ class Gibberish(object):
         return Gibberish(multiplied_base_charset + extra)
 
 
-    @classmethod
-    def random(cls):
-        """Choose a random charset to make gibberish with."""
-        i = random.randint(0,99)
-        choice = None
-        if i < 15:
-            # 15%: A randomly selected Latin alphabet.
-            choice = Alphabet.LATIN_S
-        elif i < 35:
-            # 20%: A randomly selected linguistic alphabet.
-            choice = Alphabet.ALL_LANGUAGE_ALPHABETS_S
-        elif i < 45:
-            # 10%: A randomly selected geometric alphabet.
-            choice = [[x] for x in Alphabet.GEOMETRIC_ALPHABETS]
-        elif i < 55:
-            # 10%: A custom alphabet.
-            choice = Alphabet.CUSTOM_S
-        elif i < 60:
-            # 5%: The combination of all geometric alphabets.
-            gibberish = Gibberish(
-                Alphabet.characters(Alphabet.GEOMETRIC_ALPHABETS))
-        elif i < 61:
-            # 1%: An emoticon
-            gibberish = EmoticonGibberish([Alphabet.random_choice_no_modifiers()])
-        elif i < 65:
-            # 4%: A limited subset of one script.
-            gibberish = cls.limited_vocabulary()
-        else:
-            # Weird Twitter.
-            how_weird = int(random.expovariate(1.0/6))
-            if i < 85:
-                # 20%: Weird Latin Twitter.
-                c = Gibberish.weird_twitter_latin
-            elif i < 90:
-                # 5%: Weird Japanese Twitter.
-                c = Gibberish.weird_twitter_japanese
-            elif i < 95:
-                # 5%: Weird CJK Twitter.
-                c = Gibberish.weird_twitter_cjk
-            else:
-                # 5%: Weird Math Twitter.
-                c = Gibberish.weird_twitter_math
-            gibberish = c(how_weird)
-
-        if choice is not None:
-            # All characters to be from one alphabet. Make your choice.
-            alphabet = random.choice(choice)
-            if isinstance(alphabet, basestring):
-                alphabet = [alphabet]
-            charset = Alphabet.characters(alphabet)
-
-            if random.randint(0,3) == 0:
-                # 25% chance to make it a little weirder.
-                gibberish = Gibberish.a_little_weirder_than(charset)
-            else:
-                gibberish = Gibberish(charset)
-
-        if gibberish.charset is None:
-            # Custom gibberish; don't mess with it.
-            return gibberish
-
-        # 75% chance to add some kind of word boundary algorithm.
-        if random.randint(0,100) < 75:
-            gibberish.word_length = WordLength.random()
-
-        # Blanket 10% chance to add 10% glitches
-        if random.randint(0, 10) == 0:
-            glitches = ''
-            while len(glitches) < len(gibberish.charset) / 10:
-                glitches += Alphabet.random_choice(Alphabet.GLITCHES)
-            gibberish.charset += glitches
-        return gibberish
-
 class EmoticonGibberish(Gibberish):
 
-    def __init__(self, charsets):
+    def __init__(self, charsets=None):
+        if charsets is None:
+            charsets = Alphabet.random_choice_no_modifiers()
         self.charsets = charsets
         super(EmoticonGibberish, self).__init__(None)
 
@@ -932,5 +1156,148 @@ class EmoticonGibberish(Gibberish):
 
 Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
 
+class GibberishTable(WanderingMonsterTable):
+
+    def __init__(self):
+        super(GibberishTable, self).__init__()
+
+        # Populate the table. An entry may be:
+        #  * The name of an alphabet, or a list of names.
+        #  * A Gibberish object.
+        #  * A funciton that returns a Gibberish object.
+
+        # One of the Latin alphabets.
+        self.add(self.choice_among_alphabets(Alphabet.LATIN_S), COMMON)
+
+        # One of the linguistic alphabets.
+        self.add(self.choice_among_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
+
+        # One of the geometric alphabets.
+        self.add(self.choice_among_alphabets(Alphabet.GEOMETRIC_ALPHABETS), UNCOMMON)
+
+        # One of the custom scripts.
+        self.add(self.choice_among_alphabets(Alphabet.CUSTOM_S), UNCOMMON)
+
+        # The combination of all geometric alphabets.
+        self.add(Alphabet.GEOMETRIC_ALPHABETS, VERY_RARE)
+
+        # A limited subset of one script.
+        self.add(Gibberish.limited_vocabulary, RARE)
+
+        # A mosaic charset.
+        self.add(self.choice_among_charsets(Alphabet.MOSAIC_CHARSET_S), RARE)
+
+        # A shape-based charset
+        self.add(self.choice_among_charsets(Alphabet.SHAPE_CHARSET_S), VERY_RARE)
+
+        # A dot-based charset
+        self.add(self.choice_among_charsets(Alphabet.DOT_CHARSET_S), VERY_RARE)
+
+        # Weird Latin Twitter
+        def weird_latin_twitter():
+            return self.weird_twitter(
+                [Alphabet.ASCII, Alphabet.LATIN_1],
+                Alphabet.WEIRD_TWITTER_LATIN,
+                Alphabet.WEIRD_TWITTER_LATIN_MIXINS)
+        self.add(weird_latin_twitter, COMMON)
+
+        # Weird Japanese Twitter
+        def weird_japanese_twitter():
+            return self.weird_twitter(
+                ["Hiragana", Alphabet.KATAKANA, Alphabet.KATAKANA_ALL],
+                Alphabet.WEIRD_TWITTER_CJK,
+                Alphabet.WEIRD_TWITTER_CJK_MIXINS)
+        self.add(weird_japanese_twitter, UNCOMMON)
+
+        # Weird CJK Twitter
+        def weird_cjk_twitter():
+            return self.weird_twitter(
+                ["CJK Unified Ideographs (Han)"],
+                Alphabet.WEIRD_TWITTER_CJK,
+                Alphabet.WEIRD_TWITTER_CJK_MIXINS, None, 10)
+        self.add(weird_japanese_twitter, VERY_RARE)
+
+        # Weird Math Twitter
+        def weird_math_twitter():
+            def math_word_length():
+                return random.choice([1,1,1,1,1,1,2,2,2,3,3,3,4,4,5])
+            return self.weird_twitter(
+                "1234567890", Alphabet.WEIRD_TWITTER_MATH,
+                Alphabet.WEIRD_TWITTER_MATH_MIXINS, math_word_length)
+        self.add(weird_math_twitter, RARE)
+
+        # Emoticons
+        self.add(EmoticonGibberish, VERY_RARE)
+
+    def weird_twitter(self, base, weird, mixins, word_length=None,
+                      weird_multiplier=1):
+        how_weird = int(random.expovariate(1.0/6)) * weird_multiplier
+        gibberish = Gibberish.weird_twitter(
+            base, weird, mixins, how_weird)
+        gibberish.word_length = word_length
+        return gibberish
+
+    def choice_among_alphabets(self, alphabets):
+        """Returns a function that chooses an alphabet from a list.
+
+        There is a 25% chance that the charset will be weirded a bit.
+        """
+        def c():
+            alphabet = random.choice(alphabets)
+            if isinstance(alphabet, basestring):
+                alphabet = [alphabet]
+            charset = Alphabet.characters(alphabet)
+            if random.randint(0,3) == 0:
+                # 25% chance to make it a little weirder.
+                gibberish = Gibberish.a_little_weirder_than(charset)
+            else:
+                gibberish = Gibberish(charset)
+            return gibberish
+        return c
+
+    def choice_among_charsets(self, charsets):
+        """Returns a function that chooses a charset from a list.
+
+        There is a 10% chance that the charset will be weirded a bit.
+        """
+        def c():
+            charset = random.choice(charsets)
+            if random.randint(1,10) == 1:
+                gibberish = Gibberish.a_little_weirder_than(charset)
+            else:
+                gibberish = Gibberish(charset)
+            return gibberish
+        return c
+
+    def choice(self):
+        choice = super(GibberishTable, self).choice()
+        if isinstance(choice, basestring):
+            choice = [choice]
+        if isinstance(choice, list):
+            gibberish = Gibberish.from_alphabets(choice)
+        elif isinstance(choice, Gibberish):
+            gibberish = choice
+        elif callable(choice):
+            gibberish = choice()
+        else:
+            raise Exception("Cannot turn %r into Gibberish object!", choice)
+
+        if gibberish.charset is None:
+            # Custom logic instead of charset. Leave it alone.
+            return gibberish
+
+        # 75% chance to add some kind of word boundary algorithm.
+        if random.randint(0,100) < 75:
+            gibberish.word_length = WordLength.random()
+
+        # Blanket 10% chance to add 10% glitches
+        if random.randint(0, 10) == 0:
+            glitches = ''
+            while len(glitches) < len(gibberish.charset) / 10:
+                glitches += Alphabet.random_choice(Alphabet.GLITCHES)
+            gibberish.charset += glitches
+        return gibberish
+
 if __name__ == '__main__':
-    print Gibberish.random().tweet()
+    for i in range(1000):
+        print Gibberish.random().tweet().encode("utf8")
