@@ -10,6 +10,10 @@ from randomness import WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
 
 import data
 
+CUSTOM_ALPHABETS = {
+    "Dice": u"\N{Die Face-1}\N{Die Face-2}\N{Die Face-3}\N{Die Face-4}\N{Die Face-5}\N{Die Face-6}",
+    }
+
 class Alphabet:
 
     @classmethod
@@ -22,7 +26,7 @@ class Alphabet:
                 cls._fill_by_name(c['child'])
 
         # Also add in custom alphabets
-        for name, chars in cls.CUSTOM_ALPHABETS.items():
+        for name, chars in CUSTOM_ALPHABETS.items():
             cls.by_name[name] = dict(characters=chars)
 
     by_name = {}
@@ -59,10 +63,6 @@ class Alphabet:
             else:
                 char.extend(cls.by_name[alphabet]['characters'])
         return ''.join(char)
-
-    CUSTOM_ALPHABETS = {
-        "Dice": u"\N{Die Face-1}\N{Die Face-2}\N{Die Face-3}\N{Die Face-4}\N{Die Face-5}\N{Die Face-6}",
-        }
 
     # Some combination European alphabets
     ASCII = "Basic Latin (ASCII)"
@@ -338,6 +338,7 @@ class Alphabet:
     GLITCHES = [
         "Optical Character Recognition (OCR)",
         "Floors and Ceilings",
+        "Dots", # Custom alphabet
         ]
 
     # Custom alphabets 
@@ -372,11 +373,13 @@ class Alphabet:
         ["Hiragana", "Katakana"],
         ]
 
-    def unicode_charset(*chrs):
-        return "".join(map(unicodedata.lookup, chrs))
+    def unicode_charset(name, *chrs):
+        charset = "".join(map(unicodedata.lookup, chrs))
+        CUSTOM_ALPHABETS[name] = charset
+        return charset
 
     # Custom alphabets
-    UP_POINTING_TRIANGLES = unicode_charset(
+    UP_POINTING_TRIANGLES = unicode_charset("Up-Pointing Triangles",
         "Apl functional symbol delta stile",
         "Black lower left triangle",
         "Black lower right triangle",
@@ -410,7 +413,7 @@ class Alphabet:
         #            "Alchemical symbol for fire",
         )
 
-    DOWN_POINTING_TRIANGLES = unicode_charset(
+    DOWN_POINTING_TRIANGLES = unicode_charset("Down-Pointing Triangles",
         "Apl functional symbol del stile",
         "Black down-pointing small triangle",
         "Black down-pointing triangle",
@@ -442,7 +445,7 @@ class Alphabet:
         #            "Heavy white down-pointing triangle",
         )
 
-    LEFT_POINTING_TRIANGLES = unicode_charset(
+    LEFT_POINTING_TRIANGLES = unicode_charset("Left-Pointing Triangles",
         "Apl functional symbol quad less-than",
         "Black left-pointing pointer",
         "Black left-pointing small triangle",
@@ -468,7 +471,7 @@ class Alphabet:
         #"Z notation domain antirestriction",
         )
 
-    RIGHT_POINTING_TRIANGLES = unicode_charset(
+    RIGHT_POINTING_TRIANGLES = unicode_charset("Right-Pointing Triangles",
         "Apl functional symbol quad greater-than",
         "Black lower right triangle",
         "Black right-pointing small triangle",
@@ -499,7 +502,7 @@ class Alphabet:
 
     TRIANGLES = UP_POINTING_TRIANGLES + DOWN_POINTING_TRIANGLES + LEFT_POINTING_TRIANGLES + RIGHT_POINTING_TRIANGLES
 
-    QUADRILATERALS = unicode_charset(
+    QUADRILATERALS = unicode_charset("Quadrilaterals",
         "Apl functional symbol quad backslash",
         "Apl functional symbol quad slash",
         "Apl functional symbol quad",
@@ -565,7 +568,7 @@ class Alphabet:
         "WHITE VERTICAL RECTANGLE", #▯
         )
 
-    PENTAGONS_AND_LARGER_POLYGONS = unicode_charset(
+    PENTAGONS_AND_LARGER_POLYGONS = unicode_charset("Miscellaneous Polygons",
         "Benzene ring with circle",
         "Benzene ring",
         "Black horizontal ellipse",
@@ -585,7 +588,7 @@ class Alphabet:
         # "Chestnut",
         )
 
-    CIRCLES = unicode_charset(
+    CIRCLES = unicode_charset("Circles",
         "UGARITIC LETTER THANNA", #𐎘
         "HEBREW MARK MASORA CIRCLE", #֯
         "COMBINING ENCLOSING CIRCLE", #⃝
@@ -638,7 +641,7 @@ class Alphabet:
 
     SHAPE_CHARSET_S = [UP_POINTING_TRIANGLES, DOWN_POINTING_TRIANGLES, LEFT_POINTING_TRIANGLES, RIGHT_POINTING_TRIANGLES, PENTAGONS_AND_LARGER_POLYGONS, QUADRILATERALS, CIRCLES]
 
-    ONE_DOT = unicode_charset(
+    ONE_DOT = unicode_charset("One Dot",
         "Braille pattern dots-3",
         "Braille pattern dots-7",
         "Bullet operator",
@@ -668,7 +671,7 @@ class Alphabet:
         #"Raised dot",
         )
 
-    TWO_DOTS_HORIZONTAL = unicode_charset(
+    TWO_DOTS_HORIZONTAL = unicode_charset("Two Dots Horizontal",
         "Braille pattern dots-14",
         "Braille pattern dots-25",
         "Braille pattern dots-36",
@@ -691,7 +694,7 @@ class Alphabet:
         "Two dot leader",
         )
 
-    TWO_DOTS_VERTICAL = unicode_charset(
+    TWO_DOTS_VERTICAL = unicode_charset("Two Dots Vertical",
         "Arabic semicolon",
         "Armenian full stop",
         "Braille pattern dots-13",
@@ -716,7 +719,7 @@ class Alphabet:
         "Two dot punctuation",
         )
 
-    TWO_DOTS_DIAGONAL = unicode_charset(
+    TWO_DOTS_DIAGONAL = unicode_charset("Two Dots Diagonal",
         "Braille pattern dots-15",
         "Braille pattern dots-15",
         "Braille pattern dots-15",
@@ -739,7 +742,7 @@ class Alphabet:
 
     TWO_DOTS = TWO_DOTS_HORIZONTAL + TWO_DOTS_VERTICAL + TWO_DOTS_DIAGONAL
 
-    MULTI_DOTS_VERTICAL = unicode_charset(
+    MULTI_DOTS_VERTICAL = unicode_charset("Many Dots Vertical",
         "Vertical ellipsis",
         "Tifinagh letter tuareg yagh",
         "Braille pattern dots-458",
@@ -758,7 +761,7 @@ class Alphabet:
         "Tifinagh letter tuareg yah",
         )
 
-    MULTI_DOTS_HORIZONTAL = unicode_charset(
+    MULTI_DOTS_HORIZONTAL = unicode_charset("Many Dots Horizontal",
         "Horizontal ellipsis",
         "Midline horizontal ellipsis",
         "Monogram for earth",
@@ -778,7 +781,7 @@ class Alphabet:
         "Vai syllable di",
         )
 
-    MULTI_DOTS_DIAGONAL = unicode_charset(
+    MULTI_DOTS_DIAGONAL = unicode_charset("Many Dots Diagonal",
         "Down right diagonal ellipsis",
         "Hebrew point qubuts",
         "Buginese pallawa",
@@ -789,7 +792,7 @@ class Alphabet:
         "Byzantine musical symbol dyo"
         )
 
-    MULTI_DOTS_MISC = unicode_charset(
+    MULTI_DOTS_MISC = unicode_charset("Many Dots Miscellaneous",
         # "Drive slow sign",
         "Proportion",
         "Tifinagh letter tuareg yakh",
@@ -815,14 +818,14 @@ class Alphabet:
     DOT_CHARSET_S = [ONE_DOT, TWO_DOTS, DOTS]
 
     # Small custom charsets that make nice mosaics when combined.
-    TRIANGLE_MOSAIC = unicode_charset(
+    TRIANGLE_MOSAIC = unicode_charset("Triangle Mosaic",
             "Black lower left triangle",
             "Black lower right triangle",
             "Black upper left triangle",
             "Black upper right triangle",
             )
 
-    BLOCK_MOSAIC = unicode_charset(
+    BLOCK_MOSAIC = unicode_charset("Block Mosaic",
             "UPPER HALF BLOCK",
             "LOWER HALF BLOCK",
             "FULL BLOCK",
@@ -830,19 +833,19 @@ class Alphabet:
             "RIGHT HALF BLOCK",
             )
 
-    VERTICAL_BLOCK_MOSAIC = unicode_charset(
+    VERTICAL_BLOCK_MOSAIC = unicode_charset("Vertical Block Mosaic",
             "UPPER HALF BLOCK",
             "LOWER HALF BLOCK",
             "FULL BLOCK",
             )
 
-    HORIZONTAL_BLOCK_MOSAIC = unicode_charset(
+    HORIZONTAL_BLOCK_MOSAIC = unicode_charset("Horizontal Block Mosaic",
             "LEFT HALF BLOCK",
             "RIGHT HALF BLOCK",
             "FULL BLOCK",
             )
 
-    TERMINAL_GRAPHIC_MOSAIC = unicode_charset(
+    TERMINAL_GRAPHIC_MOSAIC = unicode_charset("Termianl Graphic Mosaic",
             "QUADRANT LOWER LEFT",
             "QUADRANT LOWER RIGHT",
             "QUADRANT UPPER LEFT",
@@ -855,14 +858,14 @@ class Alphabet:
             "QUADRANT UPPER RIGHT AND LOWER LEFT AND LOWER RIGHT",
             )
 
-    SHADING_MOSAIC = unicode_charset(
+    SHADING_MOSAIC = unicode_charset("Shading Mosaic",
             "LIGHT SHADE",
             "MEDIUM SHADE",
             "DARK SHADE",
             "FULL BLOCK",
             )
 
-    FILL_MOSAIC = unicode_charset(
+    FILL_MOSAIC = unicode_charset("Fill Mosaic",
         "SQUARE WITH HORIZONTAL FILL", #▤
         "SQUARE WITH VERTICAL FILL", #▥
         "SQUARE WITH ORTHOGONAL CROSSHATCH FILL", #▦
@@ -871,34 +874,34 @@ class Alphabet:
         "SQUARE WITH DIAGONAL CROSSHATCH FILL", #▩
         )
 
-    BOX_DRAWING_MOSAIC = unicode_charset(
+    BOX_DRAWING_MOSAIC = unicode_charset("Box Drawing Light Mosaic",
             "BOX DRAWINGS LIGHT DOWN AND RIGHT",
             "BOX DRAWINGS LIGHT DOWN AND LEFT",
             "BOX DRAWINGS LIGHT UP AND LEFT",
             "BOX DRAWINGS LIGHT UP AND RIGHT",
             )
 
-    BOX_DRAWING_ARC_MOSAIC = unicode_charset(
+    BOX_DRAWING_ARC_MOSAIC = unicode_charset("Box Drawing Arc Mosaic",
             "BOX DRAWINGS LIGHT ARC DOWN AND RIGHT",
             "BOX DRAWINGS LIGHT ARC DOWN AND LEFT",
             "BOX DRAWINGS LIGHT ARC UP AND LEFT",
             "BOX DRAWINGS LIGHT ARC UP AND RIGHT",
             )
 
-    CHARACTER_CELL_DIAGONAL_MOSAIC = unicode_charset(
+    CHARACTER_CELL_DIAGONAL_MOSAIC = unicode_charset("Character Cell Diagonal Mosaic",
             "BOX DRAWINGS LIGHT DIAGONAL UPPER RIGHT TO LOWER LEFT",
             "BOX DRAWINGS LIGHT DIAGONAL UPPER LEFT TO LOWER RIGHT",
             "BOX DRAWINGS LIGHT DIAGONAL CROSS",
             )
 
-    PARTIALLY_FILLED_SQUARE_MOSAIC = unicode_charset(
+    PARTIALLY_FILLED_SQUARE_MOSAIC = unicode_charset("Partially Filled Square Mosaic",
         "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
         "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
         "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
         "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
         )
 
-    PARTIALLY_FILLED_CIRCLE_MOSAIC = unicode_charset(
+    PARTIALLY_FILLED_CIRCLE_MOSAIC = unicode_charset("Partially Filled Circle Mosaic",
         "BLACK CIRCLE", #●
         "CIRCLE WITH LEFT HALF BLACK", #◐
         "CIRCLE WITH RIGHT HALF BLACK", #◑
@@ -1305,7 +1308,7 @@ class GibberishTable(WanderingMonsterTable):
             gibberish.word_length = WordLength.random()
 
         # Blanket 10% chance to add 10% glitches
-        if random.randint(0, 10) == 0:
+        if random.randint(0, 10) >= 0:
             glitches = ''
             while len(glitches) < len(gibberish.charset) / 10:
                 glitches += Alphabet.random_choice(Alphabet.GLITCHES)
@@ -1321,7 +1324,8 @@ if __name__ == '__main__':
         alphabets = sys.argv[1:]
 
     for i in range(100):
-        if freq is not None:
+        if alphabets:
             print Gibberish.random(freq).tweet().encode("utf8")
         else:
             print Gibberish.from_alphabets(alphabets).tweet().encode("utf8")
+
