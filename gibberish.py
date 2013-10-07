@@ -992,9 +992,10 @@ class Gibberish(object):
     def random(self, freq=None):
         return GibberishTable().choice(freq)
 
-    def __init__(self, charset, word_length=None):
+    def __init__(self, charset, word_length=None, word_separator=' '):
         self.charset = charset
         self.word_length = word_length
+        self.word_separator = word_separator
 
     @classmethod
     def characters_from_set(cls, choices, characters):
@@ -1020,7 +1021,7 @@ class Gibberish(object):
             if not words:
                 words = word
             else:
-                words += ' ' + word
+                words += self.word_separator + word
             if len(words) >= length:
                 break
 
@@ -1303,6 +1304,9 @@ class GibberishTable(WanderingMonsterTable):
             # Custom logic instead of charset. Leave it alone.
             return gibberish
 
+        # 25% chance to use newline instead of space as word separator
+        gibberish.word_separator = '\n'
+
         # 75% chance to add some kind of word boundary algorithm.
         if random.randint(0,100) < 75:
             gibberish.word_length = WordLength.random()
@@ -1326,9 +1330,11 @@ if __name__ == '__main__':
     else:
         alphabets = sys.argv[1:]
 
+    gibberish = None
+    if alphabets:
+        gibberish = Gibberish.from_alphabets(alphabets)
     for i in range(100):
-        if alphabets:
-            print Gibberish.from_alphabets(alphabets).tweet().encode("utf8")
-        else:
-            print Gibberish.random(freq).tweet().encode("utf8")
-
+        if not alphabets:
+            gibberish = Gibberish.random(freq)
+        print tweet().encode("utf8")
+        print '---'
