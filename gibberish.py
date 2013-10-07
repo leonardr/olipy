@@ -992,10 +992,11 @@ class Gibberish(object):
     def random(self, freq=None):
         return GibberishTable().choice(freq)
 
-    def __init__(self, charset, word_length=None, word_separator=' '):
+    def __init__(self, charset, word_length=None, word_separator=' ', num_words=None):
         self.charset = charset
         self.word_length = word_length
         self.word_separator = word_separator
+        self.num_words = num_words
 
     @classmethod
     def characters_from_set(cls, choices, characters):
@@ -1013,6 +1014,7 @@ class Gibberish(object):
 
     def words(self, length):
         words = ''
+        i = 0
         while True:
             word_length = None
             if self.word_length is None:
@@ -1022,7 +1024,8 @@ class Gibberish(object):
                 words = word
             else:
                 words += self.word_separator + word
-            if len(words) >= length:
+            i += 1
+            if len(words) >= length or (self.num_words is not None and i > self.num_words):
                 break
 
         return words[:length]
@@ -1172,6 +1175,35 @@ class EmoticonGibberish(Gibberish):
         num_words = random.randint(1,3)
         return ' '.join(self.word() for word in range(num_words))
 
+class GameBoardGibberish(Gibberish):
+    def __init__(self, charset=None):
+        choices = list(Alphabet.GAMING_ALPHABETS)
+        choices.remove("Japanese Chess") # Not enough distinct characters.
+        alphabet = random.choice(choices)
+        charset = Alphabet.characters(alphabet)
+        word_separator = "\n"
+        l = random.randint(5, 9)
+        num_words = l
+        word_length = lambda: l
+        super(GameBoardGibberish, self).__init__(
+            charset, word_length, word_separator, num_words)
+
+class MosaicGibberish(Gibberish):
+    def __init__(self, charset=None):
+        charset = random.choice(Alphabet.MOSAIC_CHARSET_S)
+        if random.randint(0, 1) == 0:
+            # Linear mosaic
+            word_length = None
+            word_separator = ' '
+            num_words = None
+        else:
+            # Two-dimensional mosaic
+            size = random.randint(3, 11)
+            num_words = size + random.randint(-2,2)
+            word_length = lambda: size
+            word_separator = '\n'
+        super(MosaicGibberish, self).__init__(charset, word_length, word_separator, num_words)
+
 Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
 
 class GibberishTable(WanderingMonsterTable):
@@ -1203,7 +1235,10 @@ class GibberishTable(WanderingMonsterTable):
         self.add(Gibberish.limited_vocabulary, RARE)
 
         # A mosaic charset.
-        self.add(self.choice_among_charsets(Alphabet.MOSAIC_CHARSET_S), UNCOMMON)
+        self.add(MosaicGibberish, UNCOMMON)
+
+        # A game board charset.
+        self.add(GameBoardGibberish, RARE)
 
         # A shape-based charset
         self.add(self.choice_among_charsets(Alphabet.SHAPE_CHARSET_S), VERY_RARE)
@@ -1233,7 +1268,7 @@ class GibberishTable(WanderingMonsterTable):
                 ["CJK Unified Ideographs (Han)"],
                 Alphabet.WEIRD_TWITTER_CJK,
                 Alphabet.WEIRD_TWITTER_CJK_MIXINS, None, 10)
-        self.add(weird_japanese_twitter, VERY_RARE)
+        self.add(weird_japanese_twitter, RARE)
 
         # Weird Math Twitter
         def weird_math_twitter():
@@ -1300,16 +1335,19 @@ class GibberishTable(WanderingMonsterTable):
         else:
             raise Exception("Cannot turn %r into Gibberish object!", choice)
 
-        if gibberish.charset is None:
-            # Custom logic instead of charset. Leave it alone.
+        if gibberish.__class__ != Gibberish:
+            # Custom logic. Leave it alone.
             return gibberish
-
-        # 25% chance to use newline instead of space as word separator
-        gibberish.word_separator = '\n'
 
         # 75% chance to add some kind of word boundary algorithm.
         if random.randint(0,100) < 75:
             gibberish.word_length = WordLength.random()
+
+        # Chance to use newline instead of space as word separator
+        if (gibberish.word_length is not None
+            and gibberish.word_length() >= 15
+            and random.randint(0,3) == 0):
+            gibberish.word_separator = '\n'
 
         # Blanket 10% chance to add 10% glitches
         if random.randint(0, 10) >= 0:
@@ -1336,5 +1374,5 @@ if __name__ == '__main__':
     for i in range(100):
         if not alphabets:
             gibberish = Gibberish.random(freq)
-        print tweet().encode("utf8")
+        print gibberish.tweet().encode("utf8")
         print '---'
