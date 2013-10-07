@@ -21,6 +21,10 @@ class Alphabet:
             if 'child' in c:
                 cls._fill_by_name(c['child'])
 
+        # Also add in custom alphabets
+        for name, chars in cls.CUSTOM_ALPHABETS.items():
+            cls.by_name[name] = dict(characters=chars)
+
     by_name = {}
 
     @classmethod
@@ -56,6 +60,10 @@ class Alphabet:
                 char.extend(cls.by_name[alphabet]['characters'])
         return ''.join(char)
 
+    CUSTOM_ALPHABETS = {
+        "Dice": u"\N{Die Face-1}\N{Die Face-2}\N{Die Face-3}\N{Die Face-4}\N{Die Face-5}\N{Die Face-6}",
+        }
+
     # Some combination European alphabets
     ASCII = "Basic Latin (ASCII)"
     LATIN_1 = [ASCII, "Latin-1 Supplement"]
@@ -68,6 +76,8 @@ class Alphabet:
     CYRILLIC_FULL = ["Cyrillic", "Cyrillic Supplement", "Cyrillic Extended-A", "Cyrillic Extended-B"]
 
     LATIN_S = [ASCII, LATIN_1, LATIN_FULL]
+
+    CYRILLIC_S = [CYRILLIC, CYRILLIC_FULL]
 
     # A set of European alphabets.
     EUROPEAN_S = [
@@ -293,10 +303,11 @@ class Alphabet:
         "Musical Symbols",
         "Byzantine Musical Symbols",
         ]
-   
+
     # Gaming glyphs
     GAMING_ALPHABETS = [
-        "Chess, Checkers/Draughts", 
+        "Chess, Checkers/Draughts",
+        "Dice",
         "Domino Tiles",
         "Japanese Chess",
         "Mahjong Tiles",
@@ -350,6 +361,8 @@ class Alphabet:
         "Domino Tiles",
         "Playing Cards",
         "Mahjong Tiles",
+        "Dice",
+        ["Dice", "Domino Tiles"],
         ["Playing Cards", "Card suits"],
         "Yijing Mono-, Di- and Trigrams",
         "Yijing Hexagram Symbols",
@@ -573,6 +586,7 @@ class Alphabet:
         )
 
     CIRCLES = unicode_charset(
+        "UGARITIC LETTER THANNA", #𐎘
         "HEBREW MARK MASORA CIRCLE", #֯
         "COMBINING ENCLOSING CIRCLE", #⃝
         "COMBINING ENCLOSING CIRCLE BACKSLASH", #⃠
@@ -972,8 +986,8 @@ class Gibberish(object):
         return cls("".join(Alphabet.characters(alphabets)))
 
     @classmethod
-    def random(self):
-        return GibberishTable().choice()
+    def random(self, freq=None):
+        return GibberishTable().choice(freq)
 
     def __init__(self, charset, word_length=None):
         self.charset = charset
@@ -1166,8 +1180,8 @@ class GibberishTable(WanderingMonsterTable):
         #  * A Gibberish object.
         #  * A funciton that returns a Gibberish object.
 
-        # One of the Latin alphabets.
-        self.add(self.choice_among_alphabets(Alphabet.LATIN_S), COMMON)
+        # One of the Cyrillic alphabets.
+        self.add(self.choice_among_alphabets(Alphabet.CYRILLIC_S), RARE)
 
         # One of the linguistic alphabets.
         self.add(self.choice_among_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
@@ -1185,7 +1199,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add(Gibberish.limited_vocabulary, RARE)
 
         # A mosaic charset.
-        self.add(self.choice_among_charsets(Alphabet.MOSAIC_CHARSET_S), RARE)
+        self.add(self.choice_among_charsets(Alphabet.MOSAIC_CHARSET_S), UNCOMMON)
 
         # A shape-based charset
         self.add(self.choice_among_charsets(Alphabet.SHAPE_CHARSET_S), VERY_RARE)
@@ -1269,8 +1283,8 @@ class GibberishTable(WanderingMonsterTable):
             return gibberish
         return c
 
-    def choice(self):
-        choice = super(GibberishTable, self).choice()
+    def choice(self, freq):
+        choice = super(GibberishTable, self).choice(freq)
         if isinstance(choice, basestring):
             choice = [choice]
         if isinstance(choice, list):
@@ -1299,5 +1313,15 @@ class GibberishTable(WanderingMonsterTable):
         return gibberish
 
 if __name__ == '__main__':
-    for i in range(1000):
-        print Gibberish.random().tweet().encode("utf8")
+    freq = None
+    alphabets = None
+    if len(sys.argv) == 2 and sys.argv[1] in (COMMON, UNCOMMON, RARE, VERY_RARE, None):
+        freq = sys.argv[1]
+    else:
+        alphabets = sys.argv[1:]
+
+    for i in range(100):
+        if freq is not None:
+            print Gibberish.random(freq).tweet().encode("utf8")
+        else:
+            print Gibberish.from_alphabets(alphabets).tweet().encode("utf8")

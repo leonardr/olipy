@@ -19,7 +19,7 @@ class WanderingMonsterTable(object):
         self.rare = rare or []
         self.very_rare = very_rare or []
 
-    def add(self, o, freq):
+    def _bucket_for(self, freq):
         if freq == COMMON:
             l = self.common
         elif freq == UNCOMMON:
@@ -30,16 +30,22 @@ class WanderingMonsterTable(object):
             l = self.very_rare
         else:
             raise ValueError("Invalid value for _freq: %s" % freq)
-        l.append(o)
+        return l
 
-    def choice(self):
-        c = random.randint(0, 99)
-        if c < 65:
-            l = self.common
-        elif c < 85:
-            l = self.uncommon
-        elif c < 96:
-            l = self.rare
+    def add(self, o, freq):
+        self._bucket_for(freq).append(o)
+
+    def choice(self, freq=None):
+        if freq is not None:
+            l = self._bucket_for(freq)
         else:
-            l = self.very_rare
+            c = random.randint(0, 99)
+            if c < 65:
+                l = self.common
+            elif c < 85:
+                l = self.uncommon
+            elif c < 96:
+                l = self.rare
+            else:
+                l = self.very_rare
         return random.choice(l)
