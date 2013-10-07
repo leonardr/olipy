@@ -338,7 +338,7 @@ class Alphabet:
     GLITCHES = [
         "Optical Character Recognition (OCR)",
         "Floors and Ceilings",
-        "Dots", # Custom alphabet
+        "One Dot", # Custom alphabet
         ]
 
     # Custom alphabets 
@@ -1310,9 +1310,12 @@ class GibberishTable(WanderingMonsterTable):
         # Blanket 10% chance to add 10% glitches
         if random.randint(0, 10) >= 0:
             glitches = ''
-            while len(glitches) < len(gibberish.charset) / 10:
-                glitches += Alphabet.random_choice(Alphabet.GLITCHES)
-            gibberish.charset += glitches
+            glitch_charset = Alphabet.random_choice(Alphabet.GLITCHES)
+            max_glitches = len(gibberish.charset) / 10
+            glitch_characters = ''
+            while len(glitch_characters) < max_glitches:
+                glitch_characters += random.choice(glitch_charset)
+            gibberish.charset += glitch_characters
         return gibberish
 
 if __name__ == '__main__':
@@ -1325,7 +1328,7 @@ if __name__ == '__main__':
 
     for i in range(100):
         if alphabets:
-            print Gibberish.random(freq).tweet().encode("utf8")
-        else:
             print Gibberish.from_alphabets(alphabets).tweet().encode("utf8")
+        else:
+            print Gibberish.random(freq).tweet().encode("utf8")
 
