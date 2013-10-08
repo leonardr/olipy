@@ -1,5 +1,5 @@
 import json
-from olipy.queneau import DialogueAssembler
+from queneau import DialogueAssembler
 
 d = DialogueAssembler.loadlines(open("data/apollo_11.txt"))
 last_speaker = None
