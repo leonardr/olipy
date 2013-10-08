@@ -1191,7 +1191,7 @@ class GameBoardGibberish(Gibberish):
 class MosaicGibberish(Gibberish):
     def __init__(self, charset=None):
         charset = random.choice(Alphabet.MOSAIC_CHARSET_S)
-        if random.randint(0, 1) == 0:
+        if random.randint(0, 2) == 0:
             # Linear mosaic
             word_length = None
             word_separator = ' '
@@ -1238,7 +1238,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add(MosaicGibberish, UNCOMMON)
 
         # A game board charset.
-        self.add(GameBoardGibberish, RARE)
+        self.add(GameBoardGibberish, VERY_RARE)
 
         # A shape-based charset
         self.add(self.choice_among_charsets(Alphabet.SHAPE_CHARSET_S), VERY_RARE)
