@@ -1208,12 +1208,14 @@ class EmoticonGibberish(Gibberish):
         if charsets is None:
             charsets = Alphabet.random_choice_no_modifiers()
         self.charsets = charsets
+        self.mouths = u'____⁔𝁛ᨓ⏟‿⏝'
         super(EmoticonGibberish, self).__init__(None)
 
     def word(self, word_length=None):
         charset = random.choice(self.charsets)
         eye = random.choice(charset)
-        return eye + "_" + eye
+
+        return eye + random.choice(self.mouths) + eye
 
     def tweet(self):
         num_words = random.randint(1,3)
