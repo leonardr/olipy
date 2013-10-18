@@ -324,7 +324,7 @@ class Alphabet:
     # have geometric appeal
     GEOMETRIC_ALPHABETS = [
         "Geometric Shapes",
-        "CJK Compatibility Forms",
+        # "CJK Compatibility Forms",
         "Additional Shapes",
         "Box Drawing",
         "Block Elements",
@@ -597,6 +597,7 @@ class Alphabet:
     CIRCLES = unicode_charset("Circles",
         "UGARITIC LETTER THANNA", #𐎘
         "HEBREW MARK MASORA CIRCLE", #֯
+        "ARABIC END OF AYAH", #۝
         "COMBINING ENCLOSING CIRCLE", #⃝
         "COMBINING ENCLOSING CIRCLE BACKSLASH", #⃠
         "APL FUNCTIONAL SYMBOL CIRCLE STILE", #⌽
@@ -1263,7 +1264,10 @@ class GibberishTable(WanderingMonsterTable):
         self.add(self.choice_among_alphabets(Alphabet.CYRILLIC_S), RARE)
 
         # One of the linguistic alphabets.
-        self.add(self.choice_among_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
+        self.add(self.charset_from_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
+
+        # ALL of the linguistic alphabets.
+        self.add(self.combination_of_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
 
         # Some combination of the linguistic alphabets.
         self.add(self.combination_of_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
@@ -1281,7 +1285,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add("Circled Letters", VERY_RARE)
 
         # A limited subset of one script.
-        self.add(Gibberish.limited_vocabulary, RARE)
+        self.add(Gibberish.limited_vocabulary, UNCOMMON)
 
         # A mosaic charset.
         self.add(MosaicGibberish, COMMON)
@@ -1339,6 +1343,14 @@ class GibberishTable(WanderingMonsterTable):
         gibberish.word_length = word_length
         return gibberish
 
+    def charset_from_alphabets(self, alphabets):
+        charset = ''
+        for alphabet in alphabets:
+            if isinstance(alphabet, basestring):
+                alphabet = [alphabet]
+            charset += Alphabet.characters(alphabet)
+        return Gibberish(charset)
+
     def choice_among_alphabets(self, alphabets):
         """Returns a function that chooses an alphabet from a list.
 
@@ -1359,21 +1371,18 @@ class GibberishTable(WanderingMonsterTable):
 
     def combination_of_alphabets(self, alphabets, num=None):
         """Returns a function that chooses a number of alphabets from a list."""
-        def c():
-            how_many = num or (1 + int(random.gauss(3,2)))
-            choices = random.sample(alphabets, how_many)
-            charset = ''
-            for alphabet in choices:
-                if isinstance(alphabet, basestring):
-                    alphabet = [alphabet]
-                charset += Alphabet.characters(alphabet)
+        def combo():
+            how_many = num or max(2, int(random.gauss(4,2)))
+            if len(alphabets) <= how_many:
+                choices = alphabets
+            else:
+                choices = random.sample(alphabets, how_many)
+            gibberish = self.charset_from_alphabets(choices)
             if random.randint(1,10) == 1:
                 # 10% chance to make it a little weirder.
-                gibberish = Gibberish.a_little_weirder_than(charset)
-            else:
-                gibberish = Gibberish(charset)
+                gibberish = Gibberish.a_little_weirder_than(gibberish.charset)
             return gibberish
-        return c
+        return combo
 
     def choice_among_charsets(self, charsets):
         """Returns a function that chooses a charset from a list.
