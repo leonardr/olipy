@@ -344,6 +344,7 @@ class Alphabet:
     GLITCHES = [
         "Optical Character Recognition (OCR)",
         "Floors and Ceilings",
+        "Shading Mosaic", # Custom alphabet
         "One Dot", # Custom alphabet
         ]
 
