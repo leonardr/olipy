@@ -1322,7 +1322,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add("Circled Letters", VERY_RARE)
 
         # A limited subset of one script.
-        self.add(Gibberish.limited_vocabulary, UNCOMMON)
+        self.add(Gibberish.limited_vocabulary, COMMON)
 
         # A mosaic charset.
         self.add(MosaicGibberish, COMMON)
