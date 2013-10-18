@@ -1084,7 +1084,7 @@ class Gibberish(object):
         else:
             if random.randint(0,4) != 0:
                 # Short
-                mean = 20
+                mean = 30
                 dev = 10
                 m = 5
             else:
