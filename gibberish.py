@@ -1232,6 +1232,22 @@ class GameBoardGibberish(Gibberish):
         super(GameBoardGibberish, self).__init__(
             charset, word_length, word_separator, num_words)
 
+class CheatCodeGibberish(Gibberish):
+    "Video game input codes."
+
+    def __init__(self):
+        self.base_charset = u'←↑→↓'
+        self.fighting_game_charset = self.base_charset + u'↖↗↘↙↺↻PK'
+        self.nes_charset = self.base_charset + u'AB'
+
+    def tweet(self):
+        num_words = random.randint(5,10)
+        if random.randint(0,2) == 0:
+            charset = self.fighting_game_charset
+        else:
+            charset = self.nes_charset
+        return ' '.join(random.choice(charset) for word in range(num_words))
+
 class MosaicGibberish(Gibberish):
     def __init__(self, charset=None):
         charset = random.choice(Alphabet.MOSAIC_CHARSET_S)
@@ -1297,7 +1313,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add(self.choice_among_charsets(Alphabet.SHAPE_CHARSET_S), VERY_RARE)
 
         # A dot-based charset
-        self.add(self.choice_among_charsets(Alphabet.DOT_CHARSET_S), VERY_RARE)
+        self.add(self.choice_among_charsets(Alphabet.DOT_CHARSET_S), RARE)
 
         # Weird Latin Twitter
         def weird_latin_twitter():
@@ -1334,6 +1350,9 @@ class GibberishTable(WanderingMonsterTable):
 
         # Emoticons
         self.add(EmoticonGibberish, VERY_RARE)
+
+        # Video game cheat codes.
+        self.add(CheatCodeGibberish, VERY_RARE)
 
     def weird_twitter(self, base, weird, mixins, word_length=None,
                       weird_multiplier=1):
