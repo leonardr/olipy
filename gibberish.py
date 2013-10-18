@@ -1296,14 +1296,14 @@ class GibberishTable(WanderingMonsterTable):
         self.add(self.choice_among_alphabets(Alphabet.CYRILLIC_S), RARE)
 
         # One of the linguistic alphabets.
-        self.add(self.charset_from_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
-
-        # ALL of the non-huge linguistic alphabets.
+        self.add(self.choice_among_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
 
         all_but_large_cjk = list(Alphabet.ALL_LANGUAGE_ALPHABETS_S)
-        for i in ("CJK Unified Ideographs (Han)", "Hangul Syllables"):
+        for i in ("CJK Unified Ideographs (Han)", "Hangul Syllables",
+                  "CJK Compatibility Ideographs",):
             all_but_large_cjk.remove(i)
 
+        # ALL of the non-huge linguistic alphabets.
         self.add(self.charset_from_alphabets(all_but_large_cjk), RARE)
 
         # Some combination of the non-huge linguistic alphabets.
@@ -1389,7 +1389,9 @@ class GibberishTable(WanderingMonsterTable):
             if isinstance(alphabet, basestring):
                 alphabet = [alphabet]
             charset += Alphabet.characters(alphabet)
-        return Gibberish(charset)
+        gibberish = Gibberish(charset)
+        gibberish.original_alphabets = alphabets
+        return gibberish
 
     def choice_among_alphabets(self, alphabets):
         """Returns a function that chooses an alphabet from a list.
@@ -1406,6 +1408,7 @@ class GibberishTable(WanderingMonsterTable):
                 gibberish = Gibberish.a_little_weirder_than(charset)
             else:
                 gibberish = Gibberish(charset)
+            gibberish.original_alphabets = alphabets
             return gibberish
         return c
 
@@ -1421,6 +1424,7 @@ class GibberishTable(WanderingMonsterTable):
             if random.randint(1,10) == 1:
                 # 10% chance to make it a little weirder.
                 gibberish = Gibberish.a_little_weirder_than(gibberish.charset)
+            gibberish.original_alphabets = alphabets
             return gibberish
         return combo
 
