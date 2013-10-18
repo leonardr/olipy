@@ -346,6 +346,7 @@ class Alphabet:
         "Floors and Ceilings",
         "Shading Mosaic", # Custom alphabet
         "One Dot", # Custom alphabet
+        "Fill Mosaic", # Custom alphabet
         ]
 
     # Custom alphabets 
@@ -853,7 +854,7 @@ class Alphabet:
             "FULL BLOCK",
             )
 
-    TERMINAL_GRAPHIC_MOSAIC = unicode_charset("Termianl Graphic Mosaic",
+    TERMINAL_GRAPHIC_MOSAIC = unicode_charset("Terminal Graphic Mosaic",
             "QUADRANT LOWER LEFT",
             "QUADRANT LOWER RIGHT",
             "QUADRANT UPPER LEFT",
