@@ -12,6 +12,9 @@ import data
 
 CUSTOM_ALPHABETS = {
     "Dice": u"\N{Die Face-1}\N{Die Face-2}\N{Die Face-3}\N{Die Face-4}\N{Die Face-5}\N{Die Face-6}",
+    "Circled Letters": u"⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ",
+    "Circled Alphanumerics": u"①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ⓪⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴⓵⓶⓷⓸⓹⓺⓻⓼⓽⓾❶❷❸❹❺❻❼❽❾❿➀➁➂➃➄➅➆➇➈➉➊➋➌➍➎➏➐➑➒➓㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㊶㊷㊸㊹㊺㊻㊼㊽㊾㊿",
+    "Stars": u"✢✣✤✥✦✧✨✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋*͙⁎⁑⃰∗⊛⧆﹡＊٭≛⋆⍟⍣★☆☪⚝✡✦✧⭐⭑⭒",
     }
 
 class Alphabet:
@@ -75,7 +78,7 @@ class Alphabet:
     CYRILLIC = ["Cyrillic"]
     CYRILLIC_FULL = ["Cyrillic", "Cyrillic Supplement", "Cyrillic Extended-A", "Cyrillic Extended-B"]
 
-    LATIN_S = [ASCII, LATIN_1, LATIN_FULL]
+    LATIN_S = [ASCII, LATIN_1, LATIN_FULL, "Circled Letters", "Circled Alphanumerics"]
 
     CYRILLIC_S = [CYRILLIC, CYRILLIC_FULL]
 
@@ -227,6 +230,8 @@ class Alphabet:
         "Phonetic Extensions",
         "Phonetic Extensions Supplement",
         "Old Italic",
+        "Circled Letters",
+        "Circled Alphanumerics",
         ]
 
     # "Weird Twitter" mixins for Latin characters.
@@ -325,6 +330,7 @@ class Alphabet:
         "Block Elements",
         "Braille Patterns",
         "Yijing Mono-, Di- and Trigrams",
+        "Stars",
         ]
 
     # Yijing symbols
@@ -881,6 +887,30 @@ class Alphabet:
             "BOX DRAWINGS LIGHT UP AND RIGHT",
             )
 
+    BOX_DRAWING_HEAVY_MOSAIC = unicode_charset("Box Drawing Heavy Mosaic",
+        "BOX DRAWINGS HEAVY HORIZONTAL", #━
+        "BOX DRAWINGS HEAVY VERTICAL", #┃
+        "BOX DRAWINGS HEAVY TRIPLE DASH HORIZONTAL", #┅
+        "BOX DRAWINGS HEAVY TRIPLE DASH VERTICAL", #┇
+        "BOX DRAWINGS HEAVY QUADRUPLE DASH HORIZONTAL", #┉
+        "BOX DRAWINGS HEAVY QUADRUPLE DASH VERTICAL", #┋
+        "BOX DRAWINGS HEAVY DOWN AND RIGHT", #┏
+        "BOX DRAWINGS HEAVY DOWN AND LEFT", #┓
+        "BOX DRAWINGS HEAVY UP AND RIGHT", #┗
+        "BOX DRAWINGS HEAVY UP AND LEFT", #┛
+        "BOX DRAWINGS HEAVY VERTICAL AND RIGHT", #┣
+        "BOX DRAWINGS HEAVY VERTICAL AND LEFT", #┫
+        "BOX DRAWINGS HEAVY DOWN AND HORIZONTAL", #┳
+        "BOX DRAWINGS HEAVY UP AND HORIZONTAL", #┻
+        "BOX DRAWINGS HEAVY VERTICAL AND HORIZONTAL", #╋
+        "BOX DRAWINGS HEAVY DOUBLE DASH HORIZONTAL", #╍
+        "BOX DRAWINGS HEAVY DOUBLE DASH VERTICAL", #╏
+        "BOX DRAWINGS HEAVY LEFT", #╸
+        "BOX DRAWINGS HEAVY UP", #╹
+        "BOX DRAWINGS HEAVY RIGHT", #╺
+        "BOX DRAWINGS HEAVY DOWN", #╻
+        )
+
     BOX_DRAWING_ARC_MOSAIC = unicode_charset("Box Drawing Arc Mosaic",
             "BOX DRAWINGS LIGHT ARC DOWN AND RIGHT",
             "BOX DRAWINGS LIGHT ARC DOWN AND LEFT",
@@ -894,11 +924,23 @@ class Alphabet:
             "BOX DRAWINGS LIGHT DIAGONAL CROSS",
             )
 
-    PARTIALLY_FILLED_SQUARE_MOSAIC = unicode_charset("Partially Filled Square Mosaic",
+    PARTIALLY_FILLED_SQUARE_MOSAIC_DIAGONALS_ONLY = unicode_charset("Partially Filled Square Mosaic (Diagonals Only)",
         "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
         "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
         "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
         "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        )
+
+    PARTIALLY_FILLED_SQUARE_MOSAIC = unicode_charset(
+        "Partially Filled Square Mosaic",
+        "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
+        "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
+        "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        "SQUARE WITH LEFT HALF BLACK", #◧
+        "SQUARE WITH RIGHT HALF BLACK", #◨
+        "SQUARE WITH TOP HALF BLACK", #⬒
+        "SQUARE WITH BOTTOM HALF BLACK", #⬓
         )
 
     PARTIALLY_FILLED_CIRCLE_MOSAIC = unicode_charset("Partially Filled Circle Mosaic",
@@ -914,6 +956,7 @@ class Alphabet:
     MOSAIC_CHARSET_S = [
         BLOCK_MOSAIC,
         BOX_DRAWING_ARC_MOSAIC,
+        BOX_DRAWING_HEAVY_MOSAIC,
         BOX_DRAWING_MOSAIC,
         CHARACTER_CELL_DIAGONAL_MOSAIC,
         FILL_MOSAIC,
@@ -1214,13 +1257,16 @@ class GibberishTable(WanderingMonsterTable):
         # Populate the table. An entry may be:
         #  * The name of an alphabet, or a list of names.
         #  * A Gibberish object.
-        #  * A funciton that returns a Gibberish object.
+        #  * A function that returns a Gibberish object.
 
         # One of the Cyrillic alphabets.
         self.add(self.choice_among_alphabets(Alphabet.CYRILLIC_S), RARE)
 
         # One of the linguistic alphabets.
         self.add(self.choice_among_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
+
+        # Some combination of the linguistic alphabets.
+        self.add(self.combination_of_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
 
         # One of the geometric alphabets.
         self.add(self.choice_among_alphabets(Alphabet.GEOMETRIC_ALPHABETS), UNCOMMON)
@@ -1231,11 +1277,14 @@ class GibberishTable(WanderingMonsterTable):
         # The combination of all geometric alphabets.
         self.add(Alphabet.GEOMETRIC_ALPHABETS, VERY_RARE)
 
+        # Circled letters
+        self.add("Circled Letters", VERY_RARE)
+
         # A limited subset of one script.
         self.add(Gibberish.limited_vocabulary, RARE)
 
         # A mosaic charset.
-        self.add(MosaicGibberish, UNCOMMON)
+        self.add(MosaicGibberish, COMMON)
 
         # A game board charset.
         self.add(GameBoardGibberish, VERY_RARE)
@@ -1293,15 +1342,33 @@ class GibberishTable(WanderingMonsterTable):
     def choice_among_alphabets(self, alphabets):
         """Returns a function that chooses an alphabet from a list.
 
-        There is a 25% chance that the charset will be weirded a bit.
+        There is a 33% chance that the charset will be weirded a bit.
         """
         def c():
             alphabet = random.choice(alphabets)
             if isinstance(alphabet, basestring):
                 alphabet = [alphabet]
             charset = Alphabet.characters(alphabet)
-            if random.randint(0,3) == 0:
-                # 25% chance to make it a little weirder.
+            if random.randint(0,2) == 0:
+                # 33% chance to make it a little weirder.
+                gibberish = Gibberish.a_little_weirder_than(charset)
+            else:
+                gibberish = Gibberish(charset)
+            return gibberish
+        return c
+
+    def combination_of_alphabets(self, alphabets, num=None):
+        """Returns a function that chooses a number of alphabets from a list."""
+        def c():
+            how_many = num or (1 + int(random.gauss(3,2)))
+            choices = random.sample(alphabets, how_many)
+            charset = ''
+            for alphabet in choices:
+                if isinstance(alphabet, basestring):
+                    alphabet = [alphabet]
+                charset += Alphabet.characters(alphabet)
+            if random.randint(1,10) == 1:
+                # 10% chance to make it a little weirder.
                 gibberish = Gibberish.a_little_weirder_than(charset)
             else:
                 gibberish = Gibberish(charset)
