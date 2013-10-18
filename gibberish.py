@@ -1285,11 +1285,16 @@ class GibberishTable(WanderingMonsterTable):
         # One of the linguistic alphabets.
         self.add(self.charset_from_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
 
-        # ALL of the linguistic alphabets.
-        self.add(self.combination_of_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
+        # ALL of the non-huge linguistic alphabets.
 
-        # Some combination of the linguistic alphabets.
-        self.add(self.combination_of_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
+        all_but_large_cjk = list(Alphabet.ALL_LANGUAGE_ALPHABETS_S)
+        for i in ("CJK Unified Ideographs (Han)", "Hangul Syllables"):
+            all_but_large_cjk.remove(i)
+
+        self.add(self.charset_from_alphabets(all_but_large_cjk), RARE)
+
+        # Some combination of the non-huge linguistic alphabets.
+        self.add(self.combination_of_alphabets(all_but_large_cjk), COMMON)
 
         # One of the geometric alphabets.
         self.add(self.choice_among_alphabets(Alphabet.GEOMETRIC_ALPHABETS), UNCOMMON)
