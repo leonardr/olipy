@@ -1282,6 +1282,27 @@ class MosaicGibberish(Gibberish):
 
 Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
 
+class CompositeGibberish(Gibberish):
+
+    def __init__(self, table):
+        self.table = table
+        super(CompositeGibberish, self).__init__(None)
+
+    SEPARATORS = u"     /\-=#:.,|_⏟"
+
+    def words(self, length):
+        num_gibberish = random.randint(2,5)
+        size_of_each = (length-num_gibberish) / num_gibberish
+        gibberishes = []
+        for i in range(min(2, size_of_each)):
+            g = None
+            while g is None or not hasattr(g, 'word_length') or g.word_separator == '\n':
+                g = self.table.choice(None)
+
+            gibberishes.append(g.words(size_of_each))
+        import pdb; pdb.set_trace()
+        return random.choice(self.SEPARATORS).join(gibberishes)
+
 class GibberishTable(WanderingMonsterTable):
 
     def __init__(self):
@@ -1326,6 +1347,9 @@ class GibberishTable(WanderingMonsterTable):
 
         # A mosaic charset.
         self.add(MosaicGibberish, COMMON)
+
+        # Composite gibberish
+        self.add(lambda: CompositeGibberish(self), UNCOMMON)
 
         # A game board charset.
         self.add(GameBoardGibberish, VERY_RARE)
@@ -1483,6 +1507,9 @@ class GibberishTable(WanderingMonsterTable):
 if __name__ == '__main__':
     freq = None
     alphabets = None
+
+    sys.exit()
+
     if len(sys.argv) == 2 and sys.argv[1] in (COMMON, UNCOMMON, RARE, VERY_RARE, None):
         freq = sys.argv[1]
     else:
