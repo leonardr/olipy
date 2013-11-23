@@ -35,7 +35,16 @@ CUSTOM_ALPHABETS = {
     "Stars": u"✢✣✤✥✦✧✨✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋*͙⁎⁑⃰∗⊛⧆﹡＊٭≛⋆⍟⍣★☆☪⚝✡✦✧⭐⭑⭒",
     "Symbology": u"☀☁☂☃☄★☆☎☏☔☕☚☛☠☢☤☭☮☯☹☺☻☼♫⚐⚑⚒⚓⚔⚕⚖♻✄✌✍✏♀♂⌚",
     "Crossouts": u"Xxˣ͓̽ͯᶍẊẋẌẍₓ⒳Ⓧⓧ☒✕✖✗✘Ｘｘ𝁪𝅃𝅅𝐗𝐱𝑋𝑥𝑿𝒙𝒳𝓍𝓧𝔁𝔛𝔵𝕏𝕩𝖃𝖝𝖷𝗑𝗫𝘅𝘟𝘹𝙓𝙭𝚇𝚡×⨯ⵝ᙭Ҳ⚔⤧ҳ⤩᙮ⅹⅩ⤨⤪⨉⤫⤬",
-    }
+    "Box Drawing All": u"─━│┃┄┅┆┇┈┉┊┋┌┍┎┏┐┑┒┓└┕┖┗┘┙┚┛├┝┞┟┠┡┢┣┤┥┦┧┨┩┪┫┬┭┮┯┰┱┲┳┴┵┶┷┸┹┺┻┼┽┾┿╀╁╂╃╄╅╆╇╈╉╊╋╌╍╎╏═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬╵╶╷╸╹╺╻╼╽╾╿",
+    "Box Drawing Double": u"═║╔╗╚╝╠╣╦╩╬",
+    "Box Drawing Dots": u"┄┅┆┇┈┉┊┋╍╌╎╏",
+    "Box Drawing Thick and Thin": u"┌┍┎┏┐┑┒┓└┕┖┗┘┙┚┛├┝┞┟┠┡┢┣┤┥┦┧┨┩┪┫┬┭┮┯┰┱┲┳┴┵┶┷┸┹┺┻┼┽┾┿╀╁╂╃╄╅╆╇╈╉╊╋╸╹╺╻╼╽╾╿",
+
+    "Box Drawing Single and Double": u"┌┐└┘├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬╴╵╶╷",
+    "Block Drawing by Height": u"▀▁▂▃▄▅▆▇█▔",
+    "Block Drawing by Width": u"█▉▊▋▌▍▎▏▐▕",
+
+ }
 
 class Alphabet:
 
@@ -1013,6 +1022,13 @@ class Alphabet:
         CUSTOM_ALPHABETS["Filled Circled Numerics"],
         CUSTOM_ALPHABETS["Empty Circled Numerics"],
         CUSTOM_ALPHABETS["Dice"],
+        CUSTOM_ALPHABETS["Box Drawing All"],
+        CUSTOM_ALPHABETS["Box Drawing Dots"],
+        CUSTOM_ALPHABETS["Box Drawing Thick and Thin"],
+        CUSTOM_ALPHABETS["Box Drawing Single and Double"],
+        CUSTOM_ALPHABETS["Box Drawing Double"],
+        CUSTOM_ALPHABETS["Block Drawing by Width"],
+        CUSTOM_ALPHABETS["Block Drawing by Height"],
         BLOCK_MOSAIC,
         BOX_DRAWING_ARC_MOSAIC,
         BOX_DRAWING_HEAVY_MOSAIC,
