@@ -1107,6 +1107,8 @@ class Corruptor(object):
 
 class Gibberish(object):
 
+    minimum_length = 3
+
     @classmethod
     def from_alphabets(cls, alphabets):
         return cls("".join(Alphabet.characters(alphabets)))
@@ -1168,6 +1170,7 @@ class Gibberish(object):
                 dev = 30
                 m = 15
             length = int(max(m, min(random.gauss(mean, dev), 140)))
+        length = max(self.minimum_length, length)
         return self.words(length)
 
     @classmethod
@@ -1359,17 +1362,22 @@ Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
 
 class GibberishGradient(Gibberish):
 
+    minimum_length = 140
+    gradient_method = Gradient.gradient
+
     def __init__(self):
         super(GibberishGradient, self).__init__(None)
 
     def words(self, length):
         alpha1 = Alphabet.random_choice_no_modifiers()
         alpha2 = Alphabet.random_choice_no_modifiers()
-        if random.randint(1,3) == 3:
-            m = Gradient.rainbow_gradient
-        else:
-            m = Gradient.gradient
-        return "".join(x for x in m(alpha1, alpha2, length))
+        a = "".join(x for x in self.gradient_method(alpha1, alpha2, length))
+        return a
+
+class GibberishRainbowGradient(GibberishGradient):
+
+    minimum_length = 140
+    gradient_method = Gradient.rainbow_gradient
 
 class CompositeGibberish(Gibberish):
 
@@ -1423,6 +1431,7 @@ class GibberishTable(WanderingMonsterTable):
 
         # A gradient between two alphabets.
         self.add(GibberishGradient, COMMON)
+        self.add(GibberishRainbowGradient, UNCOMMON)
 
         # One of the geometric alphabets.
         self.add(self.choice_among_alphabets(Alphabet.GEOMETRIC_ALPHABETS), UNCOMMON)
@@ -1449,7 +1458,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add(self.choice_among_charsets(Alphabet.SHAPE_CHARSET_S), VERY_RARE)
 
         # A dot-based charset
-        self.add(self.choice_among_charsets(Alphabet.DOT_CHARSET_S), RARE)
+        self.add(self.choice_among_charsets(Alphabet.DOT_CHARSET_S), UNCOMMON)
 
         # Weird Latin Twitter
         def weird_latin_twitter():
