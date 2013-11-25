@@ -6,7 +6,7 @@ import json
 import random
 import sys
 import unicodedata
-from randomness import WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
+from randomness import Gradient, WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
 
 import data
 
@@ -72,15 +72,20 @@ class Alphabet:
         return cls.characters([choice])
 
     @classmethod
-    def random_choice_no_modifiers(cls):
+    def random_choice_no_modifiers(cls, minimum_size=2):
         """A completely random choice among non-modifier alphabets."""
         choice = None
         while choice is None:
             choice = random.choice(Alphabet.by_name.keys())
             if choice in Alphabet.MODIFIERS:
                 choice = None
-        # print "Choice: %s, len: %s" % (choice, len(cls.characters(choice)))
-        return cls.characters(choice)
+            # print "Choice: %s, len: %s" % (choice, len(cls.characters(choice)))
+            if choice is not None:
+                chars = cls.characters(choice)
+                if len(chars) < minimum_size:
+                    choice = None
+
+        return chars
 
     @classmethod
     def characters(cls, alphabets):
@@ -1352,6 +1357,20 @@ class MosaicGibberish(Gibberish):
 
 Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
 
+class GibberishGradient(Gibberish):
+
+    def __init__(self):
+        super(GibberishGradient, self).__init__(None)
+
+    def words(self, length):
+        alpha1 = Alphabet.random_choice_no_modifiers()
+        alpha2 = Alphabet.random_choice_no_modifiers()
+        if random.randint(1,3) == 3:
+            m = Gradient.rainbow_gradient
+        else:
+            m = Gradient.gradient
+        return "".join(x for x in m(alpha1, alpha2, length))
+
 class CompositeGibberish(Gibberish):
 
     def __init__(self, table):
@@ -1401,6 +1420,9 @@ class GibberishTable(WanderingMonsterTable):
 
         # Some combination of the non-huge linguistic alphabets.
         self.add(self.combination_of_alphabets(all_but_large_cjk), COMMON)
+
+        # A gradient between two alphabets.
+        self.add(GibberishGradient, COMMON)
 
         # One of the geometric alphabets.
         self.add(self.choice_among_alphabets(Alphabet.GEOMETRIC_ALPHABETS), UNCOMMON)
