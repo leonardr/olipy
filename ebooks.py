@@ -18,9 +18,16 @@ class EbooksQuotes(object):
 
     # Ways of further tweaking a quote.
     def one_sentence_from(self, quote):
-        """Reduce the given quote to a single sentence."""
+        """Reduce the given quote to a single sentence.
+        
+        The choice is biased against the first sentence, which is less likely
+        to be the start of a real in-text sentence.
+        """
         blob = TextBlob(quote)
-        return str(random.choice(blob.sentences))
+        s = random.choice(blob.sentences)
+        if s == blob.sentences[0]:
+            s = random.choice(blob.sentences)
+        return str(s)
 
     def remove_ending_punctuation(self, string):
         # Notably absent: dash and colon, which make a quote
