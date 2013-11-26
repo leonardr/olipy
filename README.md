@@ -1,8 +1,8 @@
 olipy
 =====
 
-Olipy is a Python library for artistic text generation. It has two
-main modules.
+Olipy is a Python library for artistic text generation. It has many
+useful features.
 
 queneau.py
 ----------
@@ -42,6 +42,23 @@ Example scripts for gibberish.py:
 
 * example.corrupt.py: "Corrupts" whatever text is typed in by adding
 increasing numbers of diacritical marks.
+
+ebooks.py
+---------
+
+A module for incongruously sampling texts in the style of the infamous
+@horse_ebooks. Based on the @zzt_ebooks algorithm by Adam Parrish.
+
+Example scripts for ebooks.py:
+
+* example.horse_ebooks.py: Selects some lines from a Project Gutenberg
+  text, with a bias towards the keywords you give it as command-line
+  arguments.
+
+gutenberg.py
+------------
+
+A module for dealing with texts from Project Gutenberg.
 
 integration.py
 --------------
