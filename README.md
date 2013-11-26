@@ -2,7 +2,7 @@ olipy
 =====
 
 Olipy is a Python library for artistic text generation. It has many
-useful features.
+useful modules.
 
 queneau.py
 ----------
