@@ -6,7 +6,9 @@ import zipfile
 class ProjectGutenbergText(object):
     """Class for dealing with Project Gutenberg texts."""
 
-    START = re.compile("Start[^\n]*Project Gutenberg.*", re.I)
+    START = [re.compile("Start[^\n]*Project Gutenberg.*", re.I),
+             re.compile("\*END\*THE SMALL PRINT!.*", re.I)]
+
     END = re.compile("End[^\n]*Project Gutenberg.*", re.I)
     LANGUAGE = re.compile("Language: ([\w -()]+)", re.I)
     ENCODING = re.compile("C.*set encoding: ([\w -]+)", re.I)
@@ -69,7 +71,10 @@ class ProjectGutenbergText(object):
     @classmethod
     def extract_header_and_footer(cls, text):
         """Split a PG document into (header, text, footer) tuple."""
-        m = cls.START.search(text)
+        for s in cls.START:
+            m = s.search(text)
+            if m is not None:
+                break
         if m is None:
             # Make a wild guess.
             start, start2 = 0, 1000
@@ -99,8 +104,26 @@ class ProjectGutenbergText(object):
         The best way to get Project Gutenberg ISOs is via BitTorrent:
         http://www.gutenberg.org/wiki/Gutenberg:The_CD_and_DVD_Project#Downloading_Via_BitTorrent
         """
-        for num in range(1,10):
-            books_path =  os.path.join(mount_path, str(num))
+
+        year_directories = ['etext' + x for x in (
+                '00', '01', '02', '03', '04', '05', '06', '90',' 91', '92', '93', '94', '95', '96',
+                '97', '98', '99')]
+        numbered_directories = list(str(x) for x in range(1,10))
+
+        if None in allow_formats:
+            for directory in year_directories:
+                # Early PG texts. Bunch of texts in one directory, all
+                # can be assumed to be ASCII for performance reasons.
+                books_path =  os.path.join(mount_path, str(directory))
+                for dirpath, dirnames, filenames in os.walk(books_path):
+                    for name in filenames:
+                        if name.endswith('.zip'):
+                            yield os.path.join(dirpath, name)
+
+        for directory in numbered_directories:
+            # Later PG texts. Each text in one directory, potentially in several
+            # formats.
+            books_path =  os.path.join(mount_path, str(directory))
             for dirpath, dirnames, filenames in os.walk(books_path):
                 # Does this directory contain a text?
                 contains_text = False
