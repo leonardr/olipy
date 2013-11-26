@@ -24,9 +24,14 @@ class EbooksQuotes(object):
         to be the start of a real in-text sentence.
         """
         blob = TextBlob(quote)
-        s = random.choice(blob.sentences)
-        if s == blob.sentences[0]:
-            s = random.choice(blob.sentences)
+        try:
+            sentences = blob.sentences
+        except Exception, e:
+            # TextBlob can't parse this. Just return the whole quote.
+            return quote
+        s = random.choice(sentences)
+        if s == sentences[0]:
+            s = random.choice(sentences)
         return str(s)
 
     def remove_ending_punctuation(self, string):
@@ -35,7 +40,7 @@ class EbooksQuotes(object):
         if string.count('"') == 1:
             string = string.replace('"', "")
         string = string.replace("_", "")
-        while string[-1] in ',; ':
+        while string and string[-1] in ',; ':
             string = string[:-1]
         return string
 
@@ -44,7 +49,12 @@ class EbooksQuotes(object):
         # another stopword.
         # print "%s =>" % string
         blob = TextBlob(string)
-        reversed_words = list(reversed(blob.words[2:]))
+        try:
+            words = blob.words
+        except Exception, e:
+            # TextBlob can't parse this. Just return the whole string
+            return string
+        reversed_words = list(reversed(words[2:]))
         for i, w in enumerate(reversed_words):
             if (w in Stopwords.MYSQL_STOPWORDS                
                 and i != len(reversed_words)-1 and
