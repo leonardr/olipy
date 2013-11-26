@@ -10,3 +10,4 @@ ebooks = EbooksQuotes(keywords)
 for para in t.paragraphs:
     for quote in ebooks.quotes_in(para):
         print quote
+        print
