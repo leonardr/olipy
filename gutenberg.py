@@ -18,9 +18,12 @@ class ProjectGutenbergText(object):
         self.name = name
         m = self.ENCODING.search(header)
         if m is None:
-            # Who knows?
-            logging.warn("%s specifies no encoding, assuming ASCII." % name)
-            self.original_encoding = None
+            if name.endswith(".utf-8"):
+                self.original_encoding = 'utf-8'
+            else:
+                # Who knows?
+                logging.warn("%s specifies no encoding, assuming ASCII." % name)
+                self.original_encoding = None
         else:
             enc = m.groups()[0].strip()
             if enc == 'ISO Latin-1':
