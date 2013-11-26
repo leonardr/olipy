@@ -5,7 +5,7 @@ from ebooks import EbooksQuotes
 
 keywords = sys.argv[1:] or ['horse']
 
-t = ProjectGutenbergText(open("data/44270.txt.utf-8").read())
+t = ProjectGutenbergText(open("data/44269.txt.utf-8").read())
 ebooks = EbooksQuotes(keywords)
 for para in t.paragraphs:
     for quote in ebooks.quotes_in(para):
