@@ -25,6 +25,8 @@ class EbooksQuotes(object):
     def remove_ending_punctuation(self, string):
         # Notably absent: dash and colon, which make a quote
         # funnier.
+        if string.count('"') == 1:
+            string = string.replace('"', "")
         string = string.replace("_", "")
         while string[-1] in ',; ':
             string = string[:-1]
