@@ -2,11 +2,13 @@ import random
 import re
 import textwrap
 from english import Stopwords
-from text.blob import TextBlob
+from text.blob import TextBlob, Sentence
+
+from tokenizer import WordTokenizer
 
 class EbooksQuotes(object):
 
-    def __init__(self, keywords=None, probability=0.001, 
+    def __init__(self, keywords=None, probability=0.001,
                  maximum_quote_size=140, wrap_at=30,
                  truncate_chance=1.0/4):
         keywords = keywords or []
@@ -15,6 +17,7 @@ class EbooksQuotes(object):
         self.maximum_quote_size = maximum_quote_size
         self.wrap_at = wrap_at
         self.truncate_chance = truncate_chance
+        self._blobs = {}
 
     # Ways of further tweaking a quote.
     def one_sentence_from(self, quote):
@@ -27,12 +30,12 @@ class EbooksQuotes(object):
         try:
             sentences = blob.sentences
         except Exception, e:
-            # TextBlob can't parse this. Just return the whole quote.
+            # TextBlob can't parse this. Just return the whole string
             return quote
         s = random.choice(sentences)
         if s == sentences[0]:
             s = random.choice(sentences)
-        return str(s)
+        return s
 
     def remove_ending_punctuation(self, string):
         # Notably absent: dash and colon, which make a quote
@@ -48,12 +51,16 @@ class EbooksQuotes(object):
         # Truncate a string at the last stopword not preceded by
         # another stopword.
         # print "%s =>" % string
-        blob = TextBlob(string)
-        try:
-            words = blob.words
-        except Exception, e:
-            # TextBlob can't parse this. Just return the whole string
-            return string
+
+        if type(string) == Sentence:
+            words = string.words
+        else:
+            try:
+                words = TextBlob(string).sentences
+            except Exception, e:
+                # TextBlob can't parse this. Just return the whole string
+                return string
+
         reversed_words = list(reversed(words[2:]))
         for i, w in enumerate(reversed_words):
             if (w in Stopwords.MYSQL_STOPWORDS                
@@ -61,6 +68,7 @@ class EbooksQuotes(object):
                 not reversed_words[i+1] in Stopwords.MYSQL_STOPWORDS):
                 # print "Stopword %s (previous) %s" % (w, reversed_words[i+1])
                 r = re.compile(r".*\b(%s)\b" % w)
+                string = unicode(string)
                 m = r.search(string)
                 if m is not None:
                     string = string[:m.span(1)[0]]
@@ -72,10 +80,14 @@ class EbooksQuotes(object):
 
     def quotes_in(self, paragraph):
         para = textwrap.wrap(paragraph, self.wrap_at)
+        if len(para) == 0:
+            return
 
         probability = self.probability
         if len(para) == 1:
             probability *= 100
+        elif para[0][0].upper() == para[0][0]:
+            probability *= 5
 
         gathering = False
         in_progress = None
@@ -108,6 +120,7 @@ class EbooksQuotes(object):
                     if random.random() < 0.4:
                         quote = self.truncate_at_stopword(quote)
 
+                    quote = unicode(quote)
                     quote = self.remove_ending_punctuation(quote)
 
                     yield quote
