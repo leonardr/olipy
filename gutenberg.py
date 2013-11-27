@@ -106,8 +106,9 @@ class ProjectGutenbergText(object):
         """
 
         year_directories = ['etext' + x for x in (
-                '00', '01', '02', '03', '04', '05', '06', '90',' 91', '92', '93', '94', '95', '96',
-                '97', '98', '99')]
+                '90',' 91', '92', '93', '94', '95', '96', '97', '98', '99',
+                '00', '01', '02', '03', '04', '05', '06')]
+        year_directories = ['etext06']
         numbered_directories = list(str(x) for x in range(1,10))
 
         if None in allow_formats:

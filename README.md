@@ -69,4 +69,10 @@ the Twitter API).
 data/
 -----
 
-This directory contains data files used by the example scripts.
+This directory contains data files used by the example scripts, as
+well as some miscellaneous datasets useful in text generation projects.
+
+* ids_for_old_gutenberg_filenames.json: Maps old-style (pre-2007)
+  Project Gutenberg filenames to the new-style ebook IDs. For example,
+  "/etext95/3boat10.zip" is mapped to the number 308 (see
+  http://www.gutenberg.org/ebooks/308).
