@@ -44,12 +44,18 @@ Example scripts for ebooks.py:
 markov.py
 ---------
 
-A module for generating Markov chains from text. The primary purpose
-of the olipy library is to promote alternatives to Markov chains (such
-as Queneau assembly and the _ebooks algorithm), but sometimes you
-really do want a Markov chain.
+A module for generating new strings of tokens from old strings of
+tokens using a Markov chains. The primary purpose of the olipy library
+is to promote alternatives to Markov chains (such as Queneau assembly
+and the _ebooks algorithm), but sometimes you really do want a Markov
+chain.
 
-markov.py was originally written by Adam Parrish.
+Queneau assembly is usually better than a Markov chain above the word
+level (constructing paragraphs from sentences) and below the word
+level (constructing words from phonemes), but Markov chains are
+usually better when assembling sequences of words.
+
+markov.py was originally written by Adam "A. A." Parrish.
 
 gibberish.py
 ------------
