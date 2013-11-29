@@ -19,6 +19,8 @@ class EbooksQuotes(object):
         self.truncate_chance = truncate_chance
         self._blobs = {}
 
+    SEVERAL_CAPITALIZED_WORDS = re.compile("(([A-Z][a-zA-Z]+,? ){2,}[A-Z][a-zA-Z]+[!?.]?)")
+
     # Ways of further tweaking a quote.
     def one_sentence_from(self, quote):
         """Reduce the given quote to a single sentence.
@@ -32,9 +34,15 @@ class EbooksQuotes(object):
         except Exception, e:
             # TextBlob can't parse this. Just return the whole string
             return quote
+        if len(sentences) > 1 and len(sentences[-1]) < 10:
+            # Don't choose a very short sentence if it's at the end of a chunk.
+            sentences = sentences[:-1]
         s = random.choice(sentences)
         if s == sentences[0]:
             s = random.choice(sentences)
+            if s == sentences[0]:
+                s = random.choice(sentences)
+
         return s
 
     def remove_ending_punctuation(self, string):
@@ -127,6 +135,24 @@ class EbooksQuotes(object):
             else:
                 # We are not currently gathering a quote. Should we
                 # be?
+                r = random.random()
+                if random.random() < probability * 50:
+                    # Run the regular expression and see if it matches.
+                    m = self.SEVERAL_CAPITALIZED_WORDS.search(line)
+                    if m is not None:
+                        phrase = m.groups()[0]
+                        if "Gutenberg" in phrase or "Proofreader" in phrase:
+                            # Part of the meta, not part of text.
+                            continue
+                        # Tag the text to see if it's a proper noun.
+                        blob = TextBlob(phrase)
+                        tags = blob.tags
+                        proper_nouns = [x for x, tag in tags if tag.startswith('NNP')]
+                        if len(proper_nouns) < len(tags) / 3.0:
+                            # We're good.
+                            yield phrase
+
+
                 matches = self._line_matches(line)
                 if matches or random.random() < probability:
                     gathering = True

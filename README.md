@@ -29,6 +29,28 @@ Control. Demonstrates Queneau assembly on dialogue.
 
 * example.dinosaurs.py: Generates dinosaur names.
 
+ebooks.py
+---------
+
+A module for incongruously sampling texts in the style of the infamous
+@horse_ebooks. Based on the @zzt_ebooks algorithm by Adam Parrish.
+
+Example scripts for ebooks.py:
+
+* example.horse_ebooks.py: Selects some lines from a Project Gutenberg
+  text, with a bias towards the keywords you give it as command-line
+  arguments.
+
+markov.py
+---------
+
+A module for generating Markov chains from text. The primary purpose
+of the olipy library is to promote alternatives to Markov chains (such
+as Queneau assembly and the _ebooks algorithm), but sometimes you
+really do want a Markov chain.
+
+markov.py was originally written by Adam Parrish.
+
 gibberish.py
 ------------
 
@@ -42,18 +64,6 @@ Example scripts for gibberish.py:
 
 * example.corrupt.py: "Corrupts" whatever text is typed in by adding
 increasing numbers of diacritical marks.
-
-ebooks.py
----------
-
-A module for incongruously sampling texts in the style of the infamous
-@horse_ebooks. Based on the @zzt_ebooks algorithm by Adam Parrish.
-
-Example scripts for ebooks.py:
-
-* example.horse_ebooks.py: Selects some lines from a Project Gutenberg
-  text, with a bias towards the keywords you give it as command-line
-  arguments.
 
 gutenberg.py
 ------------

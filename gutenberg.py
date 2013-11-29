@@ -2,6 +2,7 @@ import re
 import logging
 import os
 import zipfile
+import random
 
 class ProjectGutenbergText(object):
     """Class for dealing with Project Gutenberg texts."""
@@ -108,8 +109,12 @@ class ProjectGutenbergText(object):
         year_directories = ['etext' + x for x in (
                 '90',' 91', '92', '93', '94', '95', '96', '97', '98', '99',
                 '00', '01', '02', '03', '04', '05', '06')]
-        year_directories = ['etext06']
         numbered_directories = list(str(x) for x in range(1,10))
+
+        # Sort the directories randomly to provide a little variety.
+        randomly = lambda x: random.random()
+        year_directories = sorted(year_directories, key=randomly)
+        numbered_directories = sorted(numbered_directories, key=randomly)
 
         if None in allow_formats:
             for directory in year_directories:
