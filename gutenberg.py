@@ -8,11 +8,21 @@ class ProjectGutenbergText(object):
     """Class for dealing with Project Gutenberg texts."""
 
     START = [re.compile("Start[^\n]*Project Gutenberg.*", re.I),
-             re.compile("\*END\*THE SMALL PRINT!.*", re.I)]
+             re.compile("END.THE SMALL PRINT!.*", re.I),
+             re.compile("SMALL PRINT!.*\*END\*", re.I),
+             ]
 
-    END = re.compile("End[^\n]*Project Gutenberg.*", re.I)
+    END = [re.compile("End[^\n]*Project Gutenberg.*", re.I),
+           re.compile("of the Project Gutenberg", re.I),
+           re.compile("End of this Etext", re.I),
+           re.compile("End of\W+Project Gutenberg", re.M),
+           re.compile("Ende dieses Projekt Gutenberg Etextes", re.I),
+           re.compile("The Project Gutenberg Etext", re.I)]
     LANGUAGE = re.compile("Language: ([\w -()]+)", re.I)
     ENCODING = re.compile("C.*set encoding: ([\w -]+)", re.I)
+
+    # TODO: replace this with language information taken from the RDF data.
+    NOT_IN_ENGLISH = ["7wdvn10.zip", "7wml112.zip"]
 
     def __init__(self, text, name=None):
         header, text, footer = self.extract_header_and_footer(text)
@@ -44,6 +54,9 @@ class ProjectGutenbergText(object):
 
         m = self.LANGUAGE.search(header)
         if m is None:
+            filename = os.path.split(name)[1]
+            if filename in self.NOT_IN_ENGLISH:
+                self.language = "Not English!"
             # Who knows?
             logging.warn("%s specifies no language, assuming English." % name)
             self.language = "English"
@@ -79,10 +92,15 @@ class ProjectGutenbergText(object):
         if m is None:
             # Make a wild guess.
             start, start2 = 0, 1000
+            # import pdb; pdb.set_trace()
         else:
             start, start2 = m.span()
-        m = cls.END.search(text, start2+100)
+        for s in cls.END:
+            m = s.search(text, start2+100)
+            if m is not None:
+                break
         if m is None:
+            # import pdb; pdb.set_trace()
             end =len(text)
             end2 = end
         else:
