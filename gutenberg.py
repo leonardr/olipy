@@ -24,14 +24,15 @@ class ProjectGutenbergText(object):
     START = [re.compile("Start[^\n]*Project Gutenberg.*", re.I),
              re.compile("END.THE SMALL PRINT!.*", re.I),
              re.compile("SMALL PRINT!.*\*END\*", re.I),
+             re.compile('\["Small Print" V.*', re.I),
              ]
 
     END = [re.compile("End[^\n]*Project Gutenberg.*", re.I),
-           re.compile("^The Project Gutenberg Etext", re.I),
            re.compile("of the Project Gutenberg", re.I),
            re.compile("End of this Etext", re.I),
            re.compile("End of\W+Project Gutenberg", re.M),
            re.compile("Ende dieses Projekt Gutenberg Etextes", re.I),
+           re.compile("^The Project Gutenberg Etext", re.I),
            re.compile("The Project Gutenberg Etext", re.I),
            ]
     LANGUAGE = re.compile("Language: ([\w -()]+)", re.I)
