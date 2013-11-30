@@ -92,10 +92,11 @@ class EbooksQuotes(object):
             return
 
         probability = self.probability
-        if len(para) == 1:
-            probability *= 100
-        elif para[0][0].upper() == para[0][0]:
+        if para[0][0].upper() == para[0][0]:
+            # We greatly prefer lines that start with capital letters.
             probability *= 5
+        else:
+            probability /= 4
 
         gathering = False
         in_progress = None
@@ -151,7 +152,6 @@ class EbooksQuotes(object):
                         if len(proper_nouns) < len(tags) / 3.0:
                             # We're good.
                             yield phrase
-
 
                 matches = self._line_matches(line)
                 if matches or random.random() < probability:

@@ -1,11 +1,24 @@
+import json
 import re
 import logging
 import os
 import zipfile
 import random
+NS = dict()
+try:
+    import rdflib
+    from rdflib.namespace import Namespace
+    NS['dcterms'] = Namespace("http://purl.org/dc/terms/")
+    NS['dcam'] = Namespace("http://purl.org/dc/dcam/")
+    NS['rdf'] = Namespace(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+    NS['gutenberg'] = Namespace("http://www.gutenberg.org/2009/pgterms/")
+except ImportError, e:
+    rdflib = None
 
 class ProjectGutenbergText(object):
     """Class for dealing with Project Gutenberg texts."""
+
+    ids_for_old_filenames = None
 
     START = [re.compile("Start[^\n]*Project Gutenberg.*", re.I),
              re.compile("END.THE SMALL PRINT!.*", re.I),
@@ -21,14 +34,17 @@ class ProjectGutenbergText(object):
     LANGUAGE = re.compile("Language: ([\w -()]+)", re.I)
     ENCODING = re.compile("C.*set encoding: ([\w -]+)", re.I)
 
-    # TODO: replace this with language information taken from the RDF data.
-    NOT_IN_ENGLISH = ["7wdvn10.zip", "7wml112.zip"]
-
-    def __init__(self, text, name=None):
+    def __init__(self, text, name=None, rdf_catalog_path=None):
         header, text, footer = self.extract_header_and_footer(text)
+        self.rdf_catalog_path= rdf_catalog_path
+        self._graph = None
         if name is None:
-            name = text[:20]
+            name = text[:20]   
+            self.etext_id = None
+        else:
+            self.etext_id = self.etext_id_from_filename(name)
         self.name = name
+
         m = self.ENCODING.search(header)
         if m is None:
             if name.endswith(".utf-8"):
@@ -52,16 +68,19 @@ class ProjectGutenbergText(object):
 
             self.original_encoding = enc
 
-        m = self.LANGUAGE.search(header)
-        if m is None:
-            filename = os.path.split(name)[1]
-            if filename in self.NOT_IN_ENGLISH:
-                self.language = "Not English!"
-            # Who knows?
-            logging.warn("%s specifies no language, assuming English." % name)
-            self.language = "English"
+        # Figure out which language(s) the text is in.
+        if self.graph is not None:
+            # The most reliable source is an RDF graph. If we have one, use it.
+            self.languages = set(
+                [unicode(x[2]) for x in self.graph.triples((None, NS['dcterms'].language, None))])
         else:
-            self.language = m.groups()[0]
+            # Look for a "Language: Foo" bit of text in the header.
+            m = self.LANGUAGE.search(header)
+            if m is None:
+                logging.warn("%s specifies no language." % name)
+                self.languages = set([])
+            else:
+                self.languages = set([m.groups()[0]])
 
         check_encoding = self.original_encoding or 'ascii'
         self.text = None
@@ -81,6 +100,37 @@ class ProjectGutenbergText(object):
         if self.text is None:
             log.error("Can't determine encoding for %s (specified encoding is %s)" % (
                     name, self.original_encoding))
+
+    def etext_uri(self):
+        return "http://www.gutenberg.org/ebooks/%s" % self.etext_id
+
+    @property
+    def graph(self):
+        if rdflib is None or self.rdf_catalog_path is None:
+            return None
+        if self._graph is None:
+            self._graph = rdflib.Graph()
+            self._graph.load(open(self.rdf_path))
+        return self._graph
+
+    @property
+    def rdf_path(self):
+        return os.path.join(
+            self.rdf_catalog_path, "cache", "epub",
+            str(self.etext_id), "pg%s.rdf" % self.etext_id)
+
+    def etext_id_from_filename(self, path):
+        if self.ids_for_old_filenames is None:
+            # Load the mapping from JSON.
+            this_dir = os.path.split(__file__)[0]
+            mapping_file = os.path.join(
+                this_dir, 'data', 'ids_for_old_project_gutenberg_filenames.json')
+            self.ids_for_old_filenames = json.load(open(mapping_file))
+
+        path_part, filename = os.path.split(path)
+        ignore, directory_part = os.path.split(path_part)
+        unique_filename = os.path.join(directory_part, filename)
+        return self.ids_for_old_filenames[unique_filename]
 
     @classmethod
     def extract_header_and_footer(cls, text):
@@ -136,8 +186,7 @@ class ProjectGutenbergText(object):
 
         if None in allow_formats:
             for directory in year_directories:
-                # Early PG texts. Bunch of texts in one directory, all
-                # can be assumed to be ASCII for performance reasons.
+                # Early PG texts. One directory per year, one format per text.
                 books_path =  os.path.join(mount_path, str(directory))
                 for dirpath, dirnames, filenames in os.walk(books_path):
                     for name in filenames:
@@ -145,8 +194,8 @@ class ProjectGutenbergText(object):
                             yield os.path.join(dirpath, name)
 
         for directory in numbered_directories:
-            # Later PG texts. Each text in one directory, potentially in several
-            # formats.
+            # Later PG texts. One directory per text, each text
+            # potentially in several formats.
             books_path =  os.path.join(mount_path, str(directory))
             for dirpath, dirnames, filenames in os.walk(books_path):
                 # Does this directory contain a text?
@@ -179,7 +228,8 @@ class ProjectGutenbergText(object):
     @classmethod
     def texts_on_media(
         cls, mount_path,
-        allow_languages=["English"],
+        rdf_catalog_path=None,
+        allow_languages=["en", "English"],
         allow_formats=["0", "8", None,], 
         deny_formats=None):
         """Yield ProjectGutenbergText objects from a mounted Gutenberg CD or DVD.
@@ -192,19 +242,20 @@ class ProjectGutenbergText(object):
         The best way to get Project Gutenberg ISOs is via BitTorrent:
         http://www.gutenberg.org/wiki/Gutenberg:The_CD_and_DVD_Project#Downloading_Via_BitTorrent
         """
+        allow_languages = set(allow_languages)
         deny_formats = list(deny_formats or [])
         # We're not set up to handle any of these formats.
         deny_formats.extend(["h", "t", "x", "m", "r", "pdf", "lit", "doc", "pub"])
         for path in cls.files_on_media(mount_path, allow_formats, deny_formats):
             try:
-                text = cls.text_from_zip(path, allow_languages)
-                if text.language in allow_languages:
+                text = cls.text_from_zip(path, rdf_catalog_path)
+                if len(text.languages.intersection(allow_languages)) > 0:
                     yield text
             except Exception, e:
                 logging.error("%s: %s" % (path, e))
 
     @classmethod
-    def text_from_zip(cls, path, allow_languages=["English"]):
+    def text_from_zip(cls, path, rdf_catalog_path=None):
         """Return a ProjectGutenbergText object from a zip file."""
         archive = zipfile.ZipFile(path)
         inside = archive.filelist
@@ -214,7 +265,7 @@ class ProjectGutenbergText(object):
                     path, len(inside), ", ".join(filenames)))
         possibilities = [x for x in filenames if x.lower().endswith(".txt")]
         data = archive.read(possibilities[0])
-        return ProjectGutenbergText(data, path)
+        return ProjectGutenbergText(data, path, rdf_catalog_path)
 
     @property
     def paragraphs(self):
