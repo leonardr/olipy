@@ -20,17 +20,20 @@ class ProjectGutenbergText(object):
 
     ids_for_old_filenames = None
 
+    ETEXT_ID = re.compile("^([0-9]+)")
     START = [re.compile("Start[^\n]*Project Gutenberg.*", re.I),
              re.compile("END.THE SMALL PRINT!.*", re.I),
              re.compile("SMALL PRINT!.*\*END\*", re.I),
              ]
 
     END = [re.compile("End[^\n]*Project Gutenberg.*", re.I),
+           re.compile("^The Project Gutenberg Etext", re.I),
            re.compile("of the Project Gutenberg", re.I),
            re.compile("End of this Etext", re.I),
            re.compile("End of\W+Project Gutenberg", re.M),
            re.compile("Ende dieses Projekt Gutenberg Etextes", re.I),
-           re.compile("The Project Gutenberg Etext", re.I)]
+           re.compile("The Project Gutenberg Etext", re.I),
+           ]
     LANGUAGE = re.compile("Language: ([\w -()]+)", re.I)
     ENCODING = re.compile("C.*set encoding: ([\w -]+)", re.I)
 
@@ -129,8 +132,11 @@ class ProjectGutenbergText(object):
 
         path_part, filename = os.path.split(path)
         ignore, directory_part = os.path.split(path_part)
-        unique_filename = os.path.join(directory_part, filename)
-        return self.ids_for_old_filenames[unique_filename]
+        if "etext" in directory_part:
+            unique_filename = os.path.join(directory_part, filename)
+            return self.ids_for_old_filenames[unique_filename]
+        else:
+            return int(self.ETEXT_ID.search(filename).groups()[0])
 
     @classmethod
     def extract_header_and_footer(cls, text):
@@ -249,7 +255,7 @@ class ProjectGutenbergText(object):
         for path in cls.files_on_media(mount_path, allow_formats, deny_formats):
             try:
                 text = cls.text_from_zip(path, rdf_catalog_path)
-                if len(text.languages.intersection(allow_languages)) > 0:
+                if not allow_languages or len(text.languages.intersection(allow_languages)) > 0:
                     yield text
             except Exception, e:
                 logging.error("%s: %s" % (path, e))
