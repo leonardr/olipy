@@ -1,6 +1,6 @@
 """
 Cronjobs run like clockwork, and sometimes you want something to
-happen a little less predicably. The Scheduler class will schedule
+happen a little less predictably. The Scheduler class will schedule
 events to happen according to a normal distribution.
 
 You specify the mean of the normal distribution (how often something
@@ -8,10 +8,15 @@ should happen, on average) and the standard deviation (how much
 reality is allowed to deviate from the average).
 
 So if you want something to happen every hour, more or less, you can
-run your cronjob once every five minutes and have it call this code to
+run your cronjob once every ten minutes and have it call this code to
 check whether anything should actually happen:
 
 Scheduler(60*60,60*10).is_it_time(last_time_something_happened)
+
+Since you're buying a brand new lottery ticket every time you call
+is_it_time(), events will actually happen more often than you schedule
+them for. You can compensate for this by setting your mean a little
+higher than you want to.
 """
 
 from datetime import datetime
