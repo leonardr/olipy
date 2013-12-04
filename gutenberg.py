@@ -170,7 +170,8 @@ class ProjectGutenbergText(object):
     def files_on_media(
         cls, mount_path,
         allow_formats=["0", "8", None,], 
-        deny_formats=["h", "t", "x", "m", "r", "pdf", "lit", "doc", "pub"]):
+        deny_formats=["h", "t", "x", "m", "r", "pdf", "lit", "doc", "pub"],
+        start_at=None):
         """Yields paths to zip files on a mounted Gutenberg CD or DVD.
 
         Yields a given text in at most one format. By default, UTF-8
@@ -186,11 +187,7 @@ class ProjectGutenbergText(object):
                 '00', '01', '02', '03', '04', '05', '06')]
         numbered_directories = list(str(x) for x in range(1,10))
 
-        # Sort the directories randomly to provide a little variety.
-        randomly = lambda x: random.random()
-        year_directories = sorted(year_directories, key=randomly)
-        numbered_directories = sorted(numbered_directories, key=randomly)
-
+        started = (start_at is None)
         if None in allow_formats:
             for directory in year_directories:
                 # Early PG texts. One directory per year, one format per text.
@@ -198,7 +195,10 @@ class ProjectGutenbergText(object):
                 for dirpath, dirnames, filenames in os.walk(books_path):
                     for name in filenames:
                         if name.endswith('.zip'):
-                            yield os.path.join(dirpath, name)
+                            if not started and name.startswith(start_at):
+                                started = True
+                            if started:
+                                yield os.path.join(dirpath, name)
 
         for directory in numbered_directories:
             # Later PG texts. One directory per text, each text
@@ -229,7 +229,10 @@ class ProjectGutenbergText(object):
                 # the highest-priority one.
                 for format in allow_formats:
                     if format in formats:
-                        yield os.path.join(dirpath, formats[format])
+                        if not started and name.startswith(start_at):
+                            started = True
+                        if started:
+                            yield os.path.join(dirpath, formats[format])
                         break
 
     @classmethod
@@ -238,7 +241,8 @@ class ProjectGutenbergText(object):
         rdf_catalog_path=None,
         allow_languages=["en", "English"],
         allow_formats=["0", "8", None,], 
-        deny_formats=None):
+        deny_formats=None,
+        start_at=None):
         """Yield ProjectGutenbergText objects from a mounted Gutenberg CD or DVD.
 
         Yields a given text in at most one format. By default, only
@@ -253,7 +257,7 @@ class ProjectGutenbergText(object):
         deny_formats = list(deny_formats or [])
         # We're not set up to handle any of these formats.
         deny_formats.extend(["h", "t", "x", "m", "r", "pdf", "lit", "doc", "pub"])
-        for path in cls.files_on_media(mount_path, allow_formats, deny_formats):
+        for path in cls.files_on_media(mount_path, allow_formats, deny_formats, start_at):
             try:
                 text = cls.text_from_zip(path, rdf_catalog_path)
                 if not allow_languages or len(text.languages.intersection(allow_languages)) > 0:

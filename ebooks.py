@@ -8,12 +8,14 @@ from tokenizer import WordTokenizer
 
 class EbooksQuotes(object):
 
-    def __init__(self, keywords=None, probability=0.001,
-                 maximum_quote_size=140, wrap_at=30,
-                 truncate_chance=1.0/4):
+    def __init__(
+        self, keywords=None, probability=0.001,
+        minimum_quote_size=8, maximum_quote_size=140,
+        wrap_at=30, truncate_chance=1.0/4):
         keywords = keywords or []
         self.keywords = [x.lower() for x in keywords]
         self.probability = probability
+        self.minimum_quote_size = minimum_quote_size
         self.maximum_quote_size = maximum_quote_size
         self.wrap_at = wrap_at
         self.truncate_chance = truncate_chance
@@ -105,7 +107,8 @@ class EbooksQuotes(object):
             if gathering:
                 # We are currently putting together a quote.
                 done = False
-                if random.random() < self.truncate_chance:
+                if (random.random() < self.truncate_chance 
+                    and len(in_progress) >= self.minimum_quote_size):
                     # Yield a truncated quote.
                     done = True
                 else:
@@ -129,10 +132,26 @@ class EbooksQuotes(object):
                     if random.random() < 0.4:
                         quote = self.truncate_at_stopword(quote)
 
+                    # Quotes that end with two consecutive stopwords
+                    # are not funny. It would be best to parse every
+                    # single quote and make sure it doesn't end with
+                    # two consecutive stopwords. But in practice it's
+                    # much faster to just check for the biggest
+                    # offenders, which all end in 'the', and then trim
+                    # the 'the'.
+                    low = quote.lower()
+                    for stopwords in ('of the', 'in the', 'and the',
+                                      'in the', 'on the', 'for the'):
+                        if low.endswith(stopwords):
+                            quote = quote[:len(" the")-1]
+                            break
+
                     quote = unicode(quote)
                     quote = self.remove_ending_punctuation(quote)
 
-                    yield quote
+                    if (len(quote) >= self.minimum_quote_size
+                        and len(quote) <= self.maximum_quote_size):
+                        yield quote
             else:
                 # We are not currently gathering a quote. Should we
                 # be?
