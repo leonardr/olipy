@@ -82,6 +82,13 @@ integration.py
 A module for integrating Olipy with other pieces of software (notably
 the Twitter API).
 
+wordfilter.py
+-------------
+
+A Python port of Darius Kazemi's word filter
+(https://npmjs.org/package/wordfilter), for finding strings that
+contain racial slurs and the like.
+
 data/
 -----
 
