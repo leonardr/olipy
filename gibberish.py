@@ -10,10 +10,6 @@ from randomness import Gradient, WanderingMonsterTable, COMMON, UNCOMMON, RARE, 
 
 import data
 
-ᴬᴮᴰᴱᴳ
-
-# subscripts: ₐₑₕᵢⱼₒₖₗₘₙₚₛₜᵣᵤᵥₓ
-
 CUSTOM_ALPHABETS = {
     "Dice": u"\N{Die Face-1}\N{Die Face-2}\N{Die Face-3}\N{Die Face-4}\N{Die Face-5}\N{Die Face-6}",
     "Completely Circled Alphabetics": u"ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ",
@@ -34,9 +30,14 @@ CUSTOM_ALPHABETS = {
     "Monospace Alphabetics" : u"𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣",
     "Alphabetics with Umlaut" : u"ÄB̈C̈D̈ËF̈G̈ḦÏJ̈K̈L̈M̈N̈ÖP̈Q̈R̈S̈T̈ÜV̈ẄẌŸZ̈äb̈c̈d̈ëf̈g̈ḧïj̈k̈l̈m̈n̈öp̈q̈r̈s̈ẗüv̈ẅẍÿz̈",
     "Modifier Alphabetics" : u"ᴬᴮʿᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴻᴼᴾᴿᵀᵁⱽᵂₐᵇᵈᵉᶠᵍʰᶤʲᵏˡᵐᵑᵒᵖʳˢᵗᵤᵛʷˣʸᶻ",
+    "Turned Alphabetics": u"ɐqɔpǝɟƃɥıɾʞʃɯuodbɹsʇnʌʍxʎz",
+    "Subscript Alphabetics": u"ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘʀꜱᴛᴜᴠᴡʏᴢₐₑₕᵢⱼₖₗₘₙₒₚᵣₛₜᵤᵥₓ",
+    "Superscript Alphabetics": u"ᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁⱽᵂᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛʷˣʸᶻ",
+    "Superscript and Subscript Math" : u"₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾",
     "Filled Circled Numerics": u"➊➋➌➍➎➏➐➑➒",
+    "Double Circled Numerics": u"⓵⓶⓷⓸⓹⓺⓻⓼⓽⓾",
     "Empty Circled Numerics": u"①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳",
-    "Circled Alphanumerics": u"①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ⓪⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴⓵⓶⓷⓸⓹⓺⓻⓼⓽⓾❶❷❸❹❺❻❼❽❾❿➀➁➂➃➄➅➆➇➈➉➊➋➌➍➎➏➐➑➒➓㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㊶㊷㊸㊹㊺㊻㊼㊽㊾㊿♳♴♵♶♷♸♹",
+    "Circled Alphanumerics": u"①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽⑾⑿⒀⒁⒂⒃⒄⒅⒆⒇⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ⓪⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴⓵⓶⓷⓸⓹⓺⓻⓼⓽⓾❶❷❸❹❺❻❼❽❾❿➀➁➂➃➄➅➆➇➈➉➊➋➌➍➎➏➐➑➒➓㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㊶㊷㊸㊹㊺㊻㊼㊽㊾㊿♳♴♵♶♷♸♹⓵⓶⓷⓸⓹⓺⓻⓼⓽⓾",
     "Stars": u"✢✣✤✥✦✧✨✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋*͙⁎⁑⃰∗⊛⧆﹡＊٭≛⋆⍟⍣★☆☪⚝✡✦✧⭐⭑⭒",
     "Symbology": u"☀☁☂☃☄★☆☎☏☔☕☚☛☠☢☤☭☮☯☹☺☻☼♫⚐⚑⚒⚓⚔⚕⚖♻✄✌✍✏♀♂⌚",
     "Crossouts": u"Xxˣ͓̽ͯᶍẊẋẌẍₓ⒳Ⓧⓧ☒✕✖✗✘Ｘｘ𝁪𝅃𝅅𝐗𝐱𝑋𝑥𝑿𝒙𝒳𝓍𝓧𝔁𝔛𝔵𝕏𝕩𝖃𝖝𝖷𝗑𝗫𝘅𝘟𝘹𝙓𝙭𝚇𝚡×⨯ⵝ᙭Ҳ⚔⤧ҳ⤩᙮ⅹⅩ⤨⤪⨉⤫⤬",
@@ -134,7 +135,9 @@ class Alphabet:
                "Sans Bold Italic Alphabetics",
                "Monospace Alphabetics",
                "Alphabetics with Umlaut",
-               "Modifier Alphabetics",
+               "Turned Alphabetics",
+               "Subscript Alphabetics",
+               "Superscript Alphabetics",
                ]
 
     CYRILLIC_S = [CYRILLIC, CYRILLIC_FULL]
@@ -289,6 +292,7 @@ class Alphabet:
         "Old Italic",
         "Circled Alphabetics",
         "Circled Alphanumerics",
+        "Double Circled Numerics",
         "Bold Alphabetics",
         "Italic Alphabetics",
         "Script Alphabetics",
@@ -356,6 +360,7 @@ class Alphabet:
         "Number Forms",
         "Fullwidth ASCII Digits",
         "Superscripts and Subscripts",
+        "Superscript and Subscript Math",
         ]
 
     WEIRD_TWITTER_MATH_MIXINS = [
@@ -1030,6 +1035,7 @@ class Alphabet:
     MOSAIC_CHARSET_S = [
         CUSTOM_ALPHABETS["Completely Circled Alphabetics"],
         CUSTOM_ALPHABETS["Fullwidth Alphabetics"],
+        CUSTOM_ALPHABETS["Double Circled Numerics"],
         CUSTOM_ALPHABETS["Filled Circled Numerics"],
         CUSTOM_ALPHABETS["Empty Circled Numerics"],
         CUSTOM_ALPHABETS["Dice"],
@@ -1609,6 +1615,38 @@ class GibberishTable(WanderingMonsterTable):
                 glitch_characters += random.choice(glitch_charset)
             gibberish.charset += glitch_characters
         return gibberish
+
+class GlyphNames(object):
+    """I know the names of glyphs."""
+
+    def __init__(self):
+        self.inverse = dict()
+        # self.missing = []
+        # self.max_present = None
+        for i in range(1, 1000000):
+            c = unichr(i)
+            try:
+                glyph_name = unicodedata.name(c)
+                self.inverse[glyph_name] = c
+                # self.max_present = i
+            except ValueError, e:
+                # self.missing.append(i)
+                continue
+
+    @classmethod
+    def names(self, s):
+        """Yield the name of every glyph in the given string."""
+        for glyph in s:
+            try:
+                yield glyph, unicodedata.name(glyph)
+            except ValueError, e:
+                yield glyph, None
+
+    def matching(self, exp):
+        """Yield all name-glyph pairs where the name matches a regexp."""
+        for name, value in self.inverse.keys():
+            if exp.search(name):
+                yield name, value
 
 if __name__ == '__main__':
     freq = None
