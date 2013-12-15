@@ -4,8 +4,20 @@ olipy
 Olipy is a Python library for artistic text generation. It has many
 useful modules.
 
+Setup
+-----
+
+Olipy uses the [`TextBlob`](https://textblob.readthedocs.org/) library
+to parse text. Note that `TextBlob` has extra dependencies (text
+corpora) which are not installed as part of the Python package.
+Instructions for installing the extra dependencies are on the `TextBlob`
+site, but they boil down to running [this Python
+script](https://raw.github.com/sloria/TextBlob/master/download_corpora.py).
+
 queneau.py
 ----------
+
+_Dependencies:_ `TextBlob`
 
 A module for Queneau assembly, a technique pioneered by Raymond
 Queneau in his 1961 book "Cent mille milliards de poèmes" ("One
@@ -32,6 +44,8 @@ Control. Demonstrates Queneau assembly on dialogue.
 ebooks.py
 ---------
 
+_Dependencies:_ `TextBlob`
+
 A module for incongruously sampling texts in the style of the infamous
 @horse_ebooks. Based on the @zzt_ebooks algorithm by Adam Parrish.
 
@@ -43,6 +57,8 @@ Example scripts for ebooks.py:
 
 markov.py
 ---------
+
+_Dependencies:_ None
 
 A module for generating new strings of tokens from old strings of
 tokens using a Markov chains. The primary purpose of the olipy library
@@ -60,6 +76,8 @@ markov.py was originally written by Adam "A. A." Parrish.
 gibberish.py
 ------------
 
+_Dependencies:_ None
+
 A module for those interested in the appearance of Unicode
 glyphs. Its main use is generating aesthetically pleasing gibberish
 using selected combinations of Unicode code charts.
@@ -74,10 +92,17 @@ increasing numbers of diacritical marks.
 gutenberg.py
 ------------
 
+_Dependencies:_ `rdflib` (Only necessary if you have a copy of [Project
+Gutenberg's RDF
+catalog](http://www.gutenberg.org/wiki/Gutenberg:Feeds#Current_RDF_Format)
+and you want to get extra metadata from it.)
+
 A module for dealing with texts from Project Gutenberg.
 
 integration.py
 --------------
+
+_Dependencies:_ python-twitter
 
 A module for integrating Olipy with other pieces of software (notably
 the Twitter API).
@@ -85,9 +110,11 @@ the Twitter API).
 wordfilter.py
 -------------
 
-A Python port of Darius Kazemi's word filter
-(https://npmjs.org/package/wordfilter), for finding strings that
-contain racial slurs and the like.
+_Dependencies:_ None
+
+A Python port of [Darius Kazemi's word
+filter](https://npmjs.org/package/wordfilter), for finding strings
+that contain racial slurs and the like.
 
 data/
 -----
