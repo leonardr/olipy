@@ -47,7 +47,9 @@ ebooks.py
 _Dependencies:_ `TextBlob`
 
 A module for incongruously sampling texts in the style of the infamous
-@horse_ebooks. Based on the @zzt_ebooks algorithm by Adam Parrish.
+[https://twitter.com/horse_ebooks](@horse_ebooks). Based on the
+[https://twitter.com/zzt_ebooks](@zzt_ebooks) algorithm by Adam
+Parrish.
 
 Example scripts for ebooks.py:
 
@@ -60,16 +62,16 @@ markov.py
 
 _Dependencies:_ None
 
-A module for generating new strings of tokens from old strings of
-tokens using a Markov chains. The primary purpose of the olipy library
-is to promote alternatives to Markov chains (such as Queneau assembly
-and the _ebooks algorithm), but sometimes you really do want a Markov
-chain.
+A module for generating new token lists from old token lists using a
+Markov chain.
 
-Queneau assembly is usually better than a Markov chain above the word
-level (constructing paragraphs from sentences) and below the word
-level (constructing words from phonemes), but Markov chains are
-usually better when assembling sequences of words.
+The primary purpose of the olipy library is to promote alternatives to
+Markov chains (such as Queneau assembly and the _ebooks algorithm),
+but sometimes you really do want a Markov chain. Queneau assembly is
+usually better than a Markov chain above the word level (constructing
+paragraphs from sentences) and below the word level (constructing
+words from phonemes), but Markov chains are usually better when
+assembling sequences of words.
 
 markov.py was originally written by Adam "A. A." Parrish.
 
