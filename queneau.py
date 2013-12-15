@@ -193,7 +193,20 @@ class Assembler(object):
                     continue
             f.write(json.dumps(item) + "\n")
 
+class SentenceAssembler(Assembler):
+    """Assemble sentences from words.
+
+    Markov chains are usually better for this."""
+
+    WHITESPACE = re.compile("\s+")
+
+    def add(self, item):
+        words = self.WHITESPACE.split(item)
+        super(SentenceAssembler, self).add(words)
+
 class WordAssembler(Assembler):
+
+    """Assemble words from runs of vowels and consonants."""
 
     def __init__(self, initial=[]):
         self.vowel_runs_by_position = self.empty_bucket()
