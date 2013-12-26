@@ -188,17 +188,18 @@ class ProjectGutenbergText(object):
         numbered_directories = list(str(x) for x in range(1,10))
 
         started = (start_at is None)
-        if None in allow_formats:
-            for directory in year_directories:
-                # Early PG texts. One directory per year, one format per text.
-                books_path =  os.path.join(mount_path, str(directory))
-                for dirpath, dirnames, filenames in os.walk(books_path):
-                    for name in filenames:
-                        if name.endswith('.zip'):
-                            if not started and name.startswith(start_at):
-                                started = True
-                            if started:
-                                yield os.path.join(dirpath, name)
+        # if None in allow_formats:
+        #     for directory in year_directories:
+        #         # Early PG texts. One directory per year, one format per text.
+        #         books_path =  os.path.join(mount_path, str(directory))
+        #         for dirpath, dirnames, filenames in os.walk(books_path):
+        #             for name in filenames:
+        #                 if name.endswith('.zip'):
+        #                     if not started and name.startswith(start_at):
+        #                         started = True
+        #                     if (started and not name.endswith('h.zip')
+        #                         and not name.endswith('l.zip')):
+        #                         yield os.path.join(dirpath, name)
 
         for directory in numbered_directories:
             # Later PG texts. One directory per text, each text
@@ -213,7 +214,7 @@ class ProjectGutenbergText(object):
 
                 if not contains_text:
                     continue
-                    
+
                 formats = {}
                 for name in filenames:
                     if not name.endswith('.zip'):
@@ -264,6 +265,7 @@ class ProjectGutenbergText(object):
                     yield text
             except Exception, e:
                 logging.error("%s: %s" % (path, e))
+                # raise e
 
     @classmethod
     def text_from_zip(cls, path, rdf_catalog_path=None):
