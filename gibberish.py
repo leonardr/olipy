@@ -1411,6 +1411,10 @@ class CompositeGibberish(Gibberish):
             gibberishes.append(g.words(size_of_each))
         return random.choice(self.SEPARATORS).join(gibberishes)
 
+class RosettaStoneGibberish(CompositeGibberish):
+    """A number of small gibberishes, one per line."""
+    SEPARATORS = u"\n"
+
 class GibberishTable(WanderingMonsterTable):
 
     def __init__(self):
@@ -1462,6 +1466,9 @@ class GibberishTable(WanderingMonsterTable):
 
         # Composite gibberish
         self.add(lambda: CompositeGibberish(self), UNCOMMON)
+
+        # Composite gibberish, newline-separated
+        self.add(lambda: RosettaStoneGibberish(self), UNCOMMON)
 
         # A game board charset.
         self.add(GameBoardGibberish, VERY_RARE)
@@ -1660,6 +1667,7 @@ if __name__ == '__main__':
     gibberish = None
     if alphabets:
         gibberish = Gibberish.from_alphabets(alphabets)
+    table = GibberishTable()
     for i in range(100):
         if not alphabets:
             gibberish = Gibberish.random(freq)
