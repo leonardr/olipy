@@ -3,7 +3,7 @@ import os
 
 dir = os.path.split(__file__)[0]
 
-BLACKLIST = json.load(open(os.path.join(dir, "data", "badwords.json")))['badwords']
+BLACKLIST = json.load(open(os.path.join(dir, "data", "wordlists", "badwords.json")))['badwords']
 
 def is_blacklisted(string, blacklist=BLACKLIST):
     s = string.lower()
