@@ -21,12 +21,115 @@ class EbooksQuotes(object):
         self.truncate_chance = truncate_chance
         self._blobs = {}
 
+    COMMON_STARTING_WORDS= [
+        "I","How","The","You","What","A","Why",
+        "And","This","It","Do","In","We","Learn","If",
+        "But","Don't","Your","When","Discover",
+        "Are","Get","There","My","Have","To","That",
+        "As","Make","Let","One"]
+
+    # Quotes that end in certain parts of speech get higher ratings.
+    PART_OF_SPEECH_SCORE_MULTIPLIERS = {
+        "NNP": 3.2,
+        "NNS": 2.7,
+        "NN": 2.5,
+        "VGD": 1.9,
+        "VBG": 1.9,
+        "PRP": 1.8,
+        "VB": 1.6,
+        "JJR": 1.3,
+        "CD": 1.2,
+        "RB": 1.2,
+        "VBP": 1}
+
+    PUNCTUATION_AND_COMMON_STARTING_WORD = re.compile('[.!?"] (%s) ' % (
+            "|".join(COMMON_STARTING_WORDS)))
+
     SEVERAL_CAPITALIZED_WORDS = re.compile("(([A-Z][a-zA-Z]+,? ){2,}[A-Z][a-zA-Z]+[!?.]?)")
+
+    ONE_LETTER = re.compile("[A-Za-z]")
+    ONE_WORD = re.compile("\W+")
+
+    data = ['" ', "' ", "--", '\)', ']', ',', '\.', '-']
+    BEGINNING_CRUFT = re.compile("^(%s)" % "|".join(data))
+
+    TOKENIZER = WordTokenizer()
+
+    @classmethod
+    def rate(cls, s, base_score=1.0, frequencies=None, obscurity_cutoff=None):
+        "Rate a string's suitability as an _ebook quote."
+        s = s.strip()
+        score = float(base_score)
+        # print s
+        # print " Starting rating: %.2f" % score
+
+        # People like very short or very long quotes.
+        # if len(s) < 40:
+        #    score *= 2
+        if len(s) > 128:
+            score *= 2
+            # print " Length bonus: %.2f" % score
+
+        blob = TextBlob(s.decode("utf8"))
+        try:
+            words = blob.words
+        except Exception, e:
+            # TODO: I'm sick of trying to get TextBlob to parse
+            # strings that include things like ". . . ". Just return
+            # the current score.
+            return score
+
+        if frequencies:
+            contains_known_word = False
+            contains_obscure_word = False
+            for word in words:
+                l = word.lower()
+                if l in frequencies:
+                    contains_known_word = True
+                    if frequencies[l] < obscurity_cutoff:
+                        contains_obscure_word = True
+                if contains_known_word and contains_obscure_word:
+                    break
+
+            # A string that contains no words that appear in the
+            # frequency list is heavily penalized. It's probably
+            # gibberish.
+            if not contains_known_word:
+                score *= 0.1
+                # print " No known word: %.2f" % score
+
+            # A string that contains no obscure words is even more
+            # heavily penalized. It's almost certainly boring.
+            if not contains_obscure_word:
+                score *= 0.01
+                # print " No obscure word: %.2f" % score
+
+        if s[0].upper() == s[0]:
+            # We like quotes that start with uppercase letters.
+            score *= 2.5
+            # print " Starts with uppercase letter: %.2f" % score
+
+        # Let's take a look at the first and last words.
+        first_word, ignore = blob.tags[0]
+        if first_word.capitalize() in cls.COMMON_STARTING_WORDS:
+            score *= 2.5
+            # print " Starts with common starting word: %.2f" % score
+
+        last_word, last_tag = blob.tags[-1]
+        if last_tag in cls.PART_OF_SPEECH_SCORE_MULTIPLIERS:
+            score *= cls.PART_OF_SPEECH_SCORE_MULTIPLIERS[last_tag]
+            # print " Bonus for part of speech %s: %.2f" % (last_tag, score)
+
+        if last_tag != 'NNP' and last_word[0].upper() == last_word[0]:
+            score *= 1.25
+            # print " Bonus for ending with a capitalized word: %.2f" % score
+        # print "Final score: %.2f" % score
+        return score
 
     # Ways of further tweaking a quote.
     def one_sentence_from(self, quote):
         """Reduce the given quote to a single sentence.
-        
+
         The choice is biased against the first sentence, which is less likely
         to be the start of a real in-text sentence.
         """
@@ -47,6 +150,13 @@ class EbooksQuotes(object):
 
         return s
 
+    def remove_beginning_punctuation(self, string):
+        old_string = None
+        while string != old_string:
+            old_string = string
+            string = self.BEGINNING_CRUFT.sub("", string)
+        return string
+
     def remove_ending_punctuation(self, string):
         # Notably absent: dash and colon, which make a quote
         # funnier.
@@ -56,6 +166,15 @@ class EbooksQuotes(object):
         while string and string[-1] in ',; ':
             string = string[:-1]
         return string
+
+    def truncate_to_common_word(self, text):
+        m = self.PUNCTUATION_AND_COMMON_STARTING_WORD.search(text)
+        if m is None:
+            return text
+        new_text = text[m.span()[0]+2:]
+        if len(new_text) < len(text) / 2:
+            return text
+        return new_text
 
     def truncate_at_stopword(self, string):
         # Truncate a string at the last stopword not preceded by
@@ -73,7 +192,7 @@ class EbooksQuotes(object):
 
         reversed_words = list(reversed(words[2:]))
         for i, w in enumerate(reversed_words):
-            if (w in Stopwords.MYSQL_STOPWORDS                
+            if (w in Stopwords.MYSQL_STOPWORDS
                 and i != len(reversed_words)-1 and
                 not reversed_words[i+1] in Stopwords.MYSQL_STOPWORDS):
                 # print "Stopword %s (previous) %s" % (w, reversed_words[i+1])
@@ -107,7 +226,7 @@ class EbooksQuotes(object):
             if gathering:
                 # We are currently putting together a quote.
                 done = False
-                if (random.random() < self.truncate_chance 
+                if (random.random() < self.truncate_chance
                     and len(in_progress) >= self.minimum_quote_size):
                     # Yield a truncated quote.
                     done = True
@@ -148,9 +267,14 @@ class EbooksQuotes(object):
 
                     quote = unicode(quote)
                     quote = self.remove_ending_punctuation(quote)
+                    quote = self.remove_beginning_punctuation(quote)
+
+                    if random.random() > 0.75:
+                        quote = self.truncate_to_common_word(quote)
 
                     if (len(quote) >= self.minimum_quote_size
-                        and len(quote) <= self.maximum_quote_size):
+                        and len(quote) <= self.maximum_quote_size
+                        and self.ONE_LETTER.search(quote)):
                         yield quote
             else:
                 # We are not currently gathering a quote. Should we
@@ -186,7 +310,7 @@ class EbooksQuotes(object):
                             [x.strip() for x in para[start_at:i+1]])
                     else:
                         in_progress = line.strip()
-                    
+
 
     def _line_matches(self, line):
         l = line.lower()

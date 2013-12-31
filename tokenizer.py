@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 import re
+from text.base import BaseTokenizer
 
-class WordTokenizer(object):
+class WordTokenizer(BaseTokenizer):
     """
 This tokenizer is copy-pasted version of TreebankWordTokenizer
 that doesn't split on @ and ':' symbols and doesn't split contractions::
@@ -67,6 +68,8 @@ that doesn't split on @ and ':' symbols and doesn't split contractions::
 
         return text.split()
 
+    def itokenize(self, text, *args, **kwargs):
+        return iterator(self.tokenize(text))
 
 word_tokenizer = WordTokenizer()
 
