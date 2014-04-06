@@ -221,6 +221,7 @@ class EbooksQuotes(object):
 
         gathering = False
         in_progress = None
+        last_yield = None
         for i in range(len(para)):
             line = para[i]
             if gathering:
@@ -276,11 +277,13 @@ class EbooksQuotes(object):
                         and len(quote) <= self.maximum_quote_size
                         and self.ONE_LETTER.search(quote)):
                         yield quote
+                        last_yield = quote
+                        continue
             else:
                 # We are not currently gathering a quote. Should we
                 # be?
                 r = random.random()
-                if random.random() < probability * 50:
+                if random.random() < probability:
                     # Run the regular expression and see if it matches.
                     m = self.SEVERAL_CAPITALIZED_WORDS.search(line)
                     if m is not None:
@@ -295,6 +298,7 @@ class EbooksQuotes(object):
                         if len(proper_nouns) < len(tags) / 3.0:
                             # We're good.
                             yield phrase
+                            continue
 
                 matches = self._line_matches(line)
                 if matches or random.random() < probability:
@@ -310,7 +314,6 @@ class EbooksQuotes(object):
                             [x.strip() for x in para[start_at:i+1]])
                     else:
                         in_progress = line.strip()
-
 
     def _line_matches(self, line):
         l = line.lower()

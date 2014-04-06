@@ -55,17 +55,27 @@ CUSTOM_ALPHABETS = {
 class Alphabet:
 
     @classmethod
-    def _fill_by_name(cls, data=None):
+    def _fill_by_name(cls, data=None, add_custom=True):
         for c in data:
             name = c['name']
             if 'characters' in c and len(c['characters']) > 0:
                 cls.by_name[name] = c
             if 'child' in c:
-                cls._fill_by_name(c['child'])
+                cls._fill_by_name(c['child'], False)
+
+        if not add_custom:
+            return
 
         # Also add in custom alphabets
         for name, chars in CUSTOM_ALPHABETS.items():
             cls.by_name[name] = dict(characters=chars)
+
+        # Add emoji.
+        emoji = []
+        for i in cls.EMOJI_S:
+            emoji += cls.by_name[i]['characters']
+        cls.by_name['Emoji'] = dict(characters=emoji)
+
 
     by_name = {}
 
@@ -374,6 +384,7 @@ class Alphabet:
     SYMBOLIC_ALPHABETS = [
         "APL symbols",
         "Miscellaneous Technical",
+        "Miscellaneous Symbols And Pictographs",
         "Optical Character Recognition (OCR)",
         "Arrows",
         "Supplemental Arrows-A",
@@ -1061,6 +1072,12 @@ class Alphabet:
         TRIANGLES,
         ]
 
+    EMOJI_S = [
+        "Miscellaneous Symbols And Pictographs",
+        "Transport and Map Symbols",
+        "Emoticons",
+        ]
+
 class WordLength:
 
     @classmethod
@@ -1120,6 +1137,7 @@ class Corruptor(object):
 class Gibberish(object):
 
     minimum_length = 3
+    end_with = None
 
     @classmethod
     def from_alphabets(cls, alphabets):
@@ -1182,8 +1200,13 @@ class Gibberish(object):
                 dev = 30
                 m = 15
             length = int(max(m, min(random.gauss(mean, dev), 140)))
+        if self.end_with:
+            length -= len(self.end_with)
         length = max(self.minimum_length, length)
-        return self.words(length)
+        tweet = self.words(length)
+        if self.end_with:
+            tweet += self.end_with
+        return tweet
 
     @classmethod
     def weird_twitter(cls, base_alphabets, alternate_alphabets,
@@ -1487,6 +1510,10 @@ class GibberishTable(WanderingMonsterTable):
                 Alphabet.WEIRD_TWITTER_LATIN_MIXINS)
         self.add(weird_latin_twitter, COMMON)
 
+        # Nothimg but emoji!
+        def nothing_but_emoji():
+            self.add(self.choice_among_charsets(Alphabet.EMOJI_S), RARE)
+
         # Weird Japanese Twitter
         def weird_japanese_twitter():
             return self.weird_twitter(
@@ -1613,7 +1640,7 @@ class GibberishTable(WanderingMonsterTable):
             gibberish.word_separator = '\n'
 
         # Blanket 10% chance to add 10% glitches
-        if random.randint(0, 10) >= 0:
+        if random.randint(0, 10) == 1:
             glitches = ''
             glitch_charset = Alphabet.random_choice(Alphabet.GLITCHES)
             max_glitches = len(gibberish.charset) / 10
@@ -1621,6 +1648,10 @@ class GibberishTable(WanderingMonsterTable):
             while len(glitch_characters) < max_glitches:
                 glitch_characters += random.choice(glitch_charset)
             gibberish.charset += glitch_characters
+
+        # Blanket 10% chance to add an emoji on the end.
+        if random.randint(0, 10) == 1:
+            gibberish.end_with = " " + random.choice(Alphabet.characters('Emoji'))
         return gibberish
 
 class GlyphNames(object):
