@@ -26,6 +26,11 @@ import time
 
 class Scheduler(object):
 
+    """
+    scheduler = Scheduler(mean=60*60*4, stdev=60*1)
+    print scheduler.is_it_time(scheduler.file_mtime("last_update"))
+    """
+
     def __init__(self, mean, stdev):
         self.mean = mean
         self.stdev = stdev
@@ -46,5 +51,3 @@ class Scheduler(object):
         return difference.seconds > choice
 
 
-a = Scheduler(60*60*4, 60*1)
-print a.is_it_time(a.file_mtime("gutenberg.pyc"))
