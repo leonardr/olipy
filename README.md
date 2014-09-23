@@ -48,7 +48,7 @@ _Dependencies:_ `TextBlob`
 
 A module for incongruously sampling texts in the style of the infamous
 [https://twitter.com/horse_ebooks](@horse_ebooks). Based on the
-[https://twitter.com/zzt_ebooks](@zzt_ebooks) algorithm by Adam
+[https://twitter.com/zzt_ebooks](@zzt_ebooks) algorithm by Allison
 Parrish.
 
 Example scripts for ebooks.py:
@@ -73,7 +73,7 @@ paragraphs from sentences) and below the word level (constructing
 words from phonemes), but Markov chains are usually better when
 assembling sequences of words.
 
-markov.py was originally written by Adam "A. A." Parrish.
+markov.py was originally written by Allison "A. A." Parrish.
 
 gibberish.py
 ------------

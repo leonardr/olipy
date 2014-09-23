@@ -26,7 +26,7 @@ class MarkovGenerator(object):
     @classmethod
     def loadlines(cls, f, order=1, max=500):
         """Load from a filehandle that defines one text per line."""
-        corpus = MarkovGenerator(n, max)
+        corpus = MarkovGenerator(order, max)
         if not hasattr(f, 'read'):
             # Not a file-type object. Treat it as a multi-line string.
             f = f.split("\n")
