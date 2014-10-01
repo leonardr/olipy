@@ -42,7 +42,7 @@ class Assembler(object):
                     self.tokens_by_position.setdefault(i, []).append(tup)
                 # Also add tokens to more general positions like "middle"
                 # and "end".
-                if i > 0:
+                if i > 0 and i < l-1:
                     bucket.setdefault("m", []).append(tup)
                 if i == l-1:
                     bucket.setdefault("l", []).append(tup)
