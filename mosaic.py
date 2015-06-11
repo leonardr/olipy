@@ -103,12 +103,19 @@ def make():
     alphabet = random.choice(Alphabet.TILABLE_CHARSET_S)
     if isinstance(alphabet, basestring):
         a = alphabet
+        try:
+            a = Alphabet.characters(a)
+        except Exception, e:
+            pass
     else:
         a = "".join(alphabet)
     # print a
-    wmt = WanderingMonsterTable(random.choice(a) + u" ", random.choice(a), random.choice(a))
-    hor_symmetricals = [x for x in a if not x in Mirror.horizontal]
-    ver_symmetricals = [x for x in a if not x in Mirror.horizontal]
+    common = random.choice(a)
+    if random.random() < 0.8:
+        common += u" "
+    wmt = WanderingMonsterTable(common, random.choice(a), random.choice(a))
+    symmetricals = [x for x in a if not x in Mirror.horizontal
+                    and not a in Mirror.vertical]
     sample_size = min(2, len(symmetricals))
     if not sample_size:
         symmetrical_wmt = None
@@ -117,14 +124,14 @@ def make():
     else:
         symmetrical_wmt = WanderingMonsterTable(
             random.sample(symmetricals, sample_size))
-        print "Symmetricals:"
-        for i in symmetricals:
-            print i
+        #print "Symmetricals:"
+        #for i in symmetricals:
+        #    print i
         symm_hor = True
         symm_ver = True
 
     a = Mosaic()
-    a.populate(5, 5, wmt, symmetrical_wmt, symm_hor, symm_ver)
+    a.populate(6, 5, wmt, symmetrical_wmt, symm_hor, symm_ver)
     # print unicode(a)
     # print
     # print unicode(a.mirror_horizontal())
