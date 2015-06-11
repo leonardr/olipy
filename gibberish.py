@@ -2,6 +2,7 @@
 """Create gibberish from source alphabets."""
 
 import os
+import re
 import json
 import random
 import sys
@@ -597,6 +598,13 @@ class Alphabet:
 
     TRIANGLES = UP_POINTING_TRIANGLES + DOWN_POINTING_TRIANGLES + LEFT_POINTING_TRIANGLES + RIGHT_POINTING_TRIANGLES
 
+    RECTANGLES = unicode_charset("Rectangles",
+        "BLACK RECTANGLE", #▬
+        "WHITE RECTANGLE", #▭
+        "BLACK VERTICAL RECTANGLE", #▮
+        "WHITE VERTICAL RECTANGLE", #▯
+                            )
+
     QUADRILATERALS = unicode_charset("Quadrilaterals",
         "Apl functional symbol quad backslash",
         "Apl functional symbol quad slash",
@@ -657,11 +665,7 @@ class Alphabet:
         "SQUARE WITH DIAGONAL CROSSHATCH FILL", #▩
         "WHITE SQUARE WITH CENTRE VERTICAL LINE", #⎅
         "SQUARE FOOT", #⏍
-        "BLACK RECTANGLE", #▬
-        "WHITE RECTANGLE", #▭
-        "BLACK VERTICAL RECTANGLE", #▮
-        "WHITE VERTICAL RECTANGLE", #▯
-        )
+        ) + RECTANGLES
 
     PENTAGONS_AND_LARGER_POLYGONS = unicode_charset("Miscellaneous Polygons",
         "Benzene ring with circle",
@@ -700,6 +704,7 @@ class Alphabet:
         "DENTISTRY SYMBOL LIGHT DOWN AND HORIZONTAL WITH CIRCLE", #⏁
         "DENTISTRY SYMBOL LIGHT UP AND HORIZONTAL WITH CIRCLE", #⏂
         "BENZENE RING WITH CIRCLE", #⏣
+        "BULLSEYE", # ◎
         "WHITE CIRCLE", #○
         "DOTTED CIRCLE", #◌
         "CIRCLE WITH VERTICAL FILL", #◍
@@ -1017,16 +1022,16 @@ class Alphabet:
     PARTIALLY_FILLED_SQUARE_MOSAIC_DIAGONALS_ONLY = unicode_charset("Partially Filled Square Mosaic (Diagonals Only)",
         "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
         "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
-        "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
-        "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        "SQUARE WITH LOWER RIGHT DIAGONAL HALF BLACK", #◪
+        "SQUARE WITH UPPER LEFT DIAGONAL HALF BLACK", #◩
         )
 
     PARTIALLY_FILLED_SQUARE_MOSAIC = unicode_charset(
         "Partially Filled Square Mosaic",
         "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
         "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
-        "SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK", #⬔
-        "SQUARE WITH LOWER LEFT DIAGONAL HALF BLACK", #⬕
+        "SQUARE WITH LOWER RIGHT DIAGONAL HALF BLACK", #◪
+        "SQUARE WITH UPPER LEFT DIAGONAL HALF BLACK", #◩
         "SQUARE WITH LEFT HALF BLACK", #◧
         "SQUARE WITH RIGHT HALF BLACK", #◨
         "SQUARE WITH TOP HALF BLACK", #⬒
@@ -1043,6 +1048,33 @@ class Alphabet:
         "CIRCLE WITH ALL BUT UPPER LEFT QUADRANT BLACK", #◕
         )
 
+    TILABLE_CHARSET_S = [
+        CUSTOM_ALPHABETS["Box Drawing All"],
+        CUSTOM_ALPHABETS["Box Drawing Dots"],
+        CUSTOM_ALPHABETS["Box Drawing Thick and Thin"],
+        CUSTOM_ALPHABETS["Box Drawing Single and Double"],
+        CUSTOM_ALPHABETS["Box Drawing Double"],
+        CUSTOM_ALPHABETS["Block Drawing by Width"],
+        CUSTOM_ALPHABETS["Block Drawing by Height"],
+        "Yijing Hexagram Symbols",
+        "Tai Xuan Jing Symbols",
+        "Stars",
+        "Braille Patterns",
+        BLOCK_MOSAIC,
+        BOX_DRAWING_ARC_MOSAIC,
+        BOX_DRAWING_HEAVY_MOSAIC,
+        BOX_DRAWING_MOSAIC,
+        CHARACTER_CELL_DIAGONAL_MOSAIC,
+        FILL_MOSAIC,
+        HORIZONTAL_BLOCK_MOSAIC,
+        PARTIALLY_FILLED_CIRCLE_MOSAIC,
+        PARTIALLY_FILLED_SQUARE_MOSAIC,
+        SHADING_MOSAIC,
+        TERMINAL_GRAPHIC_MOSAIC,
+        VERTICAL_BLOCK_MOSAIC,
+        RECTANGLES,
+    ]
+
     MOSAIC_CHARSET_S = [
         CUSTOM_ALPHABETS["Completely Circled Alphabetics"],
         CUSTOM_ALPHABETS["Fullwidth Alphabetics"],
@@ -1057,6 +1089,7 @@ class Alphabet:
         CUSTOM_ALPHABETS["Box Drawing Double"],
         CUSTOM_ALPHABETS["Block Drawing by Width"],
         CUSTOM_ALPHABETS["Block Drawing by Height"],
+        RECTANGLES,
         BLOCK_MOSAIC,
         BOX_DRAWING_ARC_MOSAIC,
         BOX_DRAWING_HEAVY_MOSAIC,
@@ -1077,6 +1110,127 @@ class Alphabet:
         "Transport and Map Symbols",
         "Emoticons",
         ]
+
+class Mirror(object):
+
+    left_right = u"""
+◐◑
+▌▐
+╭╮
+╰╯
+└┘
+┗┙
+┖┚
+┗┛
+┌┐
+┍┑
+┎┒
+┏┓
+├┤
+┝┥
+┞┦
+┟┧
+┠┨
+┡┩
+┢┪
+┽┾
+╃╄
+╅╆
+╉╊
+╸╺
+╼╾
+╱╲
+▖▗
+▜▛
+▙▟
+▘▝
+▚▞
+⬔◩
+⬕◪
+◧◨
+▧▨
+╒╕
+╓╖
+╔╗
+╘╛
+╙╜
+╚╝
+╞╡
+╟╢
+╠╣
+╶╴
+┣┫
+┹┺
+┵┶
+┱┲
+┭┮
+╒╕
+╓╖
+╔╗
+╘╛
+╙╜
+╚╝
+"""
+
+    top_bottom = u"""
+    ╰╭
+    ╯╮
+    ╱╲
+    ╀╁
+    ╇╈
+    ╹╻
+    ╽╿
+    ▀▄
+    ◒◓
+    ▚▞
+    ▜▟
+    ▙▛
+    ⬔◪
+    ⬕◩
+    ⬒⬓
+    ▧▨
+┴┬
+╘╒
+╚╔
+╝╗
+╧╤
+╙╖
+╨╥
+╛╕
+╜╓
+╩╦
+╵╷
+┳┻
+╹╻
+╽╿
+╦╩
+╥╨
+╧╤
+╩╦
+╘╒
+╙╓
+╚╔
+╛╕
+╜╖
+╝╗
+    """
+
+
+
+    def _make_mirror(s):
+        m = {}
+        parts = re.compile("\s+").split(s)
+        for p in parts:
+            p = p.strip()
+            if not p:
+                continue
+            a, b = p
+            m[a] = b
+            m[b] = a
+        return m
+
+    horizontal = _make_mirror(left_right)
+    vertical = _make_mirror(top_bottom)
 
 class WordLength:
 

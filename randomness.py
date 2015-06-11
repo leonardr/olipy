@@ -48,6 +48,8 @@ class WanderingMonsterTable(object):
                 l = self.rare
             else:
                 l = self.very_rare
+            if not l:
+                l = self.common
         return random.choice(l)
 
 class Gradient(object):
