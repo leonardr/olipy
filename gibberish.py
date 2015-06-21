@@ -1059,6 +1059,7 @@ class Alphabet:
         "Yijing Hexagram Symbols",
         "Tai Xuan Jing Symbols",
         "Braille Patterns",
+        "Emoji",
         BLOCK_MOSAIC,
         BOX_DRAWING_ARC_MOSAIC,
         BOX_DRAWING_HEAVY_MOSAIC,

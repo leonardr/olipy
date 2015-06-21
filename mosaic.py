@@ -172,6 +172,7 @@ from pdb import set_trace
 
 def make():
     alphabet = random.choice(Alphabet.TILABLE_CHARSET_S)
+    alphabet = 'Emoji'
     a = random.random()
     hor_sym = False
     ver_sym = False
