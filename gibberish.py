@@ -1058,7 +1058,6 @@ class Alphabet:
         CUSTOM_ALPHABETS["Block Drawing by Height"],
         "Yijing Hexagram Symbols",
         "Tai Xuan Jing Symbols",
-        "Stars",
         "Braille Patterns",
         BLOCK_MOSAIC,
         BOX_DRAWING_ARC_MOSAIC,
