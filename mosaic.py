@@ -166,8 +166,6 @@ class SymmetricalMosaic(Mosaic):
                 new_string += i
         return new_string
 
-from pdb import set_trace
-
 class MirroredMosaicGibberish(MosaicGibberish):
 
     def __init__(self, alphabet=None):
@@ -335,3 +333,8 @@ class Mirror(object):
                     if i not in cls.left_right and i not in cls.top_bottom:
                         print i
                     print
+
+if __name__ == '__main__':
+    for i in range(4):
+        print MirroredMosaicGibberish().tweet()
+        print
