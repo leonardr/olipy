@@ -1,8 +1,8 @@
 # encoding: utf-8
+import re
 import random
-from gibberish import Mirror
 from randomness import WanderingMonsterTable
-from gibberish import Alphabet
+from gibberish import Alphabet, MosaicGibberish
 
 class Mosaic(object):
 
@@ -58,7 +58,7 @@ class SymmetricalMosaic(Mosaic):
         return SymmetricalMosaic(wmt, symmetry_list)
 
     @classmethod
-    def make_wmt(cls, alphabet, common_spaces=False):
+    def make_wmt(cls, alphabet, num_spaces=0):
         if not isinstance(alphabet, basestring):
             alphabet = "".join(alphabet)
         try:
@@ -68,15 +68,14 @@ class SymmetricalMosaic(Mosaic):
         common = uncommon = rare = None
 
         if len(alphabet) == 1:
-            if not common_spaces:
+            if not num_spaces:
                 raise ValueError("Can't make a mosaic from a single character")
             common = alphabet
         elif len(alphabet) == 2:
             common = alphabet
         else:
             common, uncommon, rare = random.sample(alphabet, 3)
-        if common_spaces:
-            common += u"\N{EM SPACE}"
+        common += u"\N{EM SPACE}" * num_spaces
         return (WanderingMonsterTable(common, uncommon, rare),
                 SymmetryList(alphabet))
 
@@ -92,7 +91,6 @@ class SymmetricalMosaic(Mosaic):
         if vertical_symmetry:
             max_height /= 2
         height = random.randint(3, max_height)
-        print height, width, height*(width+1)
         return height, width
 
     def populate(self, height, width, horizontal_symmetry=False,
@@ -170,43 +168,170 @@ class SymmetricalMosaic(Mosaic):
 
 from pdb import set_trace
 
-def make():
-    alphabet = random.choice(Alphabet.TILABLE_CHARSET_S)
-    alphabet = 'Emoji'
-    a = random.random()
-    hor_sym = False
-    ver_sym = False
-    if a < 0.25:
-        hor_sym = True
-    elif a < 0.4:
-        ver_sym = True
-    elif a < 0.95:
-        hor_sym = ver_sym = True
+class MirroredMosaicGibberish(MosaicGibberish):
 
-    b = random.random()
-    common_spaces = (b < 0.6)
+    def __init__(self, alphabet=None):
+        if not alphabet:
+            if random.randint(0, 5) == 2:
+                # Give emoji a boost
+                alphabet = "Emoji"
+            else:
+                alphabet = random.choice(Alphabet.TILABLE_CHARSET_S)
+        self.alphabet = alphabet
 
-    height, width = SymmetricalMosaic.random_size(140, hor_sym, ver_sym)
-    print height, width, hor_sym, ver_sym, common_spaces
+    def tweet(self):
+        a = random.random()
+        hor_sym = False
+        ver_sym = False
+        if a < 0.25:
+            hor_sym = True
+        elif a < 0.4:
+            ver_sym = True
+        elif a < 0.95:
+            hor_sym = ver_sym = True
 
-    mosaic = SymmetricalMosaic.from_alphabet(alphabet, common_spaces)
-    m = mosaic.populate(height, width, hor_sym, ver_sym)
-    print unicode(m), len(unicode(m))
+        num_spaces = int(random.gauss(1.3,1))
 
-# for alphabet in Alphabet.TILABLE_CHARSET_S:
-#     if isinstance(alphabet, basestring):
-#         try:
-#             alphabet = Alphabet.characters(alphabet)
-#         except KeyError, e:
-#             pass
-#         if len(alphabet) > 50:
-#             continue
-#         for i in alphabet:
-#             if i not in Mirror.left_right and i not in Mirror.top_bottom:
-#                 print i
-#         print
+        height, width = SymmetricalMosaic.random_size(140, hor_sym, ver_sym)
+
+        mosaic = SymmetricalMosaic.from_alphabet(self.alphabet, num_spaces)
+        m = mosaic.populate(height, width, hor_sym, ver_sym)
+        return unicode(m)
+
+class Mirror(object):
+    """Information about which characters mirror to which other characters."""
+
+    left_right = u"""
+◐◑
+▌▐
+╭╮
+╰╯
+└┘
+┗┙
+┖┚
+┗┛
+┌┐
+┍┑
+┎┒
+┏┓
+├┤
+┝┥
+┞┦
+┟┧
+┠┨
+┡┩
+┢┪
+┽┾
+╃╄
+╅╆
+╉╊
+╸╺
+╼╾
+╱╲
+▖▗
+▜▛
+▙▟
+▘▝
+▚▞
+⬔◩
+⬕◪
+◧◨
+▧▨
+╒╕
+╓╖
+╔╗
+╘╛
+╙╜
+╚╝
+╞╡
+╟╢
+╠╣
+╶╴
+┣┫
+┹┺
+┵┶
+┱┲
+┭┮
+╒╕
+╓╖
+╔╗
+╘╛
+╙╜
+╚╝
+"""
+
+    top_bottom = u"""
+    ╰╭
+    ╯╮
+    ╱╲
+    ╀╁
+    ╇╈
+    ╹╻
+    ╽╿
+    ▀▄
+    ◒◓
+    ▚▞
+    ▜▟
+    ▙▛
+    ⬔◪
+    ⬕◩
+    ⬒⬓
+    ▧▨
+┴┬
+╘╒
+╚╔
+╝╗
+╧╤
+╙╖
+╨╥
+╛╕
+╜╓
+╩╦
+╵╷
+┳┻
+╹╻
+╽╿
+╦╩
+╥╨
+╧╤
+╩╦
+╘╒
+╙╓
+╚╔
+╛╕
+╜╖
+╝╗
+    """
 
 
-for i in range(4):
-    make()
-    print
+
+    def _make_mirror(s):
+        m = {}
+        parts = re.compile("\s+").split(s)
+        for p in parts:
+            p = p.strip()
+            if not p:
+                continue
+            a, b = p
+            m[a] = b
+            m[b] = a
+        return m
+
+    horizontal = _make_mirror(left_right)
+    vertical = _make_mirror(top_bottom)
+
+    @classmethod
+    def potentials(classmethod):
+        """Report on characters that might need to be added to this class."""
+        for alphabet in Alphabet.TILABLE_CHARSET_S:
+            if isinstance(alphabet, basestring):
+                try:
+                    alphabet = Alphabet.characters(alphabet)
+                except KeyError, e:
+                    pass
+                if len(alphabet) > 50:
+                    continue
+                for i in alphabet:
+                    if i not in cls.left_right and i not in cls.top_bottom:
+                        print i
+                    print

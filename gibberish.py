@@ -2,7 +2,6 @@
 """Create gibberish from source alphabets."""
 
 import os
-import re
 import json
 import random
 import sys
@@ -1048,8 +1047,9 @@ class Alphabet:
         "CIRCLE WITH ALL BUT UPPER LEFT QUADRANT BLACK", #◕
         )
 
+    # These charsets can make a (potentially mirrorable) mosaic 
+    # in conjunction with EM SPACE.
     TILABLE_CHARSET_S = [
-        CUSTOM_ALPHABETS["Box Drawing All"],
         CUSTOM_ALPHABETS["Box Drawing Dots"],
         CUSTOM_ALPHABETS["Box Drawing Thick and Thin"],
         CUSTOM_ALPHABETS["Box Drawing Single and Double"],
@@ -1061,13 +1061,14 @@ class Alphabet:
         "Braille Patterns",
         "Emoji",
         BLOCK_MOSAIC,
-        BOX_DRAWING_ARC_MOSAIC,
+        # CUSTOM_ALPHABETS["Box Drawing All"],
+        # BOX_DRAWING_ARC_MOSAIC,
+        PARTIALLY_FILLED_CIRCLE_MOSAIC,
         BOX_DRAWING_HEAVY_MOSAIC,
         BOX_DRAWING_MOSAIC,
         CHARACTER_CELL_DIAGONAL_MOSAIC,
         FILL_MOSAIC,
         HORIZONTAL_BLOCK_MOSAIC,
-        PARTIALLY_FILLED_CIRCLE_MOSAIC,
         PARTIALLY_FILLED_SQUARE_MOSAIC,
         SHADING_MOSAIC,
         TERMINAL_GRAPHIC_MOSAIC,
@@ -1110,127 +1111,6 @@ class Alphabet:
         "Transport and Map Symbols",
         "Emoticons",
         ]
-
-class Mirror(object):
-
-    left_right = u"""
-◐◑
-▌▐
-╭╮
-╰╯
-└┘
-┗┙
-┖┚
-┗┛
-┌┐
-┍┑
-┎┒
-┏┓
-├┤
-┝┥
-┞┦
-┟┧
-┠┨
-┡┩
-┢┪
-┽┾
-╃╄
-╅╆
-╉╊
-╸╺
-╼╾
-╱╲
-▖▗
-▜▛
-▙▟
-▘▝
-▚▞
-⬔◩
-⬕◪
-◧◨
-▧▨
-╒╕
-╓╖
-╔╗
-╘╛
-╙╜
-╚╝
-╞╡
-╟╢
-╠╣
-╶╴
-┣┫
-┹┺
-┵┶
-┱┲
-┭┮
-╒╕
-╓╖
-╔╗
-╘╛
-╙╜
-╚╝
-"""
-
-    top_bottom = u"""
-    ╰╭
-    ╯╮
-    ╱╲
-    ╀╁
-    ╇╈
-    ╹╻
-    ╽╿
-    ▀▄
-    ◒◓
-    ▚▞
-    ▜▟
-    ▙▛
-    ⬔◪
-    ⬕◩
-    ⬒⬓
-    ▧▨
-┴┬
-╘╒
-╚╔
-╝╗
-╧╤
-╙╖
-╨╥
-╛╕
-╜╓
-╩╦
-╵╷
-┳┻
-╹╻
-╽╿
-╦╩
-╥╨
-╧╤
-╩╦
-╘╒
-╙╓
-╚╔
-╛╕
-╜╖
-╝╗
-    """
-
-
-
-    def _make_mirror(s):
-        m = {}
-        parts = re.compile("\s+").split(s)
-        for p in parts:
-            p = p.strip()
-            if not p:
-                continue
-            a, b = p
-            m[a] = b
-            m[b] = a
-        return m
-
-    horizontal = _make_mirror(left_right)
-    vertical = _make_mirror(top_bottom)
 
 class WordLength:
 
@@ -1291,6 +1171,7 @@ class Corruptor(object):
 class Gibberish(object):
 
     minimum_length = 3
+    can_truncate = True
     end_with = None
 
     @classmethod
@@ -1324,6 +1205,7 @@ class Gibberish(object):
     def words(self, length):
         words = ''
         i = 0
+        from pdb import set_trace
         while True:
             word_length = None
             if self.word_length is None:
@@ -1332,7 +1214,10 @@ class Gibberish(object):
             if not words:
                 words = word
             else:
-                words += self.word_separator + word
+                new_words = words + self.word_separator + word
+                if len(new_words) > length and not self.can_truncate:
+                    break
+                words = new_words
             i += 1
             if len(words) >= length or (self.num_words is not None and i > self.num_words):
                 break
@@ -1546,20 +1431,18 @@ class SingleModifierGibberish(Gibberish):
         return new_tweet[:140]
 
 class MosaicGibberish(Gibberish):
-    def __init__(self, charset=None):
-        charset = random.choice(Alphabet.MOSAIC_CHARSET_S)
-        if random.randint(0, 2) == 0:
-            # Linear mosaic
-            word_length = None
-            word_separator = ' '
-            num_words = None
-        else:
-            # Two-dimensional mosaic
-            size = random.randint(3, 11)
-            num_words = size + random.randint(-2,2)
-            word_length = lambda: size
-            word_separator = '\n'
-        super(MosaicGibberish, self).__init__(charset, word_length, word_separator, num_words)
+
+    def __init__(self, alphabet=None):
+        if not alphabet:
+            alphabet = random.choice(Alphabet.MOSAIC_CHARSET_S)
+        l = int(random.gauss(8,3))
+        word_length = lambda: l
+        word_separator = '\n'
+        num_words = None
+        self.can_truncate = False
+        super(MosaicGibberish, self).__init__(
+            alphabet, word_length, word_separator, num_words)
+
 
 Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
 
@@ -1620,7 +1503,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add(self.choice_among_alphabets(Alphabet.CYRILLIC_S), RARE)
 
         # One of the Latin alphabets.
-        self.add(self.choice_among_alphabets(Alphabet.LATIN_S), COMMON)
+        self.add(self.choice_among_alphabets(Alphabet.LATIN_S), UNCOMMON)
 
         # One of the linguistic alphabets.
         self.add(self.choice_among_alphabets(Alphabet.ALL_LANGUAGE_ALPHABETS_S), COMMON)
@@ -1631,14 +1514,18 @@ class GibberishTable(WanderingMonsterTable):
             all_but_large_cjk.remove(i)
 
         # ALL of the non-huge linguistic alphabets.
-        self.add(self.charset_from_alphabets(all_but_large_cjk), RARE)
+        self.add(self.charset_from_alphabets(all_but_large_cjk), VERY_RARE)
 
         # Some combination of the non-huge linguistic alphabets.
-        self.add(self.combination_of_alphabets(all_but_large_cjk), COMMON)
+        self.add(self.combination_of_alphabets(all_but_large_cjk), UNCOMMON)
 
         # A gradient between two alphabets.
         self.add(GibberishGradient, COMMON)
         self.add(GibberishRainbowGradient, UNCOMMON)
+
+        # A mirrored mosaic
+        from mosaic import MirroredMosaicGibberish
+        self.add(MirroredMosaicGibberish, COMMON)
 
         # One of the geometric alphabets.
         self.add(self.choice_among_alphabets(Alphabet.GEOMETRIC_ALPHABETS), UNCOMMON)
@@ -1653,7 +1540,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add(Gibberish.limited_vocabulary, COMMON)
 
         # A mosaic charset.
-        self.add(MosaicGibberish, COMMON)
+        self.add(MosaicGibberish, UNCOMMON)
 
         # Some other kind of gibberish with a single modifier applied
         # to every character.
