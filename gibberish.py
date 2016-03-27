@@ -1,6 +1,7 @@
 # coding=utf-8
 """Create gibberish from source alphabets."""
 
+from pdb import set_trace
 import os
 import json
 import random
@@ -102,6 +103,17 @@ class Alphabet:
                     choice = None
 
         return chars
+
+    @classmethod
+    def subset(cls, alphabet, how_many_characters=None):
+        """A limited subset of an alphabet."""
+        full = Alphabet.random_choice_no_modifiers()
+        limited = ''
+        if not how_many_characters:
+            how_many_characters = max(2, int(random.gauss(4, 2)))
+        for i in range(how_many_characters):
+            limited += random.choice(alphabet)
+        return limited
 
     @classmethod
     def characters(cls, alphabets):
@@ -1112,6 +1124,24 @@ class Alphabet:
         "Emoticons",
         ]
 
+    WHITESPACE = unicode_charset(
+        "NO-BREAK SPACE",
+        "EN QUAD",
+        "EM QUAD",
+        "EN SPACE",
+        "EM SPACE",
+        "THREE-PER-EM SPACE",
+        "FOUR-PER-EM SPACE",
+        "SIX-PER-EM SPACE",
+        "FIGURE SPACE",
+        "PUNCTUATION SPACE",
+        "THIN SPACE",
+        "HAIR SPACE",
+        "NARROW NO-BREAK SPACE",
+        "MEDIUM MATHEMATICAL SPACE",
+        "IDEOGRAPHIC SPACE",
+    )
+
 class WordLength:
 
     @classmethod
@@ -1205,7 +1235,6 @@ class Gibberish(object):
     def words(self, length):
         words = ''
         i = 0
-        from pdb import set_trace
         while True:
             word_length = None
             if self.word_length is None:
@@ -1339,13 +1368,13 @@ class Gibberish(object):
         return Gibberish(alphabet)
 
     @classmethod
-    def limited_vocabulary(cls, how_many_characters=None):
+    def limited_vocabulary(cls, how_many_characters=None, include_whitespace=None):
         full = Alphabet.random_choice_no_modifiers()
-        limited = ''
-        if not how_many_characters:
-            how_many_characters = max(2, int(random.gauss(4, 2)))
-        for i in range(how_many_characters):
-            limited += random.choice(full)
+        limited = Alphabet.subset(full, how_many_characters)
+        if include_whitespace is None:
+            include_whitespace = random.random() < 0.33
+        if include_whitespace:
+            limited += random.choice(Alphabet.WHITESPACE)
         return cls(limited)
 
     @classmethod
@@ -1432,17 +1461,22 @@ class SingleModifierGibberish(Gibberish):
 
 class MosaicGibberish(Gibberish):
 
-    def __init__(self, alphabet=None):
+    def __init__(self, alphabet=None, include_whitespace=None):
         if not alphabet:
             alphabet = random.choice(Alphabet.MOSAIC_CHARSET_S)
         l = int(random.gauss(8,3))
+        if include_whitespace is None:
+            include_whitespace = random.random() < 0.25
+        if include_whitespace:
+            choice = random.choice(Alphabet.WHITESPACE)
+            size = random.randint(1, len(alphabet)*2)
+            alphabet += (choice * size)
         word_length = lambda: l
         word_separator = '\n'
         num_words = None
         self.can_truncate = False
         super(MosaicGibberish, self).__init__(
             alphabet, word_length, word_separator, num_words)
-
 
 Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
 
@@ -1527,6 +1561,16 @@ class GibberishTable(WanderingMonsterTable):
         from mosaic import MirroredMosaicGibberish
         self.add(MirroredMosaicGibberish, COMMON)
 
+        # A mirrored mosaic from an untilable alphabet
+        def untilable_mirror():
+            alphabet = None
+            while not alphabet or alphabet in Alphabet.TILABLE_CHARSET_S:
+                alphabet = Alphabet.random_choice_no_modifiers()
+            limited = Alphabet.subset(alphabet)
+            gibberish = MirroredMosaicGibberish(limited)
+            return gibberish
+        self.add(untilable_mirror, UNCOMMON)
+
         # One of the geometric alphabets.
         self.add(self.choice_among_alphabets(Alphabet.GEOMETRIC_ALPHABETS), UNCOMMON)
 
@@ -1538,6 +1582,13 @@ class GibberishTable(WanderingMonsterTable):
 
         # A limited subset of one script.
         self.add(Gibberish.limited_vocabulary, COMMON)
+
+        # A less limited subset of one script.
+        self.add(lambda: Gibberish.limited_vocabulary(how_many_characters=3+int(random.gauss(4,2))), UNCOMMON)
+
+        # A limited subset of one script, including whitespace
+        self.add(lambda: Gibberish.limited_vocabulary(include_whitespace=True),
+                 UNCOMMON)
 
         # A mosaic charset.
         self.add(MosaicGibberish, UNCOMMON)

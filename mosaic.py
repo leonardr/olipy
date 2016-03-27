@@ -1,4 +1,5 @@
 # encoding: utf-8
+from pdb import set_trace
 import re
 import random
 from randomness import WanderingMonsterTable
@@ -188,8 +189,14 @@ class MirroredMosaicGibberish(MosaicGibberish):
         elif a < 0.95:
             hor_sym = ver_sym = True
 
-        num_spaces = int(random.gauss(1.3,1))
-
+        mostly_space = False
+        if random.random() < 0.6:
+            # Primarily characters.
+            num_spaces = int(random.gauss(1.3,1))
+        else:
+            # Primarily whitespace
+            num_spaces = random.randint(len(self.alphabet), len(self.alphabet)*2)
+            mostly_space = True
         height, width = SymmetricalMosaic.random_size(140, hor_sym, ver_sym)
 
         mosaic = SymmetricalMosaic.from_alphabet(self.alphabet, num_spaces)
