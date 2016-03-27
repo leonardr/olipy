@@ -116,6 +116,12 @@ class Alphabet:
         return limited
 
     @classmethod
+    def random_modifier(cls):
+        "A modifier selected at random."
+        alphabet = Alphabet.characters(cls.MODIFIERS)
+        return random.choice(alphabet)
+
+    @classmethod
     def characters(cls, alphabets):
         char = []
         if isinstance(alphabets, basestring):
@@ -1498,6 +1504,30 @@ class GibberishGradient(Gibberish):
         a = "".join(x for x in self.gradient_method(alpha1, alpha2, length))
         return a
 
+class ModifierGradientGibberish(Gibberish):
+    """The alphabet stays the same throughout the tweet, but the modifier
+    used slowly changes from one to another.
+    """
+
+    minimum_length = 140
+
+    def __init__(self):
+        super(ModifierGradientGibberish, self).__init__(None)
+        mod1 = Alphabet.random_modifier()
+        mod2 = None
+        while mod2 is None or mod2 == mod1:
+            mod2 = Alphabet.random_modifier()
+
+        alphabet = Alphabet.random_choice_no_modifiers()
+        self.a1 = [char + mod1 for char in alphabet]
+        self.a2 = [char + mod2 for char in alphabet]
+
+    def words(self, length):
+        a = "".join(x for x in Gradient.gradient(self.a1, self.a2, length/2))
+        print a
+        set_trace()
+        return a
+
 class GibberishRainbowGradient(GibberishGradient):
 
     minimum_length = 140
@@ -1560,6 +1590,7 @@ class GibberishTable(WanderingMonsterTable):
         # A gradient between two alphabets.
         self.add(GibberishGradient, COMMON)
         self.add(GibberishRainbowGradient, UNCOMMON)
+        self.add(ModifierGradientGibberish, UNCOMMON)
 
         # A mirrored mosaic
         from mosaic import MirroredMosaicGibberish
