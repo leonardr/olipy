@@ -1445,17 +1445,21 @@ class CheatCodeGibberish(Gibberish):
             charset = self.nes_charset
         return ' '.join(random.choice(charset) for word in range(num_words))
 
-class SingleModifierGibberish(Gibberish):
-    def __init__(self, table):
+class LimitedModifierGibberish(Gibberish):
+    def __init__(self, table, num_modifiers=None):
         self.other_generator = table.choice(None)
-        modifier_charset = Alphabet.random_choice(*Alphabet.MODIFIERS)
-        self.modifier = random.choice(modifier_charset)
+        self.modifiers = ''
+        if num_modifiers is None:
+            num_modifiers = int(max(1, random.gauss(1,3)))
+        for i in range(num_modifiers):
+            modifier_charset = Alphabet.random_choice(*Alphabet.MODIFIERS)
+            self.modifiers += random.choice(modifier_charset)
 
     def tweet(self):
         tweet = self.other_generator.tweet()
         new_tweet = []
         for i in tweet:
-            new_tweet += i + self.modifier
+            new_tweet += i + random.choice(self.modifiers)
         new_tweet = unicodedata.normalize("NFC", "".join(new_tweet))
         return new_tweet[:140]
 
@@ -1593,9 +1597,9 @@ class GibberishTable(WanderingMonsterTable):
         # A mosaic charset.
         self.add(MosaicGibberish, UNCOMMON)
 
-        # Some other kind of gibberish with a single modifier applied
-        # to every character.
-        self.add(lambda: SingleModifierGibberish(self), COMMON)
+        # Some other kind of gibberish with a modifier (chosen from a
+        # small subset) applied to every character.
+        self.add(lambda: LimitedModifierGibberish(self), COMMON)
 
         # Composite gibberish
         self.add(lambda: CompositeGibberish(self), UNCOMMON)
