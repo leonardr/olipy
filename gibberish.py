@@ -116,6 +116,11 @@ class Alphabet:
         return limited
 
     @classmethod
+    def random_whitespace(cls):
+        "A whitespace character selected at random."
+        return random.choice(cls.WHITESPACE)
+
+    @classmethod
     def random_modifier(cls):
         "A modifier selected at random."
         alphabet = Alphabet.characters(cls.MODIFIERS)
@@ -1422,6 +1427,29 @@ class EmoticonGibberish(Gibberish):
         num_words = random.randint(1,3)
         return ' '.join(self.word() for word in range(num_words))
 
+class SamplerGibberish(Gibberish):
+    def __init__(self, alphabet=None):
+        self.rows = random.randint(1,3)
+        self.per_row = random.randint(3,4)
+        if self.rows == 1:
+            self.per_row += 3
+        self.total_size = self.rows * self.per_row
+        while not (alphabet and len(alphabet) > self.total_size):
+            alphabet = Alphabet.random_choice()
+        self.alphabet = alphabet
+
+    def tweet(self):
+        whitespace = Alphabet.random_whitespace()
+        rows = []
+        sample = random.sample(self.alphabet, self.total_size)
+        for i in range(self.rows):
+            row = ''
+            for i in range(self.per_row):
+                row += sample.pop()
+            rows.append(whitespace.join(row))
+        value = "\n".join(rows)
+        return value
+
 class GameBoardGibberish(Gibberish):
     def __init__(self, charset=None):
         choices = list(Alphabet.GAMING_ALPHABETS)
@@ -1640,6 +1668,9 @@ class GibberishTable(WanderingMonsterTable):
 
         # A game board charset.
         self.add(GameBoardGibberish, VERY_RARE)
+
+        # A sampler from a charset.
+        self.add(SamplerGibberish, RARE)
 
         # A shape-based charset
         self.add(self.choice_among_charsets(Alphabet.SHAPE_CHARSET_S), VERY_RARE)
