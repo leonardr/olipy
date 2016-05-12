@@ -50,7 +50,7 @@ CUSTOM_ALPHABETS = {
     "Box Drawing Single and Double": u"┌┐└┘├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬╴╵╶╷",
     "Block Drawing by Height": u"▀▁▂▃▄▅▆▇█▔",
     "Block Drawing by Width": u"█▉▊▋▌▍▎▏▐▕",
-
+    "Skin Tones" : u"🏻🏼🏽🏾🏿",
  }
 
 class Alphabet:
@@ -1113,6 +1113,7 @@ class Alphabet:
         CUSTOM_ALPHABETS["Box Drawing Double"],
         CUSTOM_ALPHABETS["Block Drawing by Width"],
         CUSTOM_ALPHABETS["Block Drawing by Height"],
+        CUSTOM_ALPHABETS["Skin Tones"],
         RECTANGLES,
         BLOCK_MOSAIC,
         BOX_DRAWING_ARC_MOSAIC,
@@ -1502,6 +1503,7 @@ class MosaicGibberish(Gibberish):
     def __init__(self, alphabet=None, include_whitespace=None):
         if not alphabet:
             alphabet = random.choice(Alphabet.MOSAIC_CHARSET_S)
+        alphabet = CUSTOM_ALPHABETS["Skin Tones"]
         l = int(random.gauss(8,3))
         if include_whitespace is None:
             include_whitespace = random.random() < 0.25
@@ -1552,8 +1554,6 @@ class ModifierGradientGibberish(Gibberish):
 
     def words(self, length):
         a = "".join(x for x in Gradient.gradient(self.a1, self.a2, length/2))
-        print a
-        set_trace()
         return a
 
 class GibberishRainbowGradient(GibberishGradient):
@@ -1686,7 +1686,7 @@ class GibberishTable(WanderingMonsterTable):
                 Alphabet.WEIRD_TWITTER_LATIN_MIXINS)
         self.add(weird_latin_twitter, COMMON)
 
-        # Nothimg but emoji!
+        # Nothing but emoji!
         def nothing_but_emoji():
             self.add(self.choice_among_charsets(Alphabet.EMOJI_S), RARE)
 
@@ -1875,7 +1875,7 @@ if __name__ == '__main__':
     if alphabets:
         gibberish = Gibberish.from_alphabets(alphabets)
     table = GibberishTable()
-    for i in range(100):
+    for i in range(1000):
         if not alphabets:
             gibberish = Gibberish.random(freq)
         print gibberish.tweet().encode("utf8")
