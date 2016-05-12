@@ -1286,6 +1286,12 @@ class Gibberish(object):
         tweet = self.words(length)
         if self.end_with:
             tweet += self.end_with
+        if not tweet[0].strip():
+            # This tweet starts with whitespace. Use COMBINING
+            # GRAPHEME JOINER to get Twitter to preserve the whitespace.
+            tweet = u"\N{COMBINING GRAPHEME JOINER}" + tweet
+        if len(tweet) > 140:
+            tweet = tweet[:140]
         return tweet
 
     @classmethod
@@ -1503,7 +1509,6 @@ class MosaicGibberish(Gibberish):
     def __init__(self, alphabet=None, include_whitespace=None):
         if not alphabet:
             alphabet = random.choice(Alphabet.MOSAIC_CHARSET_S)
-        alphabet = CUSTOM_ALPHABETS["Skin Tones"]
         l = int(random.gauss(8,3))
         if include_whitespace is None:
             include_whitespace = random.random() < 0.25

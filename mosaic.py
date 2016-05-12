@@ -201,7 +201,13 @@ class MirroredMosaicGibberish(MosaicGibberish):
 
         mosaic = SymmetricalMosaic.from_alphabet(self.alphabet, num_spaces)
         m = mosaic.populate(height, width, hor_sym, ver_sym)
-        return unicode(m)
+        m = unicode(m)
+        if not m[0].strip():
+            # This tweet starts with whitespace. Use COMBINING
+            # GRAPHEME JOINER to get Twitter to preserve the whitespace.
+            m = u"\N{COMBINING GRAPHEME JOINER}" + m
+            set_trace()
+        return m
 
 class Mirror(object):
     """Information about which characters mirror to which other characters."""
