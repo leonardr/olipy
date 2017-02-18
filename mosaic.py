@@ -205,6 +205,8 @@ class MirroredMosaicGibberish(MosaicGibberish):
         if not m[0].strip():
             # This tweet starts with whitespace. Use COMBINING
             # GRAPHEME JOINER to get Twitter to preserve the whitespace.
+            #
+            # TODO: It's not clear whether this works.
             m = u"\N{COMBINING GRAPHEME JOINER}" + m
         return m
 
