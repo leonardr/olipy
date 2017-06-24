@@ -1,0 +1,38 @@
+Some word lists that aren't in the dariusk/corpora module.
+
+Most of these lists are lists of words sorted by frequency of
+occurance in English. In general, these word lists are too large to
+fit in corpora. Most of them have been manually edited to minimize the
+risk of embarrassing or offensive output. (But it's ultimately up to
+you.)
+
+* abstract_nouns.txt - The 4000 most common abstract concepts, like
+  "work" and "love".
+
+* adjectival_nouns.txt - The top 1000 nouns that can also act as
+  adjectives.
+
+* adjectives.txt - The 5000 most common adjectives.
+
+* concrete_nouns.txt - The opposite of abstract_nouns.txt. These nouns
+  refer to more concrete things like "hometown" and
+  "masterpiece". (But see scribblenauts_words.txt to get even more
+  concrete.)
+
+* gerunds.txt - The 3000 most common gerunds.
+
+* past_tense.txt - The 3000 most common past tense verbs.
+
+* present_tense.txt - The 2000 most common present tense verbs.
+
+* scribblenauts_words.txt - The top 4000 nouns that were 'concrete'
+  enough to be summonable in the game Scribblenauts.
+
+We also have some more corpora-type JSON datasets:
+
+* large_cities.json - Large U.S. and world cities
+* languages.json - ISO-639-1 languages
+* stopwords.json - Stopwords as defined by MySQL
+* us_states.json - U.S. states (just the 50)
+
+
