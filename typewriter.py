@@ -95,6 +95,8 @@ class Typewriter(object):
 
     def delete_space(self, string):
         poses = [i for i, c in enumerate(string) if c == ' ']
+        if not poses:
+            return string
         i = random.choice(poses)
         return string[:i] + string[i+1:]
 
@@ -137,7 +139,9 @@ class Typewriter(object):
         transforms_per_100 = random.gauss(
             self.mean_transforms, self.stdev_transforms
         )
-        total_transforms = transforms_per_100 * min(1, (length/100))
+        chunks_100 = max(1, length/100)
+        total_transforms = max(1, transforms_per_100 * chunks_100)
+
         for i in range(int(total_transforms)):
             s = self.wmt.choice()(s)
         s = so_far + s

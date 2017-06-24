@@ -175,6 +175,15 @@ class Assembler(object):
         return corpus
 
     @classmethod
+    def loadlist(cls, l, tokens_in='tokens'):
+        """Load from a list of objects.""" 
+        corpus = cls()
+        for o in l:
+            if tokens_in in o:
+                corpus.add(o, tokens_in)
+        return corpus
+    
+    @classmethod
     def loads(cls, s):
         return cls.load(StringIO(s))
 

@@ -1,9 +1,9 @@
 import json
 import os
 
-dir = os.path.split(__file__)[0]
+from corpus import Corpus
 
-BLACKLIST = json.load(open(os.path.join(dir, "data", "word-lists", "badwords.json")))['badwords']
+BLACKLIST = Corpus.load("slurs")['badwords']
 
 def is_blacklisted(string, blacklist=BLACKLIST):
     s = string.lower()

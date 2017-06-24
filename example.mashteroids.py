@@ -1,6 +1,8 @@
 from queneau import Assembler, WordAssembler
 import textwrap
-corpus = Assembler.load(open("data/minor_planets.min.json"), tokens_in='citation')
+from corpus import Corpus
+corpus = Assembler.loadlist(Corpus.load("minor_planets"),
+                            tokens_in='citation')
 
 how_many = 100
 for i in range(how_many):

@@ -3,8 +3,11 @@ import random
 import re
 import textwrap
 
+from corpus import Corpus
 from queneau import Assembler, CompositeAssembler, WordAssembler
-corpus = Assembler.loadlines(open("data/boardgames.txt"), tokens_in='description')
+corpus = Assembler.loadlist(
+    Corpus.load("boardgames"), tokens_in='description'
+)
 
 no_punctuation_at_end = re.compile("[a-zA-Z0-9]$")
 whitespace = re.compile("\s+")

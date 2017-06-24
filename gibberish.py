@@ -7,6 +7,7 @@ import json
 import random
 import sys
 import unicodedata
+from corpus import Corpus
 from randomness import Gradient, WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
 
 import data
@@ -393,7 +394,7 @@ class MosaicGibberish(Gibberish):
         super(MosaicGibberish, self).__init__(
             alphabet, word_length, word_separator, num_words)
 
-Alphabet._fill_by_name(data.load_json("unicode_code_sheets.json"))
+Alphabet._fill_by_name(Corpus.load("unicode_code_sheets"))
 
 class GibberishGradient(Gibberish):
 

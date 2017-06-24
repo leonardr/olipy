@@ -6,8 +6,9 @@ class Corpus(object):
     from the more-corpora directory included with olipy.
     """
     base_path = os.path.split(__file__)[0]
-
-    extensions = '.txt', '.json'
+    corpora_dirs = ['data/more-corpora', 'corpora/data']
+    
+    extensions = ['.txt', '.json', '.ndjson']
 
     @classmethod
     def load(cls, target):
@@ -25,10 +26,10 @@ class Corpus(object):
         """Return the names of all available corpora."""
         for full_key, key, filename in cls._paths():
             yield full_key
-
+           
     @classmethod
     def _paths(cls):
-        for corpora_dir in ('more-corpora', 'corpora/data'):
+        for corpora_dir in cls.corpora_dirs:
             full_path = os.path.join(cls.base_path, corpora_dir)
             for (dirpath, dirnames, filenames) in os.walk(full_path):
                 thisdir = os.path.split(dirpath)[-1]
@@ -51,6 +52,9 @@ class Corpus(object):
         
     @classmethod
     def _load_corpus(cls, filename):
+        if filename.endswith(".ndjson"):
+            # Assume one JSON object per line.
+            return [json.loads(i.strip()) for i in open(filename)]
         if filename.endswith(".json"):
             # Assume a corpora-style JSON format.
             data = json.load(open(filename))

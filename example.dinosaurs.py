@@ -1,8 +1,8 @@
 import json
 from queneau import WordAssembler
-from data import load_json
+from corpus import Corpus
 import textwrap
-assembler = WordAssembler(load_json("dinosaurs.json"))
+assembler = WordAssembler(Corpus.load("dinosaurs"))
 
 dinos = []
 for i in range(2):

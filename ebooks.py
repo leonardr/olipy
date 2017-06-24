@@ -2,7 +2,7 @@ import random
 import re
 import textwrap
 from english import Stopwords
-from text.blob import TextBlob, Sentence
+from textblob import TextBlob, Sentence
 
 from tokenizer import WordTokenizer
 

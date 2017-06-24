@@ -143,13 +143,118 @@ A Python port of [Darius Kazemi's word
 filter](https://npmjs.org/package/wordfilter), for finding strings
 that contain racial slurs and the like.
 
+Extra corpora
+-------------
+
+The data/more-corpora/ directory contains several word lists and
+datasets that aren't in the dariusk/corpora module. These datasets (as
+well as the ones in dariusk/corpora) can be accessed through the
+`corpus` module.
+
+= Word lists
+
+Most of these lists are lists of words sorted by frequency of
+occurance in English. In general, these word lists are too large to
+fit in the corpora project. Some of them have been manually edited to
+minimize the risk of embarrassing or offensive output. (But it's
+ultimately up to you.)
+
+* abstract_nouns.txt - The 4000 most common abstract concepts, like
+  "work" and "love".
+
+* adjectival_nouns.txt - The top 1000 nouns that can also act as
+  adjectives.
+
+* adjectives.txt - The 5000 most common adjectives.
+
+* english_words.json - A consolidated list of English words from the
+  FRELI project. (http://www.nkuitse.com/freli/)
+
+* english_words.common.json - A subset of the list of words in
+  english_words, focusing on relatively common words shorter than 10
+  characters.
+
+* concrete_nouns.txt - The opposite of abstract_nouns.txt. These nouns
+  refer to more concrete things like "hometown" and
+  "masterpiece". (But see scribblenauts_words.txt to get even more
+  concrete.)
+
+* gerunds.txt - The 3000 most common gerunds.
+
+* past_tense.txt - The 3000 most common past tense verbs.
+
+* present_tense.txt - The 2000 most common present tense verbs.
+
+* scribblenauts_words.txt - The top 4000 nouns that were 'concrete'
+  enough to be summonable in the game Scribblenauts.
+
+= Large datasets
+
+== apollo_11.ndjson
+
+Transcripts of the Apollo 11 mission, presented as dialogue, tokenized
+into sentences using NLTK's Punkt tokenizer. One JSON object per line.
+
+Data sources:
+ The Apollo 11 Flight Journal: http://history.nasa.gov/ap11fj/
+ The Apollo 11 Surface Journal: http://history.nasa.gov/alsj/
+ "Intended to be a resource for all those interested in the Apollo
+  program, whether in a passing or scholarly capacity."
+
+== boardgames.txt
+
+Information about board games, collected from BoardGameGeek in July
+2013. One JSON object per line.
+
+Data source:
+ http://boardgamegeek.com/wiki/page/BGG_XML_API2
+
+== minor_planets.json
+
+'name', 'number' and IAU 'citation' for named minor planets
+(e.g. asteroids) as of July 2013. The 'discovery' field contains
+discovery circumstances. The 'suggested_by' field, when present, has
+been split out from the end of the original IAU citation with a simple
+heuristic. The 'citation' field has then been tokenized into sentences
+using NLTK's Punkt tokenizer and a set of custom abbreviations.
+
+Data sources: 
+ http://www.minorplanetcenter.net/iau/lists/NumberedMPs.html
+ http://ssd.jpl.nasa.gov/sbdb.cgi
+
+== shakespeare_sonnets.json
+
+The sonnets of William Shakespeare.
+
+Data source:
+ http://www.gutenberg.org/ebooks/1041
+
+= Small datasets
+
+* large_cities.json - Large U.S. and world cities
+* languages.json - ISO-639-1 languages
+* slurs.json - Racial slurs, used in wordfilter
+* stopwords.json - Stopwords as defined by MySQL
+* us_states.json - U.S. states (just the 50)
+* unicode_code_sheets.json - Lists of the Unicode characters on
+  various code sheets.
+
 data/
 -----
 
 This directory contains data files used by the example scripts, as
-well as some miscellaneous datasets useful in text generation projects.
+well as some miscellaneous datasets useful in text generation
+projects. These aren't 'corpora' per se.
 
 * ids_for_old_gutenberg_filenames.json: Maps old-style (pre-2007)
   Project Gutenberg filenames to the new-style ebook IDs. For example,
   "/etext95/3boat10.zip" is mapped to the number 308 (see
   http://www.gutenberg.org/ebooks/308).
+
+* 44269.txt.utf-8: The complete text of a public domain book
+  ("Famous Houses and Literary Shrines of London" by A. St. John
+  Adcock).
+
+data/more-corpora/
+------------------
+
