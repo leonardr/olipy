@@ -18,7 +18,8 @@ class Corpus(object):
         for full_key, key, path in cls._paths():
             if key == target or full_key == target:
                 return cls._load_corpus(path)
-    
+        raise ValueError("No such corpus: %s" % target)
+            
     @classmethod
     def keys(cls):
         """Return the names of all available corpora."""

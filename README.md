@@ -75,6 +75,19 @@ assembling sequences of words.
 
 markov.py was originally written by Allison "A. A." Parrish.
 
+corpora.py
+----------
+
+_Dependencies:_ corpora (run `git submodule init` within the olipy directory)
+
+A simple wrapper that makes it easy to load datasets from Darius
+Kazemi's `corpora` project, as well as additional corpora (mostly
+large word lists) specific to olipy.
+
+Example scripts for corpora.py:
+
+* example.corpora.py: List and display available datasets.
+
 gibberish.py
 ------------
 
