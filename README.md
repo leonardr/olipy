@@ -122,6 +122,18 @@ _Dependencies:_ python-twitter
 A module for integrating Olipy with other pieces of software (notably
 the Twitter API).
 
+typewriter.py
+-------------
+
+Simulates the Adler Universal 39 typewriter used in "The Shining" and
+the sorts of typos that are commonly made on that
+typewriter. Originally written for @a_dull_bot.
+
+Example scripts for gibberish.py:
+
+* example.typewriter.py: Retypes standard input on the Adler Universal
+  39, with about 10 typos per 100 characters.
+
 wordfilter.py
 -------------
 
