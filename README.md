@@ -149,9 +149,14 @@ Extra corpora
 The data/more-corpora/ directory contains several word lists and
 datasets that aren't in the dariusk/corpora module. These datasets (as
 well as the ones in dariusk/corpora) can be accessed through the
-`corpus` module.
+`corpus` module. Just write code like this:
 
-= Word lists
+```
+from corpus import Corpus
+Corpus.load("abstract_nouns")
+```
+
+**Word lists**
 
 Most of these lists are lists of words sorted by frequency of
 occurance in English. In general, these word lists are too large to
@@ -188,9 +193,9 @@ ultimately up to you.)
 * scribblenauts_words.txt - The top 4000 nouns that were 'concrete'
   enough to be summonable in the game Scribblenauts.
 
-= Large datasets
+**Large datasets**
 
-== apollo_11.ndjson
+_apollo_11.ndjson_
 
 Transcripts of the Apollo 11 mission, presented as dialogue, tokenized
 into sentences using NLTK's Punkt tokenizer. One JSON object per line.
@@ -201,7 +206,7 @@ Data sources:
  "Intended to be a resource for all those interested in the Apollo
   program, whether in a passing or scholarly capacity."
 
-== boardgames.txt
+_boardgames.txt_
 
 Information about board games, collected from BoardGameGeek in July
 2013. One JSON object per line.
@@ -209,7 +214,7 @@ Information about board games, collected from BoardGameGeek in July
 Data source:
  http://boardgamegeek.com/wiki/page/BGG_XML_API2
 
-== minor_planets.json
+_minor_planets.json_
 
 'name', 'number' and IAU 'citation' for named minor planets
 (e.g. asteroids) as of July 2013. The 'discovery' field contains
@@ -222,22 +227,18 @@ Data sources:
  http://www.minorplanetcenter.net/iau/lists/NumberedMPs.html
  http://ssd.jpl.nasa.gov/sbdb.cgi
 
-== shakespeare_sonnets.json
+_shakespeare_sonnets.json_
 
-The sonnets of William Shakespeare.
+The sonnets of William Shakespeare. Data source: http://www.gutenberg.org/ebooks/1041
 
-Data source:
- http://www.gutenberg.org/ebooks/1041
-
-= Small datasets
+**Small datasets**
 
 * large_cities.json - Large U.S. and world cities
 * languages.json - ISO-639-1 languages
 * slurs.json - Racial slurs, used in wordfilter
 * stopwords.json - Stopwords as defined by MySQL
 * us_states.json - U.S. states (just the 50)
-* unicode_code_sheets.json - Lists of the Unicode characters on
-  various code sheets.
+* unicode_code_sheets.json - Lists of the Unicode characters on various code sheets.
 
 data/
 -----
@@ -254,7 +255,4 @@ projects. These aren't 'corpora' per se.
 * 44269.txt.utf-8: The complete text of a public domain book
   ("Famous Houses and Literary Shrines of London" by A. St. John
   Adcock).
-
-data/more-corpora/
-------------------
 
