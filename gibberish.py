@@ -108,11 +108,15 @@ class Gibberish(object):
     def words(self, length):
         words = ''
         i = 0
-        while True:
+        attempts = 0
+        default_length = length
+        while attempts < 1000:
             word_length = None
             if self.word_length is None:
-                word_length = length
+                word_length = default_length
             word = self.word(word_length)
+            if not word:
+                default_length = int(default_length * 0.85)
             if not words:
                 words = word
             else:
@@ -123,8 +127,8 @@ class Gibberish(object):
             i += 1
             if len(words) >= length or (self.num_words is not None and i > self.num_words):
                 break
-
-        return words[:length]
+            attempts += 1
+        return words[:int(length)]
 
     def tweet(self):
         if random.randint(0,4) == 0:
@@ -144,9 +148,18 @@ class Gibberish(object):
         if self.end_with:
             length -= len(self.end_with)
         length = max(self.minimum_length, length)
-        tweet = self.words(length)
+        tweet = None
+        while not tweet:
+            tweet = self.words(length)
+            if not tweet:
+                length = int(length * 1.15)
+            if length > 140:
+                break
         if self.end_with:
             tweet += self.end_with
+        if not tweet:
+            # Apparently it's just not possible.
+            return None
         if not tweet[0].strip():
             # This tweet starts with whitespace. Use COMBINING
             # GRAPHEME JOINER to get Twitter to preserve the whitespace.
@@ -370,6 +383,8 @@ class LimitedModifierGibberish(Gibberish):
     def tweet(self):
         tweet = self.other_generator.tweet()
         new_tweet = []
+        if not tweet:
+            return None
         for i in tweet:
             new_tweet += i + random.choice(self.modifiers)
         new_tweet = unicodedata.normalize("NFC", "".join(new_tweet))
