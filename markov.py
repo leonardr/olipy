@@ -72,7 +72,8 @@ class MarkovGenerator(object):
         # get a random line beginning; convert to a list. 
         current = choice(self.beginnings)
         output = list(current)
-        yield current[0]
+        for token in current:
+            yield token
 
         done = False
         for i in range(self.max):
