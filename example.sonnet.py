@@ -1,7 +1,7 @@
 import json
-from queneau import Assembler
+from olipy.queneau import Assembler
 import textwrap
-from corpus import Corpus
+from olipy.corpus import Corpus
 corpus = Assembler.loadlist(
     Corpus.load("shakespeare_sonnets"), tokens_in='lines'
 )

@@ -1,7 +1,7 @@
 # Corrupts whatever you type by adding diacritical marks.
 import sys
 
-from gibberish import Corruptor
+from olipy.gibberish import Corruptor
 go = True
 while go:
     input = raw_input("> ")

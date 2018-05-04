@@ -1,6 +1,6 @@
 import sys
 import argparse
-from corpus import Corpus
+from olipy.corpus import Corpus
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

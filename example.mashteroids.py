@@ -1,6 +1,6 @@
-from queneau import Assembler, WordAssembler
+from olipy.queneau import Assembler, WordAssembler
 import textwrap
-from corpus import Corpus
+from olipy.corpus import Corpus
 corpus = Assembler.loadlist(Corpus.load("minor_planets"),
                             tokens_in='citation')
 
