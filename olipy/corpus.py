@@ -3,10 +3,10 @@ import os
 
 class Corpus(object):
     """Load a corpus of data from Darius Kazemi's corpora project or
-    from the more-corpora directory included with olipy.
+    from the corpora-more directory included with olipy.
     """
     base_path = os.path.split(__file__)[0]
-    corpora_dirs = ['data/more-corpora', 'corpora/data']
+    corpora_dirs = ['data/corpora-more', 'corpora/data']
     
     extensions = ['.txt', '.json', '.ndjson']
 
