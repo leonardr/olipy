@@ -6,7 +6,7 @@ class Corpus(object):
     from the corpora-more directory included with olipy.
     """
     base_path = os.path.split(__file__)[0]
-    corpora_dirs = ['data/corpora-more', 'corpora/data']
+    corpora_dirs = ['data/corpora-more', 'data/corpora-original']
     
     extensions = ['.txt', '.json', '.ndjson']
 
