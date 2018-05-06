@@ -1,6 +1,6 @@
 {
     "description": "MySQL stopwords",
-    "stopwords": [
+    "stopWords": [
 	"a's",
 	"able",
 	"about",
