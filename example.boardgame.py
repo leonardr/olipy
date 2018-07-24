@@ -3,8 +3,8 @@ import random
 import re
 import textwrap
 
-from corpus import Corpus
-from queneau import Assembler, CompositeAssembler, WordAssembler
+from olipy.corpus import Corpus
+from olipy.queneau import Assembler, CompositeAssembler, WordAssembler
 corpus = Assembler.loadlist(
     Corpus.load("boardgames"), tokens_in='description'
 )

@@ -1,6 +1,6 @@
 import json
-from queneau import DialogueAssembler
-from corpus import Corpus
+from olipy.queneau import DialogueAssembler
+from olipy.corpus import Corpus
 d = DialogueAssembler.loadlist(Corpus.load("apollo_11"))
 last_speaker = None
 for i in range(1, 100):
