@@ -19,7 +19,7 @@ class MarkovGenerator(object):
     @classmethod
     def load(cls, f, order=1, max=500):
         """Load from a filehandle that defines a single chunk of text."""
-        corpus = MarkovGenerator(n, max)
+        corpus = MarkovGenerator(order, max)
         corpus.add(f.read())
         return corpus
 

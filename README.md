@@ -97,6 +97,27 @@ Example scripts for ebooks.py:
   text, with a bias towards the keywords you give it as command-line
   arguments.
 
+gibberish.py
+------------
+
+A module for those interested in the appearance of Unicode
+glyphs. Its main use is generating aesthetically pleasing gibberish
+using selected combinations of Unicode code charts.
+
+```
+from olipy.gibberish import Gibberish
+print(Gibberish.random().tweet().encode("utf8"))
+# ৠ𐒧𐒇দ𐒔𐒜ৗ𐒃𐒝𐒓আ৭৭উ𐒇৶০ধপ𐒤৯ৰ৪ড়ঐবননত৲ফঌ𐒓৴ৄু০েএঠৰ𐒔𐒥গনি৶ঘ𐒋উঙ𐒤ঙছতাৃীফ৮৬৸উকফ𐒘ইমঢ৭ূণঌঊ𐒇𐒋ীঁিৃ𐒌𐒒৺𐒤৺ভ𐒖৭𐒤ৡৰল𐒊ঢ়ৎ𐒅যথখৱঌ
+# ঈঔ৫ঽ𐒔৩়দ𐒋ৠসুয়ঊশ𐒆𐒖𐒁ঔৰসঈ𐒆অ𐒋𐒑𐒨়দ৯ৄ৫ 😘
+```
+
+Example scripts for gibberish.py:
+
+* example.gibberish.py: Prints out a 140-character string of gibberish.
+
+* example.corrupt.py: "Corrupts" whatever text is typed in by adding
+increasing numbers of diacritical marks.
+
 gutenberg.py
 ------------
 
@@ -121,15 +142,77 @@ Example scripts for gutenberg.py:
   text, with a bias towards the keywords you give it as command-line
   arguments.
 
+markov.py
+---------
+
+A module for generating new token lists from old token lists using a
+Markov chain.
+
+The primary purpose of the olipy library is to promote alternatives to
+Markov chains (such as Queneau assembly and the _ebooks algorithm),
+but sometimes you really do want a Markov chain. Queneau assembly is
+usually better than a Markov chain above the word level (constructing
+paragraphs from sentences) and below the word level (constructing
+words from phonemes), but Markov chains are usually better when
+assembling sequences of words.
+
+markov.py was originally written by Allison "A. A." Parrish.
+
+```
+from olipy.markov import MarkovGenerator
+g = MarkovGenerator.load(open("olipy/data/44269.txt.utf-8"), order=1, max=100)
+print(" ".join(g.assemble()))
+# The Project Gutenberg-tm depends upon her
+# husband, whose writings never knew,
+# and to get up in
+# theatrical circles two that "he was a compilation copyright in 1809, many men
+# eminent in his
+# _Prothalamion_ speaks of obtaining of course; and the
+# ...
+```
+
+mosaic.py
+---------
+
+Tiles Unicode characters together to create symmetrical mosaics.
+gibberish.py uses this module as one of its techniques. Includes
+information on Unicode characters whose glyphs appear to be mirror
+images.
+
+```
+from olipy.mosaic import MirroredMosaicGibberish
+mosaic = MirroredMosaicGibberish()
+print(mosaic.tweet())
+# ▛▞ ▙▞▙▟▚▟ ▚▜
+# ▛▞▞ ▞▛▜▚ ▚▚▜
+#  ▞▙  ▞▚  ▟▚ 
+# ▙▚▚ ▚▙▟▞ ▞▞▟
+# ▙▚ ▛▚▛▜▞▜ ▞▟
+
+print(gibberish.tweet())
+# 🙌🙌😯📶🙌👍👍🙌📶😯🙌🙌
+#  📶🙌😯🙌🕠🕠🙌😯🙌📶 
+# 🚂💈🎈🔒🚲🕃🕃🚲🔒🎈💈🚂
+#  📶🙌😯🙌🕠🕠🙌😯🙌📶 
+# 🙌🙌😯📶🙌👍👍🙌📶😯🙌🙌
+
+```
+
 queneau.py
 ----------
-
-_Dependencies:_ `TextBlob`
 
 A module for Queneau assembly, a technique pioneered by Raymond
 Queneau in his 1961 book "Cent mille milliards de poèmes" ("One
 hundred million million poems"). Queneau assembly randomly creates new
 texts from a collection of existing texts with identical structure.
+
+```
+from olipy.queneau import WordAssembler
+from olipy.corpus import Corpus
+assembler = WordAssembler(Corpus.load("dinosaurs"))
+print(assembler.assemble_word())
+# Trilusmiasunaus
+```
 
 Example scripts for queneau.py:
 
@@ -147,50 +230,6 @@ Control. Demonstrates Queneau assembly on dialogue.
 * example.sonnet.py: Generates Shakespearean sonnets.
 
 * example.dinosaurs.py: Generates dinosaur names.
-
-
-markov.py
----------
-
-_Dependencies:_ None
-
-A module for generating new token lists from old token lists using a
-Markov chain.
-
-The primary purpose of the olipy library is to promote alternatives to
-Markov chains (such as Queneau assembly and the _ebooks algorithm),
-but sometimes you really do want a Markov chain. Queneau assembly is
-usually better than a Markov chain above the word level (constructing
-paragraphs from sentences) and below the word level (constructing
-words from phonemes), but Markov chains are usually better when
-assembling sequences of words.
-
-markov.py was originally written by Allison "A. A." Parrish.
-
-
-gibberish.py
-------------
-
-_Dependencies:_ None
-
-A module for those interested in the appearance of Unicode
-glyphs. Its main use is generating aesthetically pleasing gibberish
-using selected combinations of Unicode code charts.
-
-Example scripts for gibberish.py:
-
-* example.gibberish.py: Prints out a 140-character string of gibberish.
-
-* example.corrupt.py: "Corrupts" whatever text is typed in by adding
-increasing numbers of diacritical marks.
-
-integration.py
---------------
-
-_Dependencies:_ python-twitter
-
-A module for integrating Olipy with other pieces of software (notably
-the Twitter API).
 
 typewriter.py
 -------------

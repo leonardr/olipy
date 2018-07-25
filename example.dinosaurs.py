@@ -1,7 +1,5 @@
-import json
-from queneau import WordAssembler
-from corpus import Corpus
-import textwrap
+from olipy.queneau import WordAssembler
+from olipy.corpus import Corpus
 assembler = WordAssembler(Corpus.load("dinosaurs"))
 
 dinos = []

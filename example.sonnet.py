@@ -1,6 +1,4 @@
-import json
 from olipy.queneau import Assembler
-import textwrap
 from olipy.corpus import Corpus
 corpus = Assembler.loadlist(
     Corpus.load("shakespeare_sonnets"), tokens_in='lines'
