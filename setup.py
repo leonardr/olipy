@@ -8,12 +8,6 @@ from setuptools import setup
 
 requires = ['textblob']
 
-entry_points = {
-    'console_scripts': [
-#        'olipy-update-corpora = :main',
-    ]
-}
-
 README = open('README.md', encoding='utf-8').read()
 
 description = u'\n'.join([README])

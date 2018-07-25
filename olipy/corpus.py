@@ -117,8 +117,7 @@ class CorpusLoader(object):
         if not os.path.exists(path):
             return None
         if os.path.isdir(path):
-            return CorpusLoader(
-        
+            return CorpusLoader(path)        
         
         file_loc = "data/" + self.directory + "/" + attr + ".json"
         dir_loc = "data/" + self.directory + "/" + attr
@@ -128,7 +127,7 @@ class CorpusLoader(object):
                 resource_isdir(__name__, dir_loc):
             return CorpusLoader(self.directory + "/" + attr)
         else:
-            
+            set_trace()
 
     def get_categories(self):
         return get_categories(self.directory)

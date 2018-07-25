@@ -14,6 +14,113 @@ Instructions for installing the extra dependencies are on the `TextBlob`
 site, but they boil down to running [this Python
 script](https://raw.github.com/sloria/TextBlob/master/download_corpora.py).
 
+alphabet.py
+-----------
+
+A list of interesting groups of Unicode characters -- alphabets, shapes, and so on.
+
+```
+from olipy.alphabet import Alphabet
+print(Alphabet.default().random_choice())
+# 𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷
+print(Alphabet.default().random_choice())
+# ┌┐└┘├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬╴╵╶╷
+```
+
+This module is used heavily by gibberish.py.
+
+alternate_letterforms.py
+------------------------
+
+Translates from letters of the English alphabet to similar-looking
+characters.
+
+```
+from olipy.alternate_letterforms import alternate_spelling
+print(alternate_spelling("I love alternate letterforms."))
+# ヱ 𝑳𝖮Ⓥ𝙀 𝚊𝓵┯⒠┌𝐍ａ⫪𝖊 𝐋𝖾ߙ𝓉ᥱ𝙧ߓ𝕠┍ጠ𝑆.
+```
+
+corpus.py
+---------
+
+A simple wrapper that makes it easy to load datasets from Darius
+Kazemi's [`corpora`](https://github.com/dariusk/corpora) project, as
+well as additional corpora specific to Olipy -- mostly large word
+lists which `corpora` considers out of scope.
+
+Olipy is packaged with a complete copy of the data from the `corpora`
+project, so you don't have to install anything extra. However,
+installing `corpora` some other way can give you
+
+```
+from olipy.corpus import Corpus
+for city in Corpus.load("large_cities"):
+    print(city)
+# Akron
+# Albequerque
+# Anchorage
+# ...
+```
+
+TODO: compatibility with pycorpora project
+
+TODO: needs some work in general
+
+Example scripts for corpus.py:
+
+* example.corpus.py: List and display available datasets.
+
+ebooks.py
+---------
+
+A module for incongruously sampling texts in the style of the infamous
+[https://twitter.com/horse_ebooks](@horse_ebooks). Based on the
+[https://twitter.com/zzt_ebooks](@zzt_ebooks) algorithm by Allison
+Parrish.
+
+```
+from olipy.ebooks import EbooksQuotes
+data = open("olipy/data/44269.txt.utf-8").read().decode("utf8")
+for quote in EbooksQuotes().quotes_in(data):
+    print(quote)
+# informed his audience that not many men  eminent in literature have been born
+# acquired an unnatural preference for the country, and not only held
+# scarcely  greater than that.
+# Otherwise, except
+# ...
+```
+
+Example scripts for ebooks.py:
+
+* example.ebooks.py: Selects some lines from a Project Gutenberg
+  text, with a bias towards the keywords you give it as command-line
+  arguments.
+
+gutenberg.py
+------------
+
+_Dependencies:_ `rdflib` (Only necessary if you have a copy of [Project
+Gutenberg's RDF
+catalog](http://www.gutenberg.org/wiki/Gutenberg:Feeds#Current_RDF_Format)
+and you want to get extra metadata from it.)
+
+A module for dealing with texts from Project Gutenberg. Strips headers
+and footers, and parses the text.
+
+```
+from olipy.gutenberg import ProjectGutenbergText
+text = ProjectGutenbergText(open("olipy/data/44269.txt.utf-8").read())
+print(len(text.paragraphs))
+# 1258
+```
+
+Example scripts for gutenberg.py:
+
+* example.ebooks.py: Selects some lines from a Project Gutenberg
+  text, with a bias towards the keywords you give it as command-line
+  arguments.
+
 queneau.py
 ----------
 
@@ -41,21 +148,6 @@ Control. Demonstrates Queneau assembly on dialogue.
 
 * example.dinosaurs.py: Generates dinosaur names.
 
-ebooks.py
----------
-
-_Dependencies:_ `TextBlob`
-
-A module for incongruously sampling texts in the style of the infamous
-[https://twitter.com/horse_ebooks](@horse_ebooks). Based on the
-[https://twitter.com/zzt_ebooks](@zzt_ebooks) algorithm by Allison
-Parrish.
-
-Example scripts for ebooks.py:
-
-* example.horse_ebooks.py: Selects some lines from a Project Gutenberg
-  text, with a bias towards the keywords you give it as command-line
-  arguments.
 
 markov.py
 ---------
@@ -75,18 +167,6 @@ assembling sequences of words.
 
 markov.py was originally written by Allison "A. A." Parrish.
 
-corpora.py
-----------
-
-_Dependencies:_ corpora (run `git submodule init` within the olipy directory)
-
-A simple wrapper that makes it easy to load datasets from Darius
-Kazemi's `corpora` project, as well as additional corpora (mostly
-large word lists) specific to olipy.
-
-Example scripts for corpora.py:
-
-* example.corpora.py: List and display available datasets.
 
 gibberish.py
 ------------
@@ -103,16 +183,6 @@ Example scripts for gibberish.py:
 
 * example.corrupt.py: "Corrupts" whatever text is typed in by adding
 increasing numbers of diacritical marks.
-
-gutenberg.py
-------------
-
-_Dependencies:_ `rdflib` (Only necessary if you have a copy of [Project
-Gutenberg's RDF
-catalog](http://www.gutenberg.org/wiki/Gutenberg:Feeds#Current_RDF_Format)
-and you want to get extra metadata from it.)
-
-A module for dealing with texts from Project Gutenberg.
 
 integration.py
 --------------

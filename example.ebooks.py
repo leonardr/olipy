@@ -2,8 +2,9 @@ import argparse
 import logging
 import os
 import sys
-from gutenberg import ProjectGutenbergText
-from ebooks import EbooksQuotes
+from olipy.gutenberg import ProjectGutenbergText
+from olipy.ebooks import EbooksQuotes
+base = os.path.split(__file__)[0]
 
 parser = argparse.ArgumentParser(
     description="Generate pithy _ebooks quotes from Project Gutenberg texts.")
@@ -16,8 +17,10 @@ parser.add_argument(
 
 args = parser.parse_args()
 ebooks = EbooksQuotes(args.keyword)
+
 if args.path is None:
-    texts = [ProjectGutenbergText(open("data/44269.txt.utf-8").read(), "44269.txt.utf-8")]
+    path = os.path.join(base, "olipy", "data", "44269.txt.utf-8")
+    texts = [ProjectGutenbergText(open(path).read(), "44269.txt.utf-8")]
 else:
     texts = ProjectGutenbergText.texts_on_media(args.path)
 for text in texts:
