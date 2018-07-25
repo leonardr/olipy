@@ -231,6 +231,32 @@ Control. Demonstrates Queneau assembly on dialogue.
 
 * example.dinosaurs.py: Generates dinosaur names.
 
+randomness.py
+-------------
+
+Techniques for generating random patterns that are more sophisticated than
+simple selection.
+
+The `Gradient` class generates a string of random choices that are
+weighted towards one set of options near the start, and weighted
+towards another set of options near the end.
+
+Here's a gradient from lowercase letters to uppercase letters:
+
+```
+from olipy.randomness import Gradient
+import string
+print("".join(Gradient.gradient(string.lowercase, string.uppercase, 40)))
+# rkwyobijqQOzKfdcSHIhYINGrQkBRddEWPHYtORB
+```
+
+# TODO: put a wandering monster table here.
+
+tokenizer.py
+------------
+
+# TODO
+
 typewriter.py
 -------------
 
@@ -245,8 +271,6 @@ Example scripts for gibberish.py:
 
 wordfilter.py
 -------------
-
-_Dependencies:_ None
 
 A Python port of [Darius Kazemi's word
 filter](https://npmjs.org/package/wordfilter), for finding strings

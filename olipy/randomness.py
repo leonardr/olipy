@@ -59,7 +59,7 @@ class Gradient(object):
         """Yields a gradient from set1 to set2 of a given length."""
         for i in range(length):
             chance = float(i)/length
-            if random.random() <= chance:
+            if random.random() > chance:
                 c = go_from
             else:
                 c = go_to
