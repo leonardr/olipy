@@ -3,10 +3,10 @@ import os
 
 class Corpus(object):
     """Load a corpus of data from Darius Kazemi's corpora project or
-    from the more-corpora directory included with olipy.
+    from the corpora-more directory included with olipy.
     """
     base_path = os.path.split(__file__)[0]
-    corpora_dirs = ['data/more-corpora', 'corpora/data']
+    corpora_dirs = ['data/corpora-more', 'data/corpora-original']
     
     extensions = ['.txt', '.json', '.ndjson']
 
@@ -77,3 +77,64 @@ class Corpus(object):
 
 def load(*args, **kwargs):
     return Corpus.load(*args, **kwargs)
+
+
+class CorpusLoader(object):
+    def __init__(self, directories=None):
+        """Constructor.
+
+        :param directories: A list of directories to use when looking for
+        data. If this is not provided, olipy will use its built-in data, which includes
+        a copy of the original corpora project.
+        """
+        olipy_root = os.path.split(__file__)[0]
+        data_root = os.path.join(olipy_root, 'data')
+        def data_path(x):
+            return os.path.join(data_root, x)
+        directory = directory or data_path('corpora-original')
+
+        # Whether we're using the built-in corpora or a custom one,
+        # the data is located in the 'data' subdirectory
+        directory = os.path.join(directory, 'data')
+        self.path = [directory, data_path('corpora-more')]
+
+    def __getitem__(self, key):
+        return self.__getattr__(key)
+
+    def __getattr__(self, attr):
+        for d in self.path:
+            path = os.path.join(d, attr)
+            corpus = self.load(path)
+            if corpus:
+                return corpus
+        raise AttributeError("no resource named " + attr)
+
+    def load(self, path):
+        """Try to load a file 
+
+        :return: A CorpusLoader if `path` is a directory; otherwise
+        """
+        if not os.path.exists(path):
+            return None
+        if os.path.isdir(path):
+            return CorpusLoader(
+        
+        
+        file_loc = "data/" + self.directory + "/" + attr + ".json"
+        dir_loc = "data/" + self.directory + "/" + attr
+        if resource_exists(__name__, file_loc):
+            return fetch_resource(file_loc)
+        elif resource_exists(__name__, dir_loc) and \
+                resource_isdir(__name__, dir_loc):
+            return CorpusLoader(self.directory + "/" + attr)
+        else:
+            
+
+    def get_categories(self):
+        return get_categories(self.directory)
+
+    def get_files(self):
+        return get_files(self.directory)
+
+    def get_file(self, *components):
+        return get_file(self.directory, *components)

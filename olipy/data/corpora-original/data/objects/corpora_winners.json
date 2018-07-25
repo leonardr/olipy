@@ -1,0 +1,32 @@
+{
+  "description" : "Winners in the Corpora Brackets, from https://twitter.com/corporabrackets",
+  "winners" : [{
+      "bracket" : "condiments",
+      "winner" : "Guacamole"
+    }, {
+      "bracket" : "Deities and supernatural creatures",
+      "winner" : "Many-angled One"
+    }, {
+      "bracket" : "elements",
+      "winner" : "Ytterbium"
+    }, {
+      "bracket" : "fibers",
+      "winner" : "yarn"
+    }, {
+      "bracket" : "positive emoji",
+      "winner" : "🔥"
+    }, {
+      "bracket" : "decorative stones",
+      "winner" : "oolitic limestone"
+    }, {
+      "bracket" : "packaging",
+      "winner" : "modified atmosphere"
+    }, {
+      "bracket" : "Common character archetypes",
+      "winner" : "trickster"
+    }, {
+      "bracket" : "flowers",
+      "winner" : "foxglove"
+    }
+  ]
+}
