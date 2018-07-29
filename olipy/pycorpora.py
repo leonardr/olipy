@@ -1,0 +1,111 @@
+"""A port of Allison Parrish's pycorpora module.
+
+This was necessary
+"""
+import os
+import sys
+import json
+
+cache = dict()
+
+this_dir = os.path.split(__file__)[0]
+data_path = os.path.join(this_dir, "data")
+components = [
+    (data_path, "corpora-original", "data"),
+    (data_path, "corpora-more")
+]
+data_directories = [os.path.join(*x) for x in components]
+
+def _read(path):
+    if not path in cache:
+        if not os.path.exists(path):
+            return
+        data = json.load(open(path))
+        cache[path] = data
+    return cache[path]
+
+def fetch_resource(name, *directories):
+    directories = directories or data_directories
+    result = None
+    for directory in reversed(directories):
+        path = os.path.join(directory, name)
+        result = _read(path)
+        if not result:
+            continue
+    return result
+
+def get_categories(name=None, *directories):
+    categories = []
+    directories = directories or data_directories
+    for directory in directories:
+        if name:
+            directory = os.path.join(directory, name)
+        if not os.path.isdir(directory):
+            continue
+        for x in os.listdir(directory):
+            if os.path.isdir(os.path.join(directory, x)):
+                categories.append(x)
+        return categories
+
+def get_files(name=None, *directories):
+    files = []
+    directories = directories or data_directories
+    for directory in directories:
+        if name:
+            directory = os.path.join(directory, name)
+        if not os.path.isdir(directory):
+            continue
+        for x in os.listdir(directory):
+            path = os.path.join(directory, x)
+            if (not os.path.isdir(path) and path.endswith(".json")):
+                files.append(x[:-5])                
+    return files
+
+def get_file(*components):
+    return fetch_resource(os.path.join(*components) + ".json")
+
+
+class CorpusLoader(object):
+    def __init__(self, *directories):
+        self.directories = list(directories)
+        
+    def __getitem__(self, key):
+        return self.__getattr__(key)
+
+    def __getattr__(self, attr):
+        """If `attr` designates a file, load it as JSON and return it."""
+        for directory in self.directories:
+            file_loc =os.path.join(directory, attr + '.json')
+            dir_loc = os.path.join(directory, attr)
+            if os.path.exists(file_loc):
+                return _read(file_loc)
+            elif os.path.isdir(dir_loc):
+                return CorpusLoader(dir_loc)
+        else:
+            raise AttributeError("no resource named " + attr)
+
+    def get_categories(self):
+        return get_categories(*self.directories)
+    
+    def get_files(self):
+        return get_files(*self.directories)
+
+    def get_file(self, *components):
+        path = os.path.join(*components)
+        return _read(path)
+
+# Load the standard corpora data from corpora-original/data and the
+# olipy extensions from corpora-more.
+module = sys.modules[__name__]
+for subdir in data_directories:
+    for resource_type in os.listdir(subdir):
+        directory = os.path.join(subdir, resource_type)
+        if not os.path.isdir(directory):
+            continue
+        var = resource_type.replace("-", "_")
+        loader = getattr(module, var, None)
+        if not loader:
+            loader = CorpusLoader()
+            setattr(module, var, loader)
+        loader.directories.append(directory)
+        

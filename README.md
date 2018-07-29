@@ -54,8 +54,8 @@ project, so you don't have to install anything extra. However,
 installing `corpora` some other way can give you
 
 ```
-from olipy.corpus import Corpus
-for city in Corpus.load("large_cities"):
+from olipy import corpora
+for city in corpora.geography.large_cities:
     print(city)
 # Akron
 # Albequerque
