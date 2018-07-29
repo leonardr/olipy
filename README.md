@@ -250,12 +250,39 @@ print("".join(Gradient.gradient(string.lowercase, string.uppercase, 40)))
 # rkwyobijqQOzKfdcSHIhYINGrQkBRddEWPHYtORB
 ```
 
-# TODO: put a wandering monster table here.
+The `WanderingMonsterTable` class lets you make random choices from
+roughly weighted lists of options.
+
+```
+from olipy.randomness import WanderingMonsterTable
+
+monsters = WanderingMonsterTable(
+         common=["Giant rat", "Alligator"],
+         uncommon=["Orc", "Hobgoblin"],
+         rare=["Beholder", "Neo-otyugh"],
+         very_rare=["Flump", "Ygorl, Lord of Entropy"],
+)
+for i in range(5):
+    print monsters.choice()
+# Giant rat
+# Alligator
+# Alligator
+# Orc
+# Giant rat
+```
 
 tokenizer.py
 ------------
 
-# TODO
+A word tokenizer that performs better than NLTK's default tokenizers
+on some common types of English.
+
+>>> from nltk.tokenize.treebank import TreebankWordTokenizer
+>>> s = '''Good muffins cost $3.88\\nin New York. Email: muffins@example.com'''
+>>> TreebankWordTokenizer().tokenize(s)
+# ['Good', 'muffins', 'cost', '$', '3.88', 'in', 'New', 'York.', 'Email', ':', 'muffins', '@', 'example.com']
+>>> WordTokenizer().tokenize(s)
+# ['Good', 'muffins', 'cost', '$', '3.88', 'in', 'New', 'York.', 'Email:', 'muffins@example.com']
 
 typewriter.py
 -------------
@@ -268,13 +295,6 @@ Example scripts for gibberish.py:
 
 * example.typewriter.py: Retypes standard input on the Adler Universal
   39, with about 10 typos per 100 characters.
-
-wordfilter.py
--------------
-
-A Python port of [Darius Kazemi's word
-filter](https://npmjs.org/package/wordfilter), for finding strings
-that contain racial slurs and the like.
 
 Extra corpora
 -------------

@@ -6,7 +6,7 @@ from os.path import join, relpath
 
 from setuptools import setup
 
-requires = ['textblob']
+requires = ['textblob', 'wordfilter']
 
 README = open('README.md', encoding='utf-8').read()
 
