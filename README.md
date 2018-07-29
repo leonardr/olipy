@@ -288,8 +288,15 @@ typewriter.py
 -------------
 
 Simulates the Adler Universal 39 typewriter used in "The Shining" and
-the sorts of typos that are commonly made on that
-typewriter. Originally written for @a_dull_bot.
+the sorts of typos that would be made on that typewriter. Originally
+written for @a_dull_bot.
+
+```
+from olipy.typewriter import Typewriter
+typewriter = Typewriter()
+typewriter.type("All work and no play makes Jack a dull boy.")
+# 'All work and no play makes Jack a dull bo6.'
+```
 
 Example scripts for gibberish.py:
 
@@ -299,8 +306,8 @@ Example scripts for gibberish.py:
 Extra corpora
 -------------
 
-The data/more-corpora/ directory contains several word lists and
-datasets that aren't in the dariusk/corpora module. These datasets (as
+The data/corpora-more/ directory contains several word lists and
+datasets that aren't in the the Corpora project. These datasets (as
 well as the ones in dariusk/corpora) can be accessed through the
 `corpus` module. Just write code like this:
 
@@ -317,57 +324,25 @@ fit in the corpora project. Some of them have been manually edited to
 minimize the risk of embarrassing or offensive output. (But it's
 ultimately up to you.)
 
-* abstract_nouns.txt - The 4000 most common abstract concepts, like
-  "work" and "love".
+_geography/large_cities.json_
 
-* adjectival_nouns.txt - The top 1000 nouns that can also act as
-  adjectives.
+Names of large U.S. and world cities.
 
-* adjectives.txt - The 5000 most common adjectives.
+_geography/us_states.json_
 
-* english_words.json - A consolidated list of English words from the
-  FRELI project. (http://www.nkuitse.com/freli/)
+The fifty U.S. states.
 
-* english_words.common.json - A subset of the list of words in
-  english_words, focusing on relatively common words shorter than 10
-  characters.
+Names of large U.S. and world cities.
 
-* concrete_nouns.txt - The opposite of abstract_nouns.txt. These nouns
-  refer to more concrete things like "hometown" and
-  "masterpiece". (But see scribblenauts_words.txt to get even more
-  concrete.)
+_language/languages.json_
 
-* gerunds.txt - The 3000 most common gerunds.
+Names of languages defined in ISO-639-1
 
-* past_tense.txt - The 3000 most common past tense verbs.
+_language/unicode_code_sheets.json_
 
-* present_tense.txt - The 2000 most common present tense verbs.
+The name of every Unicode code sheet, with the characters found on that sheet.
 
-* scribblenauts_words.txt - The top 4000 nouns that were 'concrete'
-  enough to be summonable in the game Scribblenauts.
-
-**Large datasets**
-
-_apollo_11.ndjson_
-
-Transcripts of the Apollo 11 mission, presented as dialogue, tokenized
-into sentences using NLTK's Punkt tokenizer. One JSON object per line.
-
-Data sources:
- The Apollo 11 Flight Journal: http://history.nasa.gov/ap11fj/
- The Apollo 11 Surface Journal: http://history.nasa.gov/alsj/
- "Intended to be a resource for all those interested in the Apollo
-  program, whether in a passing or scholarly capacity."
-
-_boardgames.txt_
-
-Information about board games, collected from BoardGameGeek in July
-2013. One JSON object per line.
-
-Data source:
- http://boardgamegeek.com/wiki/page/BGG_XML_API2
-
-_minor_planets.json_
+_science/minor_planets.json_
 
 'name', 'number' and IAU 'citation' for named minor planets
 (e.g. asteroids) as of July 2013. The 'discovery' field contains
@@ -380,32 +355,76 @@ Data sources:
  http://www.minorplanetcenter.net/iau/lists/NumberedMPs.html
  http://ssd.jpl.nasa.gov/sbdb.cgi
 
-_shakespeare_sonnets.json_
+_words/adjectives.json_
+
+About 5000 English adjectives, sorted roughly by frequency of occurrence.
+
+_words/common_nouns.json_
+
+Lists of English nouns, sorted roughly by frequency of occurrence.
+
+Includes:
+
+* `abstract_nouns` like "work" and "love".
+* `concrete_nouns` like "face" and "house".
+* `adjectival_nouns` -- nouns that can also act as adjectives -- like "chance" and "light".
+
+_words/common_verbs.json_
+
+Lists of English verbs, sorted roughly by frequency of occurrence.
+
+* `present_tense` verbs like "get" and "want".
+* `past_tense` verbs like "said" and "found".
+* `gerund` forms like "holding" and "leaving".
+
+_words/english_words.json_
+
+A consolidated list of about 73,000 English words from the FRELI
+project. (http://www.nkuitse.com/freli/)
+
+_words/scribblenauts.json_
+
+The top 4000 nouns that were 'concrete' enough to be summonable in the
+2009 game Scribblenauts. As always, this list is ordered with more common
+words towards the front.
+
+_words/literature/apollo_11.json__
+
+Transcripts of the Apollo 11 mission, presented as dialogue, tokenized
+into sentences using NLTK's Punkt tokenizer. One JSON object per line.
+
+Data sources:
+ The Apollo 11 Flight Journal: http://history.nasa.gov/ap11fj/
+ The Apollo 11 Surface Journal: http://history.nasa.gov/alsj/
+ "Intended to be a resource for all those interested in the Apollo
+  program, whether in a passing or scholarly capacity."
+
+_words/literature/boardgames.json_
+
+Information about board games, collected from BoardGameGeek in July
+2013. One JSON object per line.
+
+Data source:
+ http://boardgamegeek.com/wiki/page/BGG_XML_API2
+
+_words/literature/shakespeare_sonnets.json_
 
 The sonnets of William Shakespeare. Data source: http://www.gutenberg.org/ebooks/1041
-
-**Small datasets**
-
-* large_cities.json - Large U.S. and world cities
-* languages.json - ISO-639-1 languages
-* slurs.json - Racial slurs, used in wordfilter
-* stopwords.json - Stopwords as defined by MySQL
-* us_states.json - U.S. states (just the 50)
-* unicode_code_sheets.json - Lists of the Unicode characters on various code sheets.
 
 data/
 -----
 
 This directory contains data files used by the example scripts, as
 well as some miscellaneous datasets useful in text generation
-projects. These aren't 'corpora' per se.
+projects. These aren't 'corpora' per se and you probably won't need to
+use them.
+
+* 44269.txt.utf-8: The complete text of a public domain book
+  ("Famous Houses and Literary Shrines of London" by A. St. John
+  Adcock). This is included so you can test your project against a
+  real book-length text without downloading anything extra.
 
 * ids_for_old_gutenberg_filenames.json: Maps old-style (pre-2007)
   Project Gutenberg filenames to the new-style ebook IDs. For example,
   "/etext95/3boat10.zip" is mapped to the number 308 (see
   http://www.gutenberg.org/ebooks/308).
-
-* 44269.txt.utf-8: The complete text of a public domain book
-  ("Famous Houses and Literary Shrines of London" by A. St. John
-  Adcock).
-
