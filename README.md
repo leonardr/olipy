@@ -41,7 +41,7 @@ print(alternate_spelling("I love alternate letterforms."))
 # ヱ 𝑳𝖮Ⓥ𝙀 𝚊𝓵┯⒠┌𝐍ａ⫪𝖊 𝐋𝖾ߙ𝓉ᥱ𝙧ߓ𝕠┍ጠ𝑆.
 ```
 
-corpus.py
+corpora.py
 ---------
 
 A simple wrapper that makes it easy to load datasets from Darius
@@ -51,11 +51,11 @@ lists which `corpora` considers out of scope.
 
 Olipy is packaged with a complete copy of the data from the `corpora`
 project, so you don't have to install anything extra. However,
-installing `corpora` some other way can give you
+installing `corpora` some other way can give you extra data.
 
 ```
 from olipy import corpora
-for city in corpora.geography.large_cities:
+for city in corpora.geography.large_cities['cities']:
     print(city)
 # Akron
 # Albequerque
@@ -63,13 +63,7 @@ for city in corpora.geography.large_cities:
 # ...
 ```
 
-TODO: compatibility with pycorpora project
-
-TODO: needs some work in general
-
-Example scripts for corpus.py:
-
-* example.corpus.py: List and display available datasets.
+Olipy's additions to 
 
 ebooks.py
 ---------
@@ -312,7 +306,7 @@ well as the ones in dariusk/corpora) can be accessed through the
 `corpus` module. Just write code like this:
 
 ```
-from corpus import Corpus
+from corpora import 
 Corpus.load("abstract_nouns")
 ```
 
