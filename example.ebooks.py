@@ -4,6 +4,7 @@ import os
 import sys
 from olipy.gutenberg import ProjectGutenbergText
 from olipy.ebooks import EbooksQuotes
+from olipy import corpora
 base = os.path.split(__file__)[0]
 
 parser = argparse.ArgumentParser(
@@ -19,8 +20,8 @@ args = parser.parse_args()
 ebooks = EbooksQuotes(args.keyword)
 
 if args.path is None:
-    path = os.path.join(base, "olipy", "data", "44269.txt.utf-8")
-    texts = [ProjectGutenbergText(open(path).read(), "44269.txt.utf-8")]
+    default = corpora.words.literature.nonfiction.literary_shrines
+    texts = [ProjectGutenbergText(default['text'])]
 else:
     texts = ProjectGutenbergText.texts_on_media(args.path)
 for text in texts:

@@ -75,8 +75,6 @@ class CorpusLoader(object):
     def __getattr__(self, attr):
         """If `attr` designates a file, load it as JSON and return it."""
         loader = None
-        if attr == 'nonfiction':
-            import pdb; pdb.set_trace()
         for directory in self.directories:
             file_loc =os.path.join(directory, attr + '.json')
             dir_loc = os.path.join(directory, attr)

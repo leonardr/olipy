@@ -3,10 +3,10 @@ import random
 import re
 import textwrap
 
-from olipy.corpus import Corpus
+from olipy import corpora
 from olipy.queneau import Assembler, CompositeAssembler, WordAssembler
 corpus = Assembler.loadlist(
-    Corpus.load("boardgames"), tokens_in='description'
+    corpora.words.literature.board_games['board_games'], tokens_in='description'
 )
 
 no_punctuation_at_end = re.compile("[a-zA-Z0-9]$")

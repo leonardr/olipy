@@ -1,7 +1,7 @@
 import json
 from olipy.queneau import DialogueAssembler
-from olipy.corpus import Corpus
-d = DialogueAssembler.loadlist(Corpus.load("apollo_11"))
+from olipy import corpora
+d = DialogueAssembler.loadlist(corpora.words.literature.nonfiction.apollo_11['transcript'])
 last_speaker = None
 for i in range(1, 100):
     speaker, tokens = d.assemble(last_speaker)

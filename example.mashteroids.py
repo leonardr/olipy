@@ -1,8 +1,10 @@
 from olipy.queneau import Assembler, WordAssembler
 import textwrap
-from olipy.corpus import Corpus
-corpus = Assembler.loadlist(Corpus.load("minor_planets"),
-                            tokens_in='citation')
+from olipy import corpora
+corpus = Assembler.loadlist(
+    corpora.science.minor_planet_details["minor_planets"],
+    tokens_in='citation'
+)
 
 how_many = 100
 for i in range(how_many):

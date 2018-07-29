@@ -1,6 +1,6 @@
 from olipy.queneau import WordAssembler
-from olipy.corpus import Corpus
-assembler = WordAssembler(Corpus.load("dinosaurs"))
+from olipy import corpora
+assembler = WordAssembler(corpora.animals.dinosaurs['dinosaurs'])
 
 dinos = []
 for i in range(2):
