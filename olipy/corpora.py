@@ -9,6 +9,7 @@ import sys
 import json
 
 cache = dict()
+loaders = []
 
 this_dir = os.path.split(__file__)[0]
 data_path = os.path.join(this_dir, "data")
@@ -60,19 +61,67 @@ def get_files(name=None, *directories):
         for x in os.listdir(directory):
             path = os.path.join(directory, x)
             if (not os.path.isdir(path) and path.endswith(".json")):
-                files.append(x[:-5])                
+                files.append(x[:-5])
     return files
 
 def get_file(*components):
     return fetch_resource(os.path.join(*components) + ".json")
 
+def load(name):
+    """Find the first corpus with the given name and load it from disk."""
+    for loader in loaders:
+        value = loader.search(name)
+        if value:
+            return value
+
+def names():
+    """Generate a list of all corpus names."""
+    for loader in loaders:
+        for name in loader.names:
+            yield name
 
 class CorpusLoader(object):
     def __init__(self, *directories):
         self.directories = list(directories)
-        
+
     def __getitem__(self, key):
         return self.__getattr__(key)
+
+    @property
+    def children(self):
+        by_filename = {}
+        for directory in self.directories:
+            for filename in sorted(os.listdir(directory)):
+                path = os.path.join(directory, filename)
+                if not os.path.isdir(path):
+                    continue
+                loader = by_filename.get(filename)
+                if not loader:
+                    loader = CorpusLoader()
+                    by_filename[filename] = loader
+                loader.directories.append(path)
+
+        return by_filename.values()
+
+    @property
+    def names(self):
+        for directory in self.directories:
+            for filename in sorted(os.listdir(directory)):
+                path = os.path.join(directory, filename)
+                if os.path.isdir(path):
+                    continue
+                if not path.endswith(".json"):
+                    continue
+                yield filename[:-5]
+
+    def search(self, name):
+        for filename in self.names:
+            if name == filename:
+                return self.__getattr__(name)
+        for loader in self.children:
+            value = loader.search(name)
+            if value:
+                return value
 
     def __getattr__(self, attr):
         """If `attr` designates a file, load it as JSON and return it."""
@@ -92,7 +141,7 @@ class CorpusLoader(object):
 
     def get_categories(self):
         return get_categories(None, *self.directories)
-    
+
     def get_files(self):
         return get_files(None, *self.directories)
 
@@ -104,7 +153,7 @@ class CorpusLoader(object):
 # olipy extensions from corpora-more.
 module = sys.modules[__name__]
 for subdir in data_directories:
-    for resource_type in os.listdir(subdir):
+    for resource_type in sorted(os.listdir(subdir)):
         directory = os.path.join(subdir, resource_type)
         if not os.path.isdir(directory):
             continue
@@ -112,6 +161,6 @@ for subdir in data_directories:
         loader = getattr(module, var, None)
         if not loader:
             loader = CorpusLoader()
+            loaders.append(loader)
             setattr(module, var, loader)
         loader.directories.append(directory)
-        

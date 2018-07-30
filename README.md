@@ -272,12 +272,10 @@ print(assembler.assemble_word())
 # Trilusmiasunaus
 ```
 
-The original purpose of Olipy was to promote Queneau assembly, and there are many scripts
-which show what it's capable of:
-
 ## randomness.py
 
-Techniques for generating random patterns that are more sophisticated `random.choice`.
+Techniques for generating random patterns that are more sophisticated
+than `random.choice`.
 
 ### `Gradient`
 
@@ -326,18 +324,18 @@ A word tokenizer that performs better than NLTK's default tokenizers
 on some common types of English.
 
 ```
->>> from nltk.tokenize.treebank import TreebankWordTokenizer
->>> s = '''Good muffins cost $3.88\\nin New York. Email: muffins@example.com'''
->>> TreebankWordTokenizer().tokenize(s)
+from nltk.tokenize.treebank import TreebankWordTokenizer
+s = '''Good muffins cost $3.88\\nin New York. Email: muffins@example.com'''
+TreebankWordTokenizer().tokenize(s)
 # ['Good', 'muffins', 'cost', '$', '3.88', 'in', 'New', 'York.', 'Email', ':', 'muffins', '@', 'example.com']
->>> WordTokenizer().tokenize(s)
+WordTokenizer().tokenize(s)
 # ['Good', 'muffins', 'cost', '$', '3.88', 'in', 'New', 'York.', 'Email:', 'muffins@example.com']
 ```
 
 typewriter.py
 -------------
 
-Simulates the Adler Universal 39 typewriter used in "The Shining" and
+Simulates the Adler Universal 39 typewriter used in _The Shining_ and
 the sorts of typos that would be made on that typewriter. Originally
 written for [@a_dull_bot](https://botsin.space/@adullbot).
 
@@ -347,11 +345,6 @@ typewriter = Typewriter()
 typewriter.type("All work and no play makes Jack a dull boy.")
 # 'All work and no play makes Jack a dull bo6.'
 ```
-
-Example scripts for gibberish.py:
-
-* example.typewriter.py: Retypes standard input on the Adler Universal
-  39, with about 10 typos per 100 characters.
 
 # Extra corpora
 
@@ -466,7 +459,3 @@ Maps old-style (pre-2007) Project Gutenberg filenames to the new-style
 ebook IDs. For example, "/etext95/3boat10.zip" is mapped to the
 number 308 (see http://www.gutenberg.org/ebooks/308). Pretty much
 nobody needs this.
-
-### `corpora.words.literature.shakespeare_sonnets`
-
-The sonnets of William Shakespeare. Data source: http://www.gutenberg.org/ebooks/1041
