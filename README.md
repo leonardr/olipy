@@ -1,24 +1,20 @@
-olipy
-=====
+Olipy is a Python library for artistic text generation. It includes many useful datasets and modules for processing and presenting texual data.
 
-Olipy is a Python library for artistic text generation. It has many
-useful modules.
-
-Setup
------
+# Setup
 
 `pip install olipy`
 
 Olipy uses the [`TextBlob`](https://textblob.readthedocs.org/) library
-to parse text. Installing Olipy through `pip` will also install
-TextBlob, but `TextBlob` has extra dependencies (text corpora) which
+to parse text. Installing Olipy through `pip` will install
+TextBlob as a dependency, but `TextBlob` has extra dependencies (text corpora) which
 are _not_ installed by `pip`.  Instructions for installing the extra
 dependencies are on the `TextBlob` site, but they boil down to running
 [this Python
 script](https://raw.github.com/sloria/TextBlob/master/download_corpora.py).
 
-alphabet.py
------------
+# Module guide
+
+## alphabet.py
 
 A list of interesting groups of Unicode characters -- alphabets, shapes, and so on.
 
@@ -32,8 +28,7 @@ print(Alphabet.default().random_choice())
 
 This module is used heavily by gibberish.py.
 
-alternate_letterforms.py
-------------------------
+## alternate_letterforms.py
 
 Translates from letters of the English alphabet to similar-looking
 characters.
@@ -44,10 +39,9 @@ print(alternate_spelling("I love alternate letterforms."))
 # ヱ 𝑳𝖮Ⓥ𝙀 𝚊𝓵┯⒠┌𝐍ａ⫪𝖊 𝐋𝖾ߙ𝓉ᥱ𝙧ߓ𝕠┍ጠ𝑆.
 ```
 
-corpora.py
----------
+# corpora.py
 
-A simple wrapper that makes it easy to load datasets from Darius
+This module makes it easy to load datasets from Darius
 Kazemi's [Corpora Project](https://github.com/dariusk/corpora), as
 well as additional datasets specific to Olipy -- mostly large word
 lists which the Corpora Project considers out of scope. (These new
@@ -105,8 +99,7 @@ corpora.get_file("animals", "birds_antarctica") # returns dict w/data
 corpora.get_file("words/literature", "shakespeare_words")
 ```
 
-ebooks.py
----------
+## ebooks.py
 
 A module for incongruously sampling texts in the style of the infamous
 [https://twitter.com/horse_ebooks](@horse_ebooks). Based on the
@@ -131,8 +124,7 @@ Example scripts for ebooks.py:
   text, with a bias towards the keywords you give it as command-line
   arguments.
 
-gibberish.py
-------------
+## gibberish.py
 
 A module for those interested in the appearance of Unicode
 glyphs. Its main use is generating aesthetically pleasing gibberish
@@ -148,17 +140,10 @@ print(Gibberish.random().tweet().encode("utf8"))
 Example scripts for gibberish.py:
 
 * example.gibberish.py: Prints out a 140-character string of gibberish.
-
 * example.corrupt.py: "Corrupts" whatever text is typed in by adding
 increasing numbers of diacritical marks.
 
-gutenberg.py
-------------
-
-_Dependencies:_ `rdflib` (Only necessary if you have a copy of [Project
-Gutenberg's RDF
-catalog](http://www.gutenberg.org/wiki/Gutenberg:Feeds#Current_RDF_Format)
-and you want to get extra metadata from it.)
+## gutenberg.py
 
 A module for dealing with texts from Project Gutenberg. Strips headers
 and footers, and parses the text.
@@ -177,14 +162,13 @@ Example scripts for gutenberg.py:
   text, with a bias towards the keywords you give it as command-line
   arguments.
 
-markov.py
----------
+## markov.py
 
 A module for generating new token lists from old token lists using a
 Markov chain.
 
-The primary purpose of the olipy library is to promote alternatives to
-Markov chains (such as Queneau assembly and the _ebooks algorithm),
+Olipy's primary purpose is to promote alternatives to
+Markov chains (such as Queneau assembly and the ebooks algorithm),
 but sometimes you really do want a Markov chain. Queneau assembly is
 usually better than a Markov chain above the word level (constructing
 paragraphs from sentences) and below the word level (constructing
@@ -208,8 +192,7 @@ print(" ".join(g.assemble()))
 # the heart'--allowed--yet I got out and more convenient.... Mr.
 ```
 
-mosaic.py
----------
+## mosaic.py
 
 Tiles Unicode characters together to create symmetrical mosaics.
 gibberish.py uses this module as one of its techniques. Includes
@@ -235,8 +218,7 @@ print(gibberish.tweet())
 
 ```
 
-queneau.py
-----------
+## queneau.py
 
 A module for Queneau assembly, a technique pioneered by Raymond
 Queneau in his 1961 book "Cent mille milliards de poèmes" ("One
@@ -251,28 +233,24 @@ print(assembler.assemble_word())
 # Trilusmiasunaus
 ```
 
-Example scripts for queneau.py:
+The original purpose of Olipy was to promote Queneau assembly, and there are many scripts
+which show what it's capable of:
 
 * example.words.py: Generates common-looking and obscure-looking English
 words. Demonstrates Queneau assembly on parts of a word.
-
 * example.mashteroids.py: Generates names and IAU citations for minor
 planets. Demonstrates Queneau assembly on sentences.
-
 * example.apollo.py: Generates dialogue between astronauts and Mission
 Control. Demonstrates Queneau assembly on dialogue.
-
 * example.boardgame.py: Generates board game names and descriptions.
-
 * example.sonnet.py: Generates Shakespearean sonnets.
-
 * example.dinosaurs.py: Generates dinosaur names.
 
-randomness.py
--------------
+## randomness.py
 
-Techniques for generating random patterns that are more sophisticated than
-simple selection.
+Techniques for generating random patterns that are more sophisticated `random.choice`.
+
+### `Gradient`
 
 The `Gradient` class generates a string of random choices that are
 weighted towards one set of options near the start, and weighted
@@ -287,8 +265,12 @@ print("".join(Gradient.gradient(string.lowercase, string.uppercase, 40)))
 # rkwyobijqQOzKfdcSHIhYINGrQkBRddEWPHYtORB
 ```
 
-The `WanderingMonsterTable` class lets you make random choices from
-roughly weighted lists of options.
+### `WanderingMonsterTable`
+
+The `WanderingMonsterTable` class lets you make a weighted random selection from 
+one of four buckets. A random selection from the "common" bucket will show up 65% of the time, a 
+selection from the "uncommon" bucket 20% of the time, "rare" 11% of the time, and "very rare" 4% of 
+the time. (It uses the same probabilities as the first edition of Advanced Dungeons & Dragons.)
 
 ```
 from olipy.randomness import WanderingMonsterTable
@@ -314,19 +296,21 @@ tokenizer.py
 A word tokenizer that performs better than NLTK's default tokenizers
 on some common types of English.
 
+```
 >>> from nltk.tokenize.treebank import TreebankWordTokenizer
 >>> s = '''Good muffins cost $3.88\\nin New York. Email: muffins@example.com'''
 >>> TreebankWordTokenizer().tokenize(s)
 # ['Good', 'muffins', 'cost', '$', '3.88', 'in', 'New', 'York.', 'Email', ':', 'muffins', '@', 'example.com']
 >>> WordTokenizer().tokenize(s)
 # ['Good', 'muffins', 'cost', '$', '3.88', 'in', 'New', 'York.', 'Email:', 'muffins@example.com']
+```
 
 typewriter.py
 -------------
 
 Simulates the Adler Universal 39 typewriter used in "The Shining" and
 the sorts of typos that would be made on that typewriter. Originally
-written for @a_dull_bot.
+written for [@a_dull_bot](https://botsin.space/@adullbot).
 
 ```
 from olipy.typewriter import Typewriter
@@ -340,8 +324,7 @@ Example scripts for gibberish.py:
 * example.typewriter.py: Retypes standard input on the Adler Universal
   39, with about 10 typos per 100 characters.
 
-Extra corpora
--------------
+# Extra corpora
 
 Olipy makes available several word lists and datasets that aren't in
 the Corpora Project. These datasets (as well as the standard Corpora
@@ -353,23 +336,23 @@ from olipy import corpora
 nouns = corpora.words.common_nouns['abstract_nouns']
 ```
 
-_`corpora.geography.large_cities`_
+### `corpora.geography.large_cities`
 
 Names of large U.S. and world cities.
 
-_`corpora.geography.us_states`_
+### `corpora.geography.us_states`
 
 The fifty U.S. states.
 
-_`corpora.language.languages`_
+### `corpora.language.languages`
 
 Names of languages defined in ISO-639-1
 
-_`corpora.language.unicode_code_sheets`_
+### `corpora.language.unicode_code_sheets`
 
-The name of every Unicode code sheet, with the characters found on that sheet.
+The name of every Unicode code sheet, each with the characters found on that sheet.
 
-_`corpora.science.minor_planets`_
+### `corpora.science.minor_planets`
 
 'name', 'number' and IAU 'citation' for named minor planets
 (e.g. asteroids) as of July 2013. The 'discovery' field contains
@@ -385,11 +368,11 @@ Data sources:
 This overrides the Corpora Project's list of the names of the first
 1000 minor planets.
 
-_`corpora.words.adjectives`_
+### `corpora.words.adjectives`
 
 About 5000 English adjectives, sorted roughly by frequency of occurrence.
 
-_`corpora.words.common_nouns`_
+### `corpora.words.common_nouns`
 
 Lists of English nouns, sorted roughly by frequency of occurrence.
 
@@ -399,7 +382,7 @@ Includes:
 * `concrete_nouns` like "face" and "house".
 * `adjectival_nouns` -- nouns that can also act as adjectives -- like "chance" and "light".
 
-_`corpora.words.common_verbs`_
+### `corpora.words.common_verbs`
 
 Lists of English verbs, sorted roughly by frequency of occurrence.
 
@@ -407,18 +390,18 @@ Lists of English verbs, sorted roughly by frequency of occurrence.
 * `past_tense` verbs like "said" and "found".
 * `gerund` forms like "holding" and "leaving".
 
-_`corpora.words.english_words`_
+### `corpora.words.english_words`
 
 A consolidated list of about 73,000 English words from the FRELI
 project. (http://www.nkuitse.com/freli/)
 
-_`corpora.words.scribblenauts`_
+### `corpora.words.scribblenauts`
 
 The top 4000 nouns that were 'concrete' enough to be summonable in the
-2009 game Scribblenauts. As always, this list is ordered with more common
+2009 game _Scribblenauts_. As always, this list is ordered with more common
 words towards the front.
 
-_`corpora.words.literature.board_games`_
+### `corpora.words.literature.board_games`
 
 Information about board games, collected from BoardGameGeek in July
 2013. One JSON object per line.
@@ -427,24 +410,12 @@ Data source:
  http://boardgamegeek.com/wiki/page/BGG_XML_API2
 
 
-_`corpora.words.literature.fiction.pride_and_prejudice`_
+### `corpora.words.literature.fiction.pride_and_prejudice`
 
-The complete text of a fiction public domain book ("Pride and Prejudice"
+The complete text of a public domain novel ("Pride and Prejudice"
 by Jane Austen).
 
-_`corpora.words.literature.nonfiction.literary_shrines`_
-
-The complete text of a nonfiction public domain book ("Famous Houses
-and Literary Shrines of London" by A. St. John Adcock).
-
-_`corpora.words.literature.gutenberg_id_mapping`_
-
-Maps old-style (pre-2007) Project Gutenberg filenames to the new-style
-ebook IDs. For example, "/etext95/3boat10.zip" is mapped to the
-number 308 (see http://www.gutenberg.org/ebooks/308). Pretty much
-nobody needs this.
-
-_`corpora.words.literature.nonfiction.apollo_11`
+### `corpora.words.literature.nonfiction.apollo_11
 
 Transcripts of the Apollo 11 mission, presented as dialogue, tokenized
 into sentences using NLTK's Punkt tokenizer. One JSON object per line.
@@ -455,6 +426,18 @@ Data sources:
  "Intended to be a resource for all those interested in the Apollo
   program, whether in a passing or scholarly capacity."
 
-_`corpora.words.literature.shakespeare_sonnets`_
+### `corpora.words.literature.nonfiction.literary_shrines`
+
+The complete text of a public domain nonfiction book ("Famous Houses
+and Literary Shrines of London" by A. St. John Adcock).
+
+### `corpora.words.literature.gutenberg_id_mapping`
+
+Maps old-style (pre-2007) Project Gutenberg filenames to the new-style
+ebook IDs. For example, "/etext95/3boat10.zip" is mapped to the
+number 308 (see http://www.gutenberg.org/ebooks/308). Pretty much
+nobody needs this.
+
+### `corpora.words.literature.shakespeare_sonnets`
 
 The sonnets of William Shakespeare. Data source: http://www.gutenberg.org/ebooks/1041
