@@ -1,6 +1,8 @@
 """A port of Allison Parrish's pycorpora module.
 
-This was necessary
+This was necessary to a) add extra stuff like word lists using the
+same mechanism defined by pycorpora and b) include an actual copy of
+the Corpora Project with a packaged Python module.
 """
 import os
 import sys

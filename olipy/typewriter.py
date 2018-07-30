@@ -63,12 +63,16 @@ class Typewriter(object):
 
     def typo(self, string):
         # Replace one character with a typo.
+        if not string:
+            return string
         i = random.randint(0, len(string)-1)
         incorrect = self.find_typo(string[i])
         return string[:i] + incorrect + string[i+1:]
 
     def typo_add(self, string):
         # Add a typo character hit before or after the correct character.
+        if not string:
+            return string
         i = random.randint(0, len(string)-1)
         correct = string[i]
         incorrect = self.find_typo(correct)
@@ -80,16 +84,22 @@ class Typewriter(object):
 
     def transpose(self, string):
         # Transpose two characters.
+        if len(string) < 2:
+            return string
         i = random.randint(0, len(string)-2)
         return string[:i] + string[i+1] + string[i] + string[i+2:]
 
     def duplicate(self, string):
         # Duplicate a character.
+        if not string:
+            return string
         i = random.randint(0, len(string)-1)
         return string[:i] + string[i] + string[i] + string[i+1:]
 
     def delete(self, string):
         # Delete a character.
+        if not string:
+            return string
         i = random.randint(0, len(string)-1)
         return string[:i] + string[i+1:]
 
@@ -102,6 +112,8 @@ class Typewriter(object):
 
     def uppercase_word(self, string):
         words = string.split(" ")
+        if not words:
+            return string
         i = random.randint(0, len(words)-1)
         return " ".join(words[:i] + [words[i].upper()] + words[i+1:])
 
@@ -111,6 +123,8 @@ class Typewriter(object):
         return string[:i] + c.lower() + string[i+1:]
 
     def uppercase_letter(self, string):
+        if not string:
+            return string
         i = random.randint(0, len(string)-1)
         return string[:i] + string[i].upper() + string[i+1:]
 
@@ -122,10 +136,14 @@ class Typewriter(object):
     
     def remove_word(self, string):
         words = string.split(" ")
+        if not words:
+            return string
         i = random.randint(0, len(words)-1)
         return " ".join(words[:i] + words[i+1:])
 
     def omit_period(self, string):
+        if not string:
+            return string
         if string[-1] == '.':
             return string[:-1]
         return string

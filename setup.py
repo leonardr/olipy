@@ -23,6 +23,20 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),
     install_requires=requires,
+    entry_points={
+        'console_scripts': [
+            'olipy.apollo = olipy.example:apollo',
+            'olipy.board_games = olipy.example:board_games',
+            'olipy.corrupt = olipy.example:corrupt',
+            'olipy.dinosaurs = olipy.example:dinosaurs',
+            'olipy.ebooks = olipy.example:ebooks',
+            'olipy.gibberish = olipy.example:gibberish',
+            'olipy.mashteroids = olipy.example:mashteroids',
+            'olipy.sonnet = olipy.example:sonnet',
+            'olipy.typewriter = olipy.example:typewriter',
+            'olipy.words = olipy.example:words',
+        ]
+    },
     package_data = {
         "olipy": [
             "data/%s/*.json" % ("*/" * x)

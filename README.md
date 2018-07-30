@@ -1,10 +1,28 @@
 # Olipy
 
-Olipy is a Python library for artistic text generation. It includes useful datasets and algorithms for using characters, words, and texts to create aesthetic effects.
+Olipy is a Python library for artistic text generation. Unlike most
+software packages, which have a single, unifying purpose. Olipy is
+more like a set of art supplies. Each module is designed to help you
+achieve a different aesthetic effect.
 
 # Setup
 
-`pip install olipy`
+Olipy is distributed as the `olipy` package on PyPI. Here's how to
+quickly get started from a command line:
+
+```
+# Create a virtual environment.
+virtualenv env
+
+# Activate the virtual environment.
+source env/bin/activate
+
+# Install Olipy within the virtual envirionment.
+pip install olipy
+
+# Run an example script.
+olipy.apollo
+```
 
 Olipy uses the [`TextBlob`](https://textblob.readthedocs.org/) library
 to parse text. Installing Olipy through `pip` will install
@@ -13,6 +31,34 @@ are _not_ installed by `pip`.  Instructions for installing the extra
 dependencies are on the `TextBlob` site, but they boil down to running
 [this Python
 script](https://raw.github.com/sloria/TextBlob/master/download_corpora.py).
+
+# Example scripts
+
+Olipy is packaged with a number of  scripts which do fun things with
+the data and algorithms. You can run any of these scripts from a
+virtual environment that has the `olipy` package installed.
+
+* `olipy.apollo`: Generates dialogue between astronauts and Mission
+  Control. Demonstrates Queneau assembly on dialogue.
+* `olipy.board_games`: Generates board game names and
+  descriptions. Demonstrates complex Queneau assemblies.
+* `olipy.corrupt` "Corrupts" whatever text is typed in by adding
+  increasing numbers of diacritical marks. Demonstrates the
+  `gibberish.Corruptor` class.
+* `olipy.dinosaurs`: Generates dinosaur names. Demonstrates Queneau
+  assembly on parts of a word.
+* `olipy.ebooks`: Selects some lines from a public domain text using
+  the *_ebooks algorithm. Demonstrates the
+  `olipy.gutenberg.ProjectGutenbergText`
+  and `olipy.ebooks.EbooksQuotes` classes.
+* `olipy.gibberish`: Prints out 140-character string of aesthetically
+  pleasing(?) gibberish. Demonstrates the `gibberish.Gibberish` class.
+* `olipy.mashteroids`: Generates names and IAU citations for minor
+  planets. Demonstrates Queneau assembly on sentences.
+* `olipy.sonnet`: Generates Shakespearean sonnets using Queneau assembly.
+* `olipy.typewriter`: Retypes whatever you type into it, with added typoes.
+* `olipy.words`: Generates common-looking and obscure-looking English
+  words.
 
 # Module guide
 
@@ -128,30 +174,19 @@ print(Gibberish.random().tweet().encode("utf8"))
 # ঈঔ৫ঽ𐒔৩়দ𐒋ৠসুয়ঊশ𐒆𐒖𐒁ঔৰসঈ𐒆অ𐒋𐒑𐒨়দ৯ৄ৫ 😘
 ```
 
-Example scripts for gibberish.py:
-
-* example.gibberish.py: Prints out a 140-character string of gibberish.
-* example.corrupt.py: "Corrupts" whatever text is typed in by adding
-increasing numbers of diacritical marks.
-
 ## gutenberg.py
 
 A module for dealing with texts from Project Gutenberg. Strips headers
 and footers, and parses the text.
 
 ```
+from olipy import corpora
 from olipy.gutenberg import ProjectGutenbergText
 text = corpora.words.literature.nonfiction.literary_shrines['text']
 text = ProjectGutenbergText(text)
 print(len(text.paragraphs))
 # 1258
 ```
-
-Example scripts for gutenberg.py:
-
-* example.ebooks.py: Selects some lines from a Project Gutenberg
-  text, with a bias towards the keywords you give it as command-line
-  arguments.
 
 ## letterforms.py
 
@@ -172,7 +207,7 @@ A module for generating new token lists from old token lists using a
 Markov chain.
 
 Olipy's primary purpose is to promote alternatives to
-Markov chains (such as Queneau assembly and the ebooks algorithm),
+Markov chains (such as Queneau assembly and the *_ebooks algorithm),
 but sometimes you really do want a Markov chain. Queneau assembly is
 usually better than a Markov chain above the word level (constructing
 paragraphs from sentences) and below the word level (constructing
@@ -239,16 +274,6 @@ print(assembler.assemble_word())
 
 The original purpose of Olipy was to promote Queneau assembly, and there are many scripts
 which show what it's capable of:
-
-* example.words.py: Generates common-looking and obscure-looking English
-words. Demonstrates Queneau assembly on parts of a word.
-* example.mashteroids.py: Generates names and IAU citations for minor
-planets. Demonstrates Queneau assembly on sentences.
-* example.apollo.py: Generates dialogue between astronauts and Mission
-Control. Demonstrates Queneau assembly on dialogue.
-* example.boardgame.py: Generates board game names and descriptions.
-* example.sonnet.py: Generates Shakespearean sonnets.
-* example.dinosaurs.py: Generates dinosaur names.
 
 ## randomness.py
 

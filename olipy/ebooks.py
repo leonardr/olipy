@@ -3,7 +3,7 @@ import re
 import textwrap
 from textblob import TextBlob, Sentence
 import corpora
-mysql_stopwords = corpora.words.stopwords.en_mysql
+stopwords = corpora.words.stopwords.en
 
 from tokenizer import WordTokenizer
 
@@ -193,9 +193,9 @@ class EbooksQuotes(object):
 
         reversed_words = list(reversed(words[2:]))
         for i, w in enumerate(reversed_words):
-            if (w in mysql_stopwords
+            if (w in stopwords
                 and i != len(reversed_words)-1 and
-                not reversed_words[i+1] in mysql_stopwords):
+                not reversed_words[i+1] in stopwords):
                 # print "Stopword %s (previous) %s" % (w, reversed_words[i+1])
                 r = re.compile(r".*\b(%s)\b" % w)
                 string = unicode(string)
