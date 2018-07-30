@@ -32,18 +32,6 @@ print(Alphabet.default().random_choice())
 
 This module is used heavily by gibberish.py.
 
-alternate_letterforms.py
-------------------------
-
-Translates from letters of the English alphabet to similar-looking
-characters.
-
-```
-from olipy.alternate_letterforms import alternate_spelling
-print(alternate_spelling("I love alternate letterforms."))
-# ヱ 𝑳𝖮Ⓥ𝙀 𝚊𝓵┯⒠┌𝐍ａ⫪𝖊 𝐋𝖾ߙ𝓉ᥱ𝙧ߓ𝕠┍ጠ𝑆.
-```
-
 corpora.py
 ---------
 
@@ -176,6 +164,20 @@ Example scripts for gutenberg.py:
 * example.ebooks.py: Selects some lines from a Project Gutenberg
   text, with a bias towards the keywords you give it as command-line
   arguments.
+
+letterforms.py
+------------------------
+
+A module that knows things about the shapes of Unicode glyphs.
+
+`alternate_spelling` translates from letters of the English alphabet
+to similar-looking characters.
+
+```
+from olipy.letterforms import alternate_spelling
+print(alternate_spelling("I love alternate letterforms."))
+# ヱ 𝑳𝖮Ⓥ𝙀 𝚊𝓵┯⒠┌𝐍ａ⫪𝖊 𝐋𝖾ߙ𝓉ᥱ𝙧ߓ𝕠┍ጠ𝑆.
+```
 
 markov.py
 ---------
