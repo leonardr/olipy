@@ -1,4 +1,6 @@
-Olipy is a Python library for artistic text generation. It includes many useful datasets and modules for processing and presenting texual data.
+# Olipy
+
+Olipy is a Python library for artistic text generation. It includes many useful datasets and modules for creating different aesthetic effects with characters, words, and texts.
 
 # Setup
 
@@ -415,7 +417,7 @@ Data source:
 The complete text of a public domain novel ("Pride and Prejudice"
 by Jane Austen).
 
-### `corpora.words.literature.nonfiction.apollo_11
+### `corpora.words.literature.nonfiction.apollo_11`
 
 Transcripts of the Apollo 11 mission, presented as dialogue, tokenized
 into sentences using NLTK's Punkt tokenizer. One JSON object per line.
