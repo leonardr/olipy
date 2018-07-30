@@ -6,5 +6,4 @@ last_speaker = None
 for i in range(1, 100):
     speaker, tokens = d.assemble(last_speaker)
     last_speaker = speaker
-    print "%s: %s" % (speaker, " ".join(x for x, y in tokens))
-    print
+    print("%s: %s\n" % (speaker, " ".join(x for x, y in tokens)))

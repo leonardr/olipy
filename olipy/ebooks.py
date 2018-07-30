@@ -1,8 +1,9 @@
 import random
 import re
 import textwrap
-from english import Stopwords
 from textblob import TextBlob, Sentence
+import corpora
+mysql_stopwords = corpora.words.stopwords.en_mysql
 
 from tokenizer import WordTokenizer
 
@@ -73,7 +74,7 @@ class EbooksQuotes(object):
         blob = TextBlob(s.decode("utf8"))
         try:
             words = blob.words
-        except Exception, e:
+        except Exception as e:
             # TODO: I'm sick of trying to get TextBlob to parse
             # strings that include things like ". . . ". Just return
             # the current score.
@@ -136,7 +137,7 @@ class EbooksQuotes(object):
         blob = TextBlob(quote)
         try:
             sentences = blob.sentences
-        except Exception, e:
+        except Exception as e:
             # TextBlob can't parse this. Just return the whole string
             return quote
         if len(sentences) > 1 and len(sentences[-1]) < 10:
@@ -186,15 +187,15 @@ class EbooksQuotes(object):
         else:
             try:
                 words = TextBlob(string).sentences
-            except Exception, e:
+            except Exception as e:
                 # TextBlob can't parse this. Just return the whole string
                 return string
 
         reversed_words = list(reversed(words[2:]))
         for i, w in enumerate(reversed_words):
-            if (w in Stopwords.MYSQL_STOPWORDS
+            if (w in mysql_stopwords
                 and i != len(reversed_words)-1 and
-                not reversed_words[i+1] in Stopwords.MYSQL_STOPWORDS):
+                not reversed_words[i+1] in mysql_stopwords):
                 # print "Stopword %s (previous) %s" % (w, reversed_words[i+1])
                 r = re.compile(r".*\b(%s)\b" % w)
                 string = unicode(string)

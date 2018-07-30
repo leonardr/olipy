@@ -6,7 +6,7 @@ This is used by gibberish.py.
 
 import unicodedata
 import random
-import corpora
+from olipy import corpora
 
 CUSTOM_ALPHABETS = {
     "Dice": u"\N{Die Face-1}\N{Die Face-2}\N{Die Face-3}\N{Die Face-4}\N{Die Face-5}\N{Die Face-6}",
@@ -132,7 +132,7 @@ class Alphabet:
     @classmethod
     def characters(cls, alphabets):
         char = []
-        if isinstance(alphabets, basestring):
+        if not isinstance(alphabets, list):
             alphabets = [alphabets]
         # print "Character lookup for %r" % alphabets
         for alphabet in alphabets:
@@ -140,7 +140,11 @@ class Alphabet:
             if isinstance(alphabet, list):
                 char.extend(cls.characters(alphabet))
             else:
-                char.extend(cls.by_name[alphabet]['characters'])
+                try:
+                    char.extend(cls.by_name[alphabet]['characters'])
+                except Exception as e:
+                    # Assume the string is the alphabet itself rather than the name of an alphabet.
+                    char.extend(alphabet)
         return ''.join(char)
 
     # Some combination European alphabets

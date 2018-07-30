@@ -18,9 +18,9 @@ for i in range(how_many):
     # Make a new assembler from the names of the asteroids that were chosen.
     name_assembler = WordAssembler(names)
     name = name_assembler.assemble_word()
-    print name
+    print(name)
     for s in textwrap.wrap(" ".join(sentences)):
-        print s
+        print(s)
 
     if i < how_many-1:
-        print
+        print("")

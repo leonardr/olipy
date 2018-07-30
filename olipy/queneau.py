@@ -1,5 +1,5 @@
 """Create Queneau assemblies of source texts."""
-from StringIO import StringIO
+from io import StringIO
 import json
 import random
 import re
@@ -141,7 +141,7 @@ class Assembler(object):
         while length is None:
             length = random.choice(self.lengths)
 
-        if length < min_length:
+        if min_length and length < min_length:
             length = min_length
 
         pattern = self.expand_pattern(pattern, length)

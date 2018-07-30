@@ -1,5 +1,5 @@
 # encoding: utf-8
-from randomness import WanderingMonsterTable
+from olipy.randomness import WanderingMonsterTable
 import random
 
 class Typewriter(object):

@@ -12,7 +12,7 @@ try:
     NS['dcam'] = Namespace("http://purl.org/dc/dcam/")
     NS['rdf'] = Namespace(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
     NS['gutenberg'] = Namespace("http://www.gutenberg.org/2009/pgterms/")
-except ImportError, e:
+except ImportError as e:
     rdflib = None
 
 class ProjectGutenbergText(object):
@@ -90,7 +90,7 @@ class ProjectGutenbergText(object):
         self.text = None
         try:
             self.text = unicode(text, check_encoding)
-        except Exception, e:
+        except Exception as e:
             specified_encoding_is_wrong = ( self.original_encoding is not None)
             for try_encoding in ('utf-8', 'iso-8859-1', 'latin-1'):
                 try:
@@ -102,7 +102,7 @@ class ProjectGutenbergText(object):
                         logging.warn("%s claims encoding is %s, but it's actually %s. Original error: %s" % (
                                 name, self.original_encoding, try_encoding, e))
                     break
-                except UnicodeDecodeError, f:
+                except UnicodeDecodeError as f:
                     pass
         if self.text is None:
             log.error("Can't determine encoding for %s (specified encoding is %s)" % (
@@ -266,7 +266,7 @@ class ProjectGutenbergText(object):
                 text = cls.text_from_zip(path, rdf_catalog_path)
                 if not allow_languages or len(text.languages.intersection(allow_languages)) > 0:
                     yield text
-            except Exception, e:
+            except Exception as e:
                 logging.error("%s: %s" % (path, e))
                 # raise e
 

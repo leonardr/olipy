@@ -28,6 +28,6 @@ for text in texts:
     total = 0
     for para in text.paragraphs:
         for quote in ebooks.quotes_in(para):
-            print quote.encode("utf8")
+            print(quote.encode("utf8"))
             total += 1
     logging.warn("%d quotes found in %s" % (total, text.name))

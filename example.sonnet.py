@@ -4,4 +4,4 @@ corpus = Assembler.loadlist(
     corpora.words.literature.shakespeare_sonnets['sonnets'], tokens_in='lines'
 )
 
-print "\n".join(line for line, source in corpus.assemble('0.l'))
+print("\n".join(line for line, source in corpus.assemble('0.l')))

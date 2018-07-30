@@ -2,8 +2,8 @@
 from pdb import set_trace
 import re
 import random
-from randomness import WanderingMonsterTable
-from gibberish import Alphabet, MosaicGibberish
+from olipy.randomness import WanderingMonsterTable
+from olipy.gibberish import Alphabet, MosaicGibberish
 
 class Mosaic(object):
 
@@ -60,11 +60,11 @@ class SymmetricalMosaic(Mosaic):
 
     @classmethod
     def make_wmt(cls, alphabet, num_spaces=0):
-        if not isinstance(alphabet, basestring):
+        if isinstance(alphabet, list) or isinstance(alphabet, tuple):
             alphabet = "".join(alphabet)
         try:
             alphabet = Alphabet.characters(alphabet)
-        except KeyError, e:
+        except KeyError as e:
             pass
         common = uncommon = rare = None
 
@@ -339,16 +339,16 @@ class Mirror(object):
             if isinstance(alphabet, basestring):
                 try:
                     alphabet = Alphabet.characters(alphabet)
-                except KeyError, e:
+                except KeyError as e:
                     pass
                 if len(alphabet) > 50:
                     continue
                 for i in alphabet:
                     if i not in cls.left_right and i not in cls.top_bottom:
-                        print i
-                    print
+                        print(i)
+                    print("\n")
 
 if __name__ == '__main__':
     for i in range(4):
-        print MirroredMosaicGibberish().tweet()
-        print
+        print(MirroredMosaicGibberish().tweet())
+        print("\n")

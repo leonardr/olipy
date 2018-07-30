@@ -7,12 +7,10 @@ import json
 import random
 import sys
 import unicodedata
-from randomness import Gradient, WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
+from olipy.randomness import Gradient, WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
 
-import data
-
-from alphabet import *
-from alternate_letterforms import alternate_spelling
+from olipy.alphabet import *
+from olipy.alternate_letterforms import alternate_spelling
 
 class WordLength:
 
@@ -194,11 +192,11 @@ class Gibberish(object):
         diacritical marks, symbolic characters, and completely random
         scripts into the alphabet.
         """
-        if isinstance(base_alphabets, basestring):
+        if isinstance(base_alphabets, list):
+            letters = Alphabet.random_choice(*base_alphabets)
+        else:
             # The base alphabet is a literal string
             letters = base_alphabets
-        else:
-            letters = Alphabet.random_choice(*base_alphabets)
 
         if how_weird <= 0:
             return Gibberish(letters)
@@ -217,11 +215,11 @@ class Gibberish(object):
             else:
                 choices = alternate_alphabets
 
-            if choices == base_alphabets and isinstance(base_alphabets, basestring):
+            if choices != base_alphabets or isinstance(base_alphabets, list):
+                letters += Alphabet.random_choice(*choices)
+            else:
                 # Again, the base alphabet is a literal string
                 letters += base_alphabets
-            else:
-                letters += Alphabet.random_choice(*choices)
 
         alphabet = letters + mixins
 
@@ -248,7 +246,7 @@ class Gibberish(object):
         approximate_size_of_foreign_alphabet = len(alphabet) / 5
         if random.random() * how_weird > 7:
             c = random.choice(Alphabet.ALL_LANGUAGE_ALPHABETS_S)
-            if isinstance(c, basestring):
+            if not isinstance(c, list):
                 c = [c]
             foreign_alphabet = Alphabet.random_choice(*c)
             f = ''
@@ -511,7 +509,7 @@ class GibberishTable(WanderingMonsterTable):
         self.add(ModifierGradientGibberish, UNCOMMON)
 
         # A mirrored mosaic
-        from mosaic import MirroredMosaicGibberish
+        from olipy.mosaic import MirroredMosaicGibberish
         self.add(MirroredMosaicGibberish, COMMON)
 
         # A mirrored mosaic from an untilable alphabet
@@ -622,7 +620,7 @@ class GibberishTable(WanderingMonsterTable):
     def charset_from_alphabets(self, alphabets):
         charset = ''
         for alphabet in alphabets:
-            if isinstance(alphabet, basestring):
+            if not isinstance(alphabet, list):
                 alphabet = [alphabet]
             charset += Alphabet.characters(alphabet)
         gibberish = Gibberish(charset)
@@ -636,7 +634,7 @@ class GibberishTable(WanderingMonsterTable):
         """
         def c():
             alphabet = random.choice(alphabets)
-            if isinstance(alphabet, basestring):
+            if not isinstance(alphabet, list):
                 alphabet = [alphabet]
             charset = Alphabet.characters(alphabet)
             if random.randint(0,2) == 0:
@@ -679,17 +677,17 @@ class GibberishTable(WanderingMonsterTable):
         return c
 
     def choice(self, freq):
-        choice = super(GibberishTable, self).choice(freq)
-        if isinstance(choice, basestring):
-            choice = [choice]
-        if isinstance(choice, list):
-            gibberish = Gibberish.from_alphabets(choice)
-        elif isinstance(choice, Gibberish):
-            gibberish = choice
-        elif callable(choice):
-            gibberish = choice()
-        else:
-            raise Exception("Cannot turn %r into Gibberish object!", choice)
+        gibberish = super(GibberishTable, self).choice(freq)
+        if isinstance(gibberish, Gibberish):
+            pass
+        elif callable(gibberish):
+            gibberish = gibberish()
+        elif not isinstance(gibberish, list):
+            gibberish = [gibberish]
+        if isinstance(gibberish, list):
+            gibberish = Gibberish.from_alphabets(gibberish)
+        if not isinstance(gibberish, Gibberish):
+            raise Exception("Cannot turn %r into Gibberish object!", gibberish)
 
         if gibberish.__class__ != Gibberish:
             # Custom logic. Leave it alone.
@@ -733,7 +731,7 @@ class GlyphNames(object):
                 glyph_name = unicodedata.name(c)
                 self.inverse[glyph_name] = c
                 # self.max_present = i
-            except ValueError, e:
+            except ValueError as e:
                 # self.missing.append(i)
                 continue
 
@@ -743,7 +741,7 @@ class GlyphNames(object):
         for glyph in s:
             try:
                 yield glyph, unicodedata.name(glyph)
-            except ValueError, e:
+            except ValueError as e:
                 yield glyph, None
 
     def matching(self, exp):
@@ -768,5 +766,5 @@ if __name__ == '__main__':
     for i in range(1000):
         if not alphabets:
             gibberish = Gibberish.random(freq)
-        print gibberish.tweet().encode("utf8")
-        print '---'
+        print(gibberish.tweet().encode("utf8"))
+        print('---')

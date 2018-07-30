@@ -11,4 +11,4 @@ for i in range(2):
         dino = "a " + dino
     dinos.append(dino)
 
-print "Look! Behind that ridge! It's %s fighting %s!" % tuple(dinos)
+print("Look! Behind that ridge! It's %s fighting %s!" % tuple(dinos))

@@ -45,7 +45,7 @@ for i in range(how_many):
         separator = ''
     else:
         separator = ' '
-    print separator.join([x for x, source in choice])
+    print(separator.join([x for x, source in choice]))
 
     # Make assemblers for the game's genres and mechanics
     for name, l in (('Genres', genres), ('Mechanics', mechanics)):
@@ -53,9 +53,9 @@ for i in range(how_many):
         for list in l:
             assembler.add(list)
         choices = [choice for choice, source in assembler.assemble()]
-        print "%s: %s" % (name, ", ".join(choices))
-    print
+        print("%s: %s" % (name, ", ".join(choices)))
+    print("\n")
     for s in textwrap.wrap(" ".join(sentences)):
-        print s
+        print(s)
     if i < how_many-1:
-        print "-" * 80
+        print("-" * 80)
