@@ -24,13 +24,15 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=requires,
     package_data = {
-        "olipy.data": [
-            "olipy/data/*/*.json",
+        "olipy": [
+            "data/%s/*.json" % ("*/" * x)
+            for x in range(10)
         ]
-    }
+    },
     classifiers=[
         'License :: OSI Approved :: GNU General Public License v3',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: Implementation :: CPython',
         'Topic :: Text Processing',
         'Topic :: Artistic Software',
