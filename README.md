@@ -1,6 +1,6 @@
 # Olipy
 
-Olipy is a Python library for artistic text generation. It includes many useful datasets and modules for creating different aesthetic effects with characters, words, and texts.
+Olipy is a Python library for artistic text generation. It includes useful datasets and algorithms for using characters, words, and texts to create aesthetic effects.
 
 # Setup
 
