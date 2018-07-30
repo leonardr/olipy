@@ -12,7 +12,7 @@ this_dir = os.path.split(__file__)[0]
 data_path = os.path.join(this_dir, "data")
 components = [
     (data_path, "corpora-original", "data"),
-    (data_path, "corpora-more")
+    (data_path, "corpora-olipy")
 ]
 data_directories = [os.path.join(*x) for x in components]
 
