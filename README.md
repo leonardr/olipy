@@ -374,7 +374,7 @@ Names of languages defined in ISO-639-1
 
 The name of every Unicode code sheet, each with the characters found on that sheet.
 
-### `corpora.science.minor_planets`
+### `corpora.science.minor_planet_details`
 
 'name', 'number' and IAU 'citation' for named minor planets
 (e.g. asteroids) as of July 2013. The 'discovery' field contains
@@ -387,8 +387,8 @@ Data sources:
  http://www.minorplanetcenter.net/iau/lists/NumberedMPs.html
  http://ssd.jpl.nasa.gov/sbdb.cgi
 
-This overrides the Corpora Project's list of the names of the first
-1000 minor planets.
+This is more complete than the Corpora Project's `minor_planets`,
+which only lists the names of the first 1000 minor planets.
 
 ### `corpora.words.adjectives`
 
