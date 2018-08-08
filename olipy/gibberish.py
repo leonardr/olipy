@@ -10,7 +10,7 @@ import unicodedata
 from olipy.randomness import Gradient, WanderingMonsterTable, COMMON, UNCOMMON, RARE, VERY_RARE
 
 from olipy.alphabet import *
-from olipy.alternate_letterforms import alternate_spelling
+from olipy.letterforms import alternate_spelling
 
 class WordLength:
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 import sys
 from io import open
-from os import walk
-from os.path import join, relpath
 
 import setuptools
 
@@ -13,7 +11,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='olipy',
-    version='1.0.0',
+    version='1.0.1',
     author='Leonard Richardson',
     author_email='leonardr@segfault.org',
     url="https://github.com/leonardr/olipy/",
@@ -44,7 +42,7 @@ setuptools.setup(
         ]
     },
     classifiers=[
-        'License :: OSI Approved :: GNU General Public License v3',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: Implementation :: CPython',
