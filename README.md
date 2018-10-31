@@ -198,7 +198,7 @@ from olipy.ia import Text
 
 # Print a URL to the web reader for a specific title in the IA collection.
 item = Text("yorkchronicle1946poqu")
-print item.reader_url(10)
+print(item.reader_url(10))
 # https://archive.org/details/yorkchronicle1946poqu/page/n10
 
 # Pick a random page from a specific title, and print a URL to a
@@ -206,7 +206,7 @@ print item.reader_url(10)
 identifier = "TNM_Radio_equipment_catalog_fall__winter_1963_-_H_20180117_0150"
 item = Text(identifier)
 page = random.randint(0, item.pages-1)
-print item.image_url(page, scale=8)
+print(item.image_url(page, scale=8))
 # https://ia600106.us.archive.org/BookReader/BookReaderImages.php?zip=/30/items/TNM_Radio_equipment_catalog_fall__winter_1963_-_H_20180117_0150/TNM_Radio_equipment_catalog_fall__winter_1963_-_H_20180117_0150_jp2.zip&file=TNM_Radio_equipment_catalog_fall__winter_1963_-_H_20180117_0150_jp2/TNM_Radio_equipment_catalog_fall__winter_1963_-_H_20180117_0150_0007.jp2&scale=8
 ```
 
