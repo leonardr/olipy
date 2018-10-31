@@ -132,17 +132,3 @@ class Text(Item):
         if extra:
             image_url += "&" + extra
         return image_url 
-
-identifier = "yorkchronicle1946poqu"
-item = Text(identifier)
-print item.reader_url(10)
-
-    
-identifier = "TNM_Radio_equipment_catalog_fall__winter_1963_-_H_20180117_0150"
-item = Text(identifier)
-import random
-page = random.randint(0, item.pages-1)
-print item.reader_url(page)
-print item.image_url(page)
-
-print item.image_url(10)
