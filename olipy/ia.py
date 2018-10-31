@@ -15,7 +15,7 @@ class Item(object):
     @property
     def item(self):
         if not self._item:
-            self._item = ia.get_item(identifier)
+            self._item = ia.get_item(self.identifier)
         return self._item
 
     @property
@@ -111,7 +111,7 @@ class Text(Item):
         # /30/items/identifier/A_Great_Book/A_Great_Book_jp2.zip
         zip_path = self.zip_path_template % dict(
             directory_number=directory_number,
-            identifier=identifier,
+            identifier=self.identifier,
             archive_filename=jp2_filename,
         )
 
