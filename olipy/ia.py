@@ -46,7 +46,7 @@ class Item(object):
         sorts = sorts or []
         sorts.insert(0, 'publicdate desc')
 
-        for item in cls.search(query, *args, fields=fields, sorts=sorts, page=page, **kwargs):
+        for item in cls.search(query, *args, fields=fields, sorts=sorts, **kwargs):
             if cutoff and item.date('public') < cutoff:
                 break
             yield item
@@ -67,6 +67,7 @@ class Item(object):
             cls.session(), query, *args, fields=fields, sorts=sorts,
             **kwargs
         )
+        import pdb; pdb.set_trace()
         for i in search.iter_as_items():
             yield cls(i)
 
