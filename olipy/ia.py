@@ -8,19 +8,26 @@ class Item(object):
     "Wraps the ia.item class with extra utilities."""
 
     MEDIA_TYPE = None
-    DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+    DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
     _session = None
 
     def __init__(self, identifier):
+        item = metadata = None
         if isinstance(identifier, ia.item.Item):
             # This is an actual Item object from the underlying
             # API wrapper.
             item = identifier
             identifier = item.identifier
+            metadata = item.metadata
+        elif isinstance(identifier, dict):
+            # This is raw metadata from the underlying API wrapper
+            item = None
+            metadata = identifier
+            identifier = identifier['identifier']
         self.identifier = identifier
         self._item = item
-        self._metadata = None
+        self._metadata = metadata
         self._files = None
 
     @classmethod
@@ -46,8 +53,9 @@ class Item(object):
         sorts = sorts or []
         sorts.insert(0, 'publicdate desc')
 
+        fields = fields or []
         for item in cls.search(query, *args, fields=fields, sorts=sorts, **kwargs):
-            if cutoff and item.date('public') < cutoff:
+            if cutoff and item.date('publicdate') < cutoff:
                 break
             yield item
 
@@ -57,18 +65,21 @@ class Item(object):
         """Search Internet Archive items.
         :param fields: Retrieve these metadata fields for each item. List of
             fields: https://archive.org/services/search/v1/fields
-            By default, all fields are included, which can be slow.
+            By default, 'title', 'publidate', and 'identifier' are retrieved.
         :param sorts: A list of fields to use as sort order. Add
             " asc" or " desc" to the name of the field to specify
             ascending or descending order.
         """
+        fields = fields or []
+        for mandatory in ['title', 'publicdate']:
+            if not mandatory in fields:
+                fields.append(mandatory)
         query = cls.modified_query(query, collection)
         search = ia.search.Search(
             cls.session(), query, *args, fields=fields, sorts=sorts,
             **kwargs
         )
-        import pdb; pdb.set_trace()
-        for i in search.iter_as_items():
+        for i in search.iter_as_results():
             yield cls(i)
 
     @classmethod
