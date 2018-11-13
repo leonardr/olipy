@@ -231,4 +231,5 @@ class Text(Item):
 
 
 class Audio(Item):
+    """This class knows about audio items."""
     MEDIA_TYPE = "audio"

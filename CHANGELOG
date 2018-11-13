@@ -1,7 +1,11 @@
+= 1.0.2 (20181113)
+
+* Added the 'ia' module for querying the Internet Archive.
+
 = 1.0.1 (20180808)
 
-Fixed import error
+* Fixed import error
 
 = 1.0.0 (20180806)
 
-Initial release
+* Initial release
