@@ -92,7 +92,7 @@ class Item(object):
         if not addenda:
             return query
         if query:
-            query += 'and'
+            query += ' and '
         extra = " and ".join(addenda)
         return query + extra
 
