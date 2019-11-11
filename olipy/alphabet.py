@@ -87,7 +87,7 @@ class Alphabet:
     def random_choice(cls, *alphabets):
         """A random choice among alphabets"""
         if not alphabets:
-            alphabets = cls.by_name.keys()
+            alphabets = list(cls.by_name.keys())
         choice = random.choice(alphabets)
         return cls.characters([choice])
 
@@ -96,8 +96,8 @@ class Alphabet:
         """A completely random choice among non-modifier alphabets."""
         choice = None
         while choice is None:
-            choice = random.choice(Alphabet.by_name.keys())
-            if choice in Alphabet.MODIFIERS:
+            choice = random.choice(list(cls.by_name.keys()))
+            if choice in cls.MODIFIERS:
                 choice = None
             # print "Choice: %s, len: %s" % (choice, len(cls.characters(choice)))
             if choice is not None:

@@ -86,12 +86,12 @@ class SymmetricalMosaic(Mosaic):
         max_width = 14
         if horizontal_symmetry:
             max_width /= 2
-        width = random.randint(3, max_width)
+        width = random.randint(3, int(max_width))
 
         max_height = min(10, max_size/(width+1))
         if vertical_symmetry:
             max_height /= 2
-        height = random.randint(3, max_height)
+        height = random.randint(3, int(max_height))
         return height, width
 
     def populate(self, height, width, horizontal_symmetry=False,
@@ -201,7 +201,7 @@ class MirroredMosaicGibberish(MosaicGibberish):
 
         mosaic = SymmetricalMosaic.from_alphabet(self.alphabet, num_spaces)
         m = mosaic.populate(height, width, hor_sym, ver_sym)
-        m = unicode(m)
+        m = m.__unicode__()
         if not m[0].strip():
             # This tweet starts with whitespace. Use COMBINING
             # GRAPHEME JOINER to get Twitter to preserve the whitespace.

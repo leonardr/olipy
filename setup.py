@@ -11,7 +11,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='olipy',
-    version='1.0.2',
+    version='1.0.3',
     author='Leonard Richardson',
     author_email='leonardr@segfault.org',
     url="https://github.com/leonardr/olipy/",

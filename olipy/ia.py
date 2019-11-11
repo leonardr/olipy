@@ -2,7 +2,10 @@
 import datetime
 import internetarchive as ia
 import requests
-import urlparse
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
 
 class Item(object):
     "Wraps the ia.item class with extra utilities."""

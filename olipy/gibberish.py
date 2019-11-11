@@ -98,7 +98,7 @@ class Gibberish(object):
     def word(self, length=None):
         length = length or self.word_length()
         t = []
-        for i in range(length):
+        for i in range(int(length)):
             t.append(random.choice(self.charset))
         return unicodedata.normalize("NFC", u''.join(t))
 
@@ -461,7 +461,7 @@ class CompositeGibberish(Gibberish):
         num_gibberish = random.randint(2,5)
         size_of_each = (length-num_gibberish) / num_gibberish
         gibberishes = []
-        for i in range(min(2, size_of_each)):
+        for i in range(int(min(2, size_of_each))):
             g = None
             while g is None or not hasattr(g, 'word_length') or g.word_separator == '\n':
                 g = self.table.choice(None)

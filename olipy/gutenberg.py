@@ -94,10 +94,10 @@ class ProjectGutenbergText(object):
             specified_encoding_is_wrong = ( self.original_encoding is not None)
             for try_encoding in ('utf-8', 'iso-8859-1', 'latin-1'):
                 try:
-                    if isinstance(text, unicode):
-                        self.text = text
-                    else:
+                    if isinstance(text, bytes):
                         self.text = unicode(text, try_encoding)
+                    else:
+                        self.text = text
                     if specified_encoding_is_wrong:
                         logging.warn("%s claims encoding is %s, but it's actually %s. Original error: %s" % (
                                 name, self.original_encoding, try_encoding, e))

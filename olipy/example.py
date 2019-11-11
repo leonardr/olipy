@@ -30,7 +30,7 @@ def apollo():
 
 def board_games(how_many=10):
     corpus = Assembler.loadlist(
-        corpora.games.board_games['board_games'], tokens_in='description'
+        corpora.games.bgg_board_games['board_games'], tokens_in='description'
     )
 
     no_punctuation_at_end = re.compile("[a-zA-Z0-9]$")
@@ -139,7 +139,7 @@ def ebooks():
         logging.info("%d quotes found in text" % total)
 
 def gibberish():
-    print(Gibberish.random().tweet().encode("utf8"))
+    print(Gibberish.random().tweet())
     
 def mashteroids(how_many=10):
     import textwrap

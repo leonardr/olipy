@@ -2,10 +2,10 @@ import random
 import re
 import textwrap
 from textblob import TextBlob, Sentence
-import corpora
+from olipy import corpora
 stopwords = corpora.words.stopwords.en
 
-from tokenizer import WordTokenizer
+from olipy.tokenizer import WordTokenizer
 
 class EbooksQuotes(object):
 
@@ -161,6 +161,8 @@ class EbooksQuotes(object):
     def remove_ending_punctuation(self, string):
         # Notably absent: dash and colon, which make a quote
         # funnier.
+        if isinstance(string, Sentence):
+            string = string.string
         if string.count('"') == 1:
             string = string.replace('"', "")
         string = string.replace("_", "")
@@ -182,7 +184,7 @@ class EbooksQuotes(object):
         # another stopword.
         # print "%s =>" % string
 
-        if type(string) == Sentence:
+        if isinstance(string, Sentence):
             words = string.words
         else:
             try:
@@ -267,7 +269,8 @@ class EbooksQuotes(object):
                             quote = quote[:len(" the")-1]
                             break
 
-                    quote = unicode(quote)
+                    if isinstance(quote, bytes):
+                        quote = quote.decode("utf8")
                     quote = self.remove_ending_punctuation(quote)
                     quote = self.remove_beginning_punctuation(quote)
 
@@ -307,7 +310,7 @@ class EbooksQuotes(object):
                     if matches:
                         # A keyword match! Start gathering a quote either
                         # at this line or some earlier line.
-                        maximum_backtrack = (
+                        maximum_backtrack = int(
                             self.maximum_quote_size / self.wrap_at) - 1
                         backtrack = random.randint(0, maximum_backtrack)
                         start_at = max(0, i - backtrack)

@@ -1,3 +1,7 @@
+= 1.0.3 (Unreleased)
+
+* This version will run under either Python 2 or Python 3.
+
 = 1.0.2 (20181113)
 
 * Added the 'ia' module for querying the Internet Archive.

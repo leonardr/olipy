@@ -57,7 +57,7 @@ class Gradient(object):
     @classmethod
     def gradient(cls, go_from, go_to, length):
         """Yields a gradient from set1 to set2 of a given length."""
-        for i in range(length):
+        for i in range(int(length)):
             chance = float(i)/length
             if random.random() > chance:
                 c = go_from
