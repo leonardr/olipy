@@ -159,4 +159,4 @@ if __name__ == '__main__':
     import sys
     generator = MarkovGenerator.loadlines(sys.stdin, order=1, max=500)
     for i in range(14):
-        print " ".join(list(generator.assemble()))
+        print(" ".join(list(generator.assemble())))
