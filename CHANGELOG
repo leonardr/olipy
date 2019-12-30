@@ -1,4 +1,8 @@
-= 1.0.3 (Unreleased)
+= 1.0.4 (20191230)
+
+* Fixed a Python 2-ism in the Markov chain generator.
+
+= 1.0.3 (20191225)
 
 * This version will run under either Python 2 or Python 3.
 
