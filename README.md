@@ -139,8 +139,8 @@ corpora.get_file("words/literature", "shakespeare_words")
 ## ebooks.py
 
 A module for incongruously sampling texts in the style of the infamous
-[https://twitter.com/horse_ebooks](@horse_ebooks). Based on the
-[https://twitter.com/zzt_ebooks](@zzt_ebooks) algorithm by Allison
+ [@horse_ebooks] (https://twitter.com/horse_ebooks). Based on the
+[zzt_ebooks] (https://twitter.com/zzt_ebooks) algorithm by Allison
 Parrish.
 
 ```
