@@ -200,7 +200,7 @@ class EbooksQuotes(object):
                 not reversed_words[i+1] in stopwords):
                 # print "Stopword %s (previous) %s" % (w, reversed_words[i+1])
                 r = re.compile(r".*\b(%s)\b" % w)
-                string = unicode(string)
+                string = str(string)
                 m = r.search(string)
                 if m is not None:
                     string = string[:m.span(1)[0]]

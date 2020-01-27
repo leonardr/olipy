@@ -76,7 +76,7 @@ class SymmetricalMosaic(Mosaic):
             common = alphabet
         else:
             common, uncommon, rare = random.sample(alphabet, 3)
-        common += u"\N{EM SPACE}" * num_spaces
+        common += "\N{EM SPACE}" * num_spaces
         return (WanderingMonsterTable(common, uncommon, rare),
                 SymmetryList(alphabet))
 
@@ -207,13 +207,13 @@ class MirroredMosaicGibberish(MosaicGibberish):
             # GRAPHEME JOINER to get Twitter to preserve the whitespace.
             #
             # TODO: It's not clear whether this works.
-            m = u"\N{COMBINING GRAPHEME JOINER}" + m
+            m = "\N{COMBINING GRAPHEME JOINER}" + m
         return m
 
 class Mirror(object):
     """Information about which characters mirror to which other characters."""
 
-    left_right = u"""
+    left_right = """
 ◐◑
 ▌▐
 ╭╮
@@ -272,7 +272,7 @@ class Mirror(object):
 ╚╝
 """
 
-    top_bottom = u"""
+    top_bottom = """
     ╰╭
     ╯╮
     ╱╲
@@ -336,7 +336,7 @@ class Mirror(object):
     def potentials(classmethod):
         """Report on characters that might need to be added to this class."""
         for alphabet in Alphabet.TILABLE_CHARSET_S:
-            if isinstance(alphabet, basestring):
+            if isinstance(alphabet, str):
                 try:
                     alphabet = Alphabet.characters(alphabet)
                 except KeyError as e:
@@ -350,5 +350,5 @@ class Mirror(object):
 
 if __name__ == '__main__':
     for i in range(4):
-        print(MirroredMosaicGibberish().tweet())
+        print((MirroredMosaicGibberish().tweet()))
         print("\n")

@@ -100,7 +100,7 @@ class Gibberish(object):
         t = []
         for i in range(int(length)):
             t.append(random.choice(self.charset))
-        return unicodedata.normalize("NFC", u''.join(t))
+        return unicodedata.normalize("NFC", ''.join(t))
 
     def words(self, length):
         words = ''
@@ -160,7 +160,7 @@ class Gibberish(object):
         if not tweet[0].strip():
             # This tweet starts with whitespace. Use COMBINING
             # GRAPHEME JOINER to get Twitter to preserve the whitespace.
-            tweet = u"\N{COMBINING GRAPHEME JOINER}" + tweet
+            tweet = "\N{COMBINING GRAPHEME JOINER}" + tweet
         if len(tweet) > 140:
             tweet = tweet[:140]
         return tweet
@@ -292,7 +292,7 @@ class EmoticonGibberish(Gibberish):
         if charsets is None:
             charsets = Alphabet.random_choice_no_modifiers()
         self.charsets = charsets
-        self.mouths = u'____⁔𝁛ᨓ⏟‿⏝ω'
+        self.mouths = '____⁔𝁛ᨓ⏟‿⏝ω'
         super(EmoticonGibberish, self).__init__(None)
 
     def word(self, word_length=None):
@@ -355,9 +355,9 @@ class CheatCodeGibberish(Gibberish):
     "Video game input codes."
 
     def __init__(self):
-        self.base_charset = u'←↑→↓'
-        self.fighting_game_charset = self.base_charset + u'↖↗↘↙↺↻PK'
-        self.nes_charset = self.base_charset + u'AB'
+        self.base_charset = '←↑→↓'
+        self.fighting_game_charset = self.base_charset + '↖↗↘↙↺↻PK'
+        self.nes_charset = self.base_charset + 'AB'
 
     def tweet(self):
         num_words = random.randint(5,10)
@@ -455,7 +455,7 @@ class CompositeGibberish(Gibberish):
         self.table = table
         super(CompositeGibberish, self).__init__(None)
 
-    SEPARATORS = u"     /\-=#:.,|_⏟"
+    SEPARATORS = "     /\-=#:.,|_⏟"
 
     def words(self, length):
         num_gibberish = random.randint(2,5)
@@ -471,7 +471,7 @@ class CompositeGibberish(Gibberish):
 
 class RosettaStoneGibberish(CompositeGibberish):
     """A number of small gibberishes, one per line."""
-    SEPARATORS = u"\n"
+    SEPARATORS = "\n"
 
 class GibberishTable(WanderingMonsterTable):
 
@@ -726,7 +726,7 @@ class GlyphNames(object):
         # self.missing = []
         # self.max_present = None
         for i in range(1, 1000000):
-            c = unichr(i)
+            c = chr(i)
             try:
                 glyph_name = unicodedata.name(c)
                 self.inverse[glyph_name] = c
@@ -746,7 +746,7 @@ class GlyphNames(object):
 
     def matching(self, exp):
         """Yield all name-glyph pairs where the name matches a regexp."""
-        for name, value in self.inverse.keys():
+        for name, value in list(self.inverse.keys()):
             if exp.search(name):
                 yield name, value
 
@@ -766,5 +766,5 @@ if __name__ == '__main__':
     for i in range(1000):
         if not alphabets:
             gibberish = Gibberish.random(freq)
-        print(gibberish.tweet().encode("utf8"))
+        print((gibberish.tweet().encode("utf8")))
         print('---')

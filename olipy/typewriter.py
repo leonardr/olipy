@@ -18,7 +18,7 @@ class Typewriter(object):
         a = "sqzw",
         n = "bjkm ",
         d = "ersfxc",
-        p = u"0-=o½l:",
+        p = "0-=o½l:",
         y = "67tughj",
         m = "jkln, ",
         e = "34wrsdf",
@@ -149,7 +149,7 @@ class Typewriter(object):
         return string
 
     def extra_space_at_beginning(self, string):
-        return u"\N{EN SPACE}" + string
+        return "\N{EN SPACE}" + string
 
     def type(self, correct, so_far=""):
         length = len(correct)

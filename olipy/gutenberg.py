@@ -10,7 +10,7 @@ try:
     from rdflib.namespace import Namespace
     NS['dcterms'] = Namespace("http://purl.org/dc/terms/")
     NS['dcam'] = Namespace("http://purl.org/dc/dcam/")
-    NS['rdf'] = Namespace(u'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+    NS['rdf'] = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
     NS['gutenberg'] = Namespace("http://www.gutenberg.org/2009/pgterms/")
 except ImportError as e:
     rdflib = None
@@ -76,7 +76,7 @@ class ProjectGutenbergText(object):
         if self.graph is not None:
             # The most reliable source is an RDF graph. If we have one, use it.
             self.languages = set(
-                [unicode(x[2]) for x in self.graph.triples((None, NS['dcterms'].language, None))])
+                [str(x[2]) for x in self.graph.triples((None, NS['dcterms'].language, None))])
         else:
             # Look for a "Language: Foo" bit of text in the header.
             m = self.LANGUAGE.search(header)
@@ -89,13 +89,13 @@ class ProjectGutenbergText(object):
         check_encoding = self.original_encoding or 'ascii'
         self.text = None
         try:
-            self.text = unicode(text, check_encoding)
+            self.text = str(text, check_encoding)
         except Exception as e:
             specified_encoding_is_wrong = ( self.original_encoding is not None)
             for try_encoding in ('utf-8', 'iso-8859-1', 'latin-1'):
                 try:
                     if isinstance(text, bytes):
-                        self.text = unicode(text, try_encoding)
+                        self.text = str(text, try_encoding)
                     else:
                         self.text = text
                     if specified_encoding_is_wrong:

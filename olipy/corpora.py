@@ -101,7 +101,7 @@ class CorpusLoader(object):
                     by_filename[filename] = loader
                 loader.directories.append(path)
 
-        return by_filename.values()
+        return list(by_filename.values())
 
     @property
     def names(self):

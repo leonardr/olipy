@@ -3,7 +3,7 @@ import datetime
 import internetarchive as ia
 import requests
 try:
-    import urlparse
+    import urllib.parse
 except ImportError:
     import urllib.parse as urlparse
 
@@ -51,7 +51,7 @@ class Item(object):
         """Find all the items that match `query` that were added since
         `date`.
         """
-        if isinstance(cutoff, basestring):
+        if isinstance(cutoff, str):
             cutoff = datetime.datetime.strptime(cutoff, cls.DATE_FORMAT)
         sorts = sorts or []
         sorts.insert(0, 'publicdate desc')
@@ -159,7 +159,7 @@ class Text(Item):
         """
         jp2 = [
             x for x in self.files
-            if x.format == u'Single Page Processed JP2 ZIP'
+            if x.format == 'Single Page Processed JP2 ZIP'
             and x.exists
         ]
         if not jp2:
@@ -196,7 +196,7 @@ class Text(Item):
         if response.status_code != 302 or not 'location' in response.headers:
             return None
         location = response.headers['location']
-        parsed = urlparse.urlparse(location)
+        parsed = urllib.parse.urlparse(location)
 
         # ZIP files are hosted at servers whose URLs look like this:
         # https://ia600106.us.archive.org/
@@ -227,7 +227,7 @@ class Text(Item):
             zip_path=zip_path,
             image_path=path_within_file,
         )
-        extra = "&".join("%s=%s" % (k, v) for k, v in kwargs.items())
+        extra = "&".join("%s=%s" % (k, v) for k, v in list(kwargs.items()))
         if extra:
             image_url += "&" + extra
         return image_url

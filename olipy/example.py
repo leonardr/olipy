@@ -26,7 +26,7 @@ def apollo():
     for i in range(1, 100):
         speaker, tokens = d.assemble(last_speaker)
         last_speaker = speaker
-        print("%s: %s" % (speaker, " ".join(x for x, y in tokens)))
+        print(("%s: %s" % (speaker, " ".join(x for x, y in tokens))))
 
 def board_games(how_many=10):
     corpus = Assembler.loadlist(
@@ -68,7 +68,7 @@ def board_games(how_many=10):
             separator = ''
         else:
             separator = ' '
-        print(separator.join([x for x, source in choice]))
+        print((separator.join([x for x, source in choice])))
 
         # Make assemblers for the game's genres and mechanics
         for name, l in (('Genres', genres), ('Mechanics', mechanics)):
@@ -76,13 +76,13 @@ def board_games(how_many=10):
             for list in l:
                 assembler.add(list)
             choices = [choice for choice, source in assembler.assemble()]
-            print("%s: %s" % (name, ", ".join(choices)))
+            print(("%s: %s" % (name, ", ".join(choices))))
         print("")
 
         for s in textwrap.wrap(" ".join(sentences)):
             print(s)
         if i < how_many-1:
-            print("-" * 80)
+            print(("-" * 80))
 
 def corrupt():
     """Corrupts whatever you type by adding diacritical marks."""
@@ -97,7 +97,7 @@ def corrupt():
         if data.strip() == '':
             break
         for corruption in range(10):
-            print(Corruptor(corruption).corrupt(data) + "\n")
+            print((Corruptor(corruption).corrupt(data) + "\n"))
     
 def dinosaurs():
     dinosaurs = corpora.animals.dinosaurs['dinosaurs']
@@ -110,7 +110,7 @@ def dinosaurs():
         else:
             dino = "a " + dino
         dinos.append(dino)
-    print("Look! Behind that ridge! It's %s fighting %s!" % tuple(dinos))
+    print(("Look! Behind that ridge! It's %s fighting %s!" % tuple(dinos)))
 
 def ebooks():    
     parser = argparse.ArgumentParser(
@@ -134,12 +134,12 @@ def ebooks():
         total = 0
         for para in text.paragraphs:
             for quote in ebooks.quotes_in(para):
-                print(quote.encode("utf8"))
+                print((quote.encode("utf8")))
                 total += 1
         logging.info("%d quotes found in text" % total)
 
 def gibberish():
-    print(Gibberish.random().tweet())
+    print((Gibberish.random().tweet()))
     
 def mashteroids(how_many=10):
     import textwrap
@@ -167,10 +167,10 @@ def mashteroids(how_many=10):
 def sonnet():
     sonnets = corpora.words.literature.shakespeare_sonnets['sonnets']
     corpus = Assembler.loadlist(sonnets, tokens_in='lines')
-    print("\n".join(line for line, source in corpus.assemble('0.l')))
+    print(("\n".join(line for line, source in corpus.assemble('0.l'))))
         
 def typewriter():
-    print(Typewriter(3, 0.5).type(sys.stdin.read()))
+    print((Typewriter(3, 0.5).type(sys.stdin.read())))
     
 def words():
     common = corpora.words.english_words['words']
@@ -178,8 +178,8 @@ def words():
     common_corpus = WordAssembler(common)
     full_corpus = WordAssembler(less_common)
 
-    print('You know "%s", "%s", and "%s".' % tuple(common_corpus.assemble_word() for i in range(3)))
-    print('But have you heard of "%s", "%s", or "%s"?' % tuple(full_corpus.assemble_word() for i in range(3)))
+    print(('You know "%s", "%s", and "%s".' % tuple(common_corpus.assemble_word() for i in range(3))))
+    print(('But have you heard of "%s", "%s", or "%s"?' % tuple(full_corpus.assemble_word() for i in range(3))))
 
 
 if __name__ == '__main__':
