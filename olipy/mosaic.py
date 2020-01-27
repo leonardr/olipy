@@ -350,5 +350,5 @@ class Mirror(object):
 
 if __name__ == '__main__':
     for i in range(4):
-        print((MirroredMosaicGibberish().tweet()))
+        print(MirroredMosaicGibberish().tweet())
         print("\n")

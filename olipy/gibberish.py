@@ -766,5 +766,5 @@ if __name__ == '__main__':
     for i in range(1000):
         if not alphabets:
             gibberish = Gibberish.random(freq)
-        print((gibberish.tweet().encode("utf8")))
+        print(gibberish.tweet().encode("utf8"))
         print('---')
