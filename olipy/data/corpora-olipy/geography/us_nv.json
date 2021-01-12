@@ -1,0 +1,27 @@
+{
+    "description": "Names of cities in Nevada",
+    "cities": [
+        "Las Vegas",
+        "Henderson",
+        "Paradise",
+        "Reno",
+        "Sunrise Manor",
+        "North Las Vegas",
+        "Spring Valley",
+        "Sparks",
+        "Carson City",
+        "Pahrump",
+        "Winchester",
+        "Sun Valley",
+        "Whitney",
+        "Enterprise",
+        "Elko",
+        "Boulder City",
+        "Mesquite",
+        "Spring Creek",
+        "Gardnerville Ranchos",
+        "Fernley",
+        "Incline Village-Crystal Bay",
+        "Spanish Springs"
+    ]
+}

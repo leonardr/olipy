@@ -1,0 +1,21 @@
+{
+    "description": "Names of cities in West Virginia",
+    "cities": [
+        "Charleston",
+        "Huntington",
+        "Parkersburg",
+        "Wheeling",
+        "Morgantown",
+        "Weirton",
+        "Fairmont",
+        "Beckley",
+        "Clarksburg",
+        "Martinsburg",
+        "Teays Valley",
+        "South Charleston",
+        "St. Albans",
+        "Bluefield",
+        "Vienna",
+        "Cross Lanes"
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "description": "Names of cities in North Dakota",
+    "cities": [
+        "Fargo",
+        "Bismarck",
+        "Grand Forks",
+        "Minot",
+        "West Fargo",
+        "Mandan",
+        "Dickinson",
+        "Jamestown",
+        "Williston"
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "description": "Names of cities in Vermont",
+    "cities": [
+        "Burlington",
+        "Essex",
+        "Bennington",
+        "Colchester",
+        "South Burlington",
+        "Rutland",
+        "Brattleboro",
+        "Springfield",
+        "Hartford"
+    ]
+}

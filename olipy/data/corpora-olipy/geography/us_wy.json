@@ -1,0 +1,13 @@
+{
+    "description": "Names of cities in Wyoming",
+    "cities": [
+        "Cheyenne",
+        "Casper",
+        "Laramie",
+        "Gillette",
+        "Rock Springs",
+        "Sheridan",
+        "Green River",
+        "Evanston"
+    ]
+}

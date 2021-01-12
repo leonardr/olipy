@@ -1,0 +1,22 @@
+{
+    "description": "Names of cities in Nebraska",
+    "cities": [
+        "Omaha",
+        "Lincoln",
+        "Bellevue",
+        "Grand Island",
+        "Kearney",
+        "Fremont",
+        "North Platte",
+        "Norfolk",
+        "Hastings",
+        "Columbus",
+        "Papillion",
+        "La Vista",
+        "Scottsbluff",
+        "Beatrice",
+        "Chalco",
+        "South Sioux City",
+        "Lexington"
+    ]
+}

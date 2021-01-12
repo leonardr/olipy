@@ -1,0 +1,15 @@
+{
+    "description": "Names of cities in South Dakota",
+    "cities": [
+        "Sioux Falls",
+        "Rapid City",
+        "Aberdeen",
+        "Watertown",
+        "Brookings",
+        "Mitchell",
+        "Pierre",
+        "Yankton",
+        "Huron",
+        "Vermillion"
+    ]
+}

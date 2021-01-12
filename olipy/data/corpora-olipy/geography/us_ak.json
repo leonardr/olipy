@@ -1,0 +1,9 @@
+{
+    "description": "Names of cities in Alaska",
+    "cities": [
+        "Anchorage",
+        "Juneau",
+        "Fairbanks",
+        "College"
+    ]
+}

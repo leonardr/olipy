@@ -1,0 +1,29 @@
+{
+    "description": "Names of cities in Maine",
+    "cities": [
+        "Portland",
+        "Lewiston",
+        "Bangor",
+        "Scarborough",
+        "Sanford",
+        "Brunswick",
+        "South Portland",
+        "Auburn",
+        "Gorham",
+        "Biddeford",
+        "Augusta",
+        "Saco",
+        "Westbrook",
+        "Waterville",
+        "Windham",
+        "Kennebunk",
+        "York",
+        "Kittery",
+        "Freeport",
+        "North Berwick",
+        "Topsham",
+        "Falmouth",
+        "Yarmouth",
+        "Wells"
+    ]
+}

@@ -1,0 +1,13 @@
+{
+    "description": "Names of cities in Delaware",
+    "cities": [
+        "Wilmington",
+        "Dover",
+        "Newark",
+        "Pike Creek",
+        "Bear",
+        "Brookside",
+        "Hockessin",
+        "Glasgow"
+    ]
+}

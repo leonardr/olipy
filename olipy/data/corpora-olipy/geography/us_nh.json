@@ -1,0 +1,33 @@
+{
+    "description": "Names of cities in New Hampshire",
+    "cities": [
+        "Manchester",
+        "Nashua",
+        "Concord",
+        "Derry",
+        "Rochester",
+        "Salem",
+        "Dover",
+        "Merrimack",
+        "Hudson",
+        "Londonderry",
+        "Keene",
+        "Bedford",
+        "Portsmouth",
+        "Goffstown",
+        "Laconia",
+        "Hampton",
+        "Exeter",
+        "Milford",
+        "Hooksett",
+        "Claremont",
+        "Durham",
+        "Windham",
+        "Lebanon",
+        "Pelham",
+        "Somersworth",
+        "Amherst",
+        "Hanover",
+        "Raymond"
+    ]
+}

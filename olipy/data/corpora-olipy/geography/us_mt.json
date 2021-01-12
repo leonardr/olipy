@@ -1,0 +1,12 @@
+{
+    "description": "Names of cities in Montana",
+    "cities": [
+        "Billings",
+        "Missoula",
+        "Great Falls",
+        "Bozeman",
+        "Butte",
+        "Helena",
+        "Kalispell"
+    ]
+}

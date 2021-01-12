@@ -1,0 +1,25 @@
+{
+    "description": "Names of cities in New Mexico",
+    "cities": [
+        "Albuquerque",
+        "Las Cruces",
+        "Santa Fe",
+        "Rio Rancho",
+        "Roswell",
+        "Farmington",
+        "South Valley",
+        "Alamogordo",
+        "Clovis",
+        "Hobbs",
+        "Carlsbad",
+        "Gallup",
+        "Deming",
+        "Sunland Park",
+        "Las Vegas",
+        "Los Lunas",
+        "Los Alamos",
+        "North Valley",
+        "Portales",
+        "Artesia"
+    ]
+}

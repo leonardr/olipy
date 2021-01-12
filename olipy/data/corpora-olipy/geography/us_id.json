@@ -1,0 +1,26 @@
+{
+    "description": "Names of cities in Idaho",
+    "cities": [
+        "Boise",
+        "Nampa",
+        "Idaho Falls",
+        "Pocatello",
+        "Meridian",
+        "Coeur d'Alene",
+        "Twin Falls",
+        "Caldwell",
+        "Lewiston",
+        "Rexburg",
+        "Post Falls",
+        "Moscow",
+        "Eagle",
+        "Hayden",
+        "Kuna",
+        "Garden City",
+        "Mountain Home",
+        "Blackfoot",
+        "Mountain Home AFB",
+        "Ammon",
+        "Chubbuck"
+    ]
+}

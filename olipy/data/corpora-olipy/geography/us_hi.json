@@ -1,0 +1,27 @@
+{
+    "description": "Names of cities in Hawaii",
+    "cities": [
+        "Honolulu",
+        "Hilo",
+        "Kailua",
+        "Kane'ohe",
+        "Waipahu",
+        "Pearl City",
+        "Waimalu",
+        "Mililani Town",
+        "Kahului",
+        "Kihei",
+        "Wahiawa",
+        "Makakilo City",
+        "Ewa Beach",
+        "Halawa",
+        "Schofield Barracks",
+        "Wailuku",
+        "Kane'ohe Station",
+        "Waipi'o",
+        "Nanakuli",
+        "Wai'anae",
+        "Village Park",
+        "Kapa'a"
+    ]
+}
