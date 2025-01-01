@@ -4,7 +4,7 @@ from io import open
 
 import setuptools
 
-requires = ['textblob', 'wordfilter', 'internetarchive', 'requests']
+requires = ['textblob', 'wordfilter', 'internetarchive', 'requests', 'beautifulsoup4']
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
