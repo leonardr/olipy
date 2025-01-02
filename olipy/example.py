@@ -10,6 +10,7 @@ from olipy.gibberish import (
     Corruptor,
     Gibberish,
 )
+from olipy.eater import EaterCommandLine
 from olipy.gutenberg import ProjectGutenbergText
 from olipy.queneau import (
     Assembler,
@@ -181,6 +182,8 @@ def words():
     print('You know "%s", "%s", and "%s".' % tuple(common_corpus.assemble_word() for i in range(3)))
     print('But have you heard of "%s", "%s", or "%s"?' % tuple(full_corpus.assemble_word() for i in range(3)))
 
+def eater():
+    EaterCommandLine()()
 
 if __name__ == '__main__':
     func = sys

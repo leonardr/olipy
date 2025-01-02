@@ -1,5 +1,10 @@
-# An eater is a callable that takes a string and return another string.
+"""An Eater of Meaning mangles text, or converts it into
+superficially similar text."""
 
+# Technically speaking, an Eater is just a callable that takes maps one
+# string onto another.
+
+import argparse
 from bs4 import BeautifulSoup
 from bs4.formatter import Formatter
 import requests
@@ -16,7 +21,7 @@ class Eater:
 
     DESCRIPTION = "Abstract base class; does not change input"
 
-    IMPLEMENTATIONS = []
+    IMPLEMENTATIONS = dict()
 
     SPLIT_RE = re.compile("(\w+)")
     WORD_RE = re.compile("\w", re.I)
@@ -159,9 +164,8 @@ class ScrambleWordCenters(Eater):
     word it encounters, but leaves the first and last characters intact
     for better readability.
 
-    Inspired by code originally by Aaron Swartz. R.I.P.
+    Original implementation by Aaron Swartz. R.I.P.
     """
-
     DESCRIPTION = "Scramble word centers"
     KEY = "scramble-center"
 
@@ -416,17 +420,61 @@ this_module = sys.modules[__name__]
 for k, v in sorted(inspect.getmembers(this_module)):
     if not inspect.isclass(v) or not issubclass(v, Eater) or not hasattr(v, 'KEY'):
         continue
-    Eater.IMPLEMENTATIONS.append(v)
+    Eater.IMPLEMENTATIONS[v.KEY] = v
 
-def demo(text='Now is the time for all good men to come to the aid of their party.'):
-    print("Demo mode activated.")
-    print(f"Demo text: {text}")
-    for eater in Eater.IMPLEMENTATIONS:
-        print(f"{eater.KEY}: {eater.DESCRIPTION}")
-        print("", eater()(text))
+class EaterCommandLine:
 
-    url = "https://www.example.com/"
-    print(f"URL test: eating {url} with {EatWordEndings.KEY}")
-    print("", URLEater(EatWordEndings())("https://www.example.com/"))
+    def parser(self):
+        parser = argparse.ArgumentParser(
+            description="An Eater of Meaning mangles text, or converts it into superficially similar text.")
+        parser.add_argument(
+            "--demo", help="Demonstrate all eaters on the same piece of input text.",
+            type=bool, default=False
+        )
+        parser.add_argument(
+            '--eater', help="Which eater to use.",
+            choices=Eater.IMPLEMENTATIONS.keys(),
+            default=EatWordEndings.KEY
+        )
+        parser.add_argument(
+            "--url", help="Treat the text input as a URL to a web page rather than text.",
+            default=None,
+        )
+        parser.add_argument(
+            "text", nargs="*", help="Text to consume",
+            default=['Now is the time for all good men to come to the aid of their party.'],
+        )
+        return parser
 
-demo()
+    def __call__(self):
+        args = self.parser().parse_args()
+        self.text = " ".join(args.text)
+        self.url = args.url
+
+        if args.demo:
+            self.url = self.url or "https://www.example.com/"
+            return self.demo()
+
+        eater = Eater.IMPLEMENTATIONS[args.eater]()
+
+        if self.url:
+            eater = URLEater(eater)
+            result = eater.eat(self.url)
+        else:
+            result = eater.eat(self.text)
+        print(result)
+
+    def demo(self):
+        print("Demo mode activated.")
+        print(f"Demo text: {self.text}")
+        print("Each eater will be demonstrated on this input text.\n")
+        for key, eater, in Eater.IMPLEMENTATIONS.items():
+            print(f"{key}: {eater.DESCRIPTION}")
+            print("", eater()(self.text))
+
+        print(f"\nURL test: eating {self.url} with {EatWordEndings.KEY}")
+        print("", URLEater(EatWordEndings())(self.url))
+
+
+if __name__ == '__main__':
+    EaterCommandLine()()
