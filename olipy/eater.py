@@ -1,13 +1,8 @@
-"""An Eater of Meaning mangles text, or converts it into
-superficially similar text."""
-
-# Technically speaking, an Eater is just a callable that takes maps one
-# string onto another.
-
 import argparse
 from bs4 import BeautifulSoup
 from bs4.formatter import Formatter
 import requests
+import syllables
 from collections import defaultdict
 import inspect
 import random
@@ -15,9 +10,15 @@ import re
 import string
 import sys
 
-import corpora
+from olipy import corpora
 
 class Eater:
+    """An Eater of Meaning mangles text, or converts it into
+    superficially similar text.
+
+    Technically speaking, an Eater is just a callable that takes maps one
+    string onto another.
+    """
 
     DESCRIPTION = "Abstract base class; does not change input"
 
@@ -264,70 +265,8 @@ class EatSyllables(NeedsWordList):
 
     def syllables(self, word):
         word = word.lower()
-        return self.syllables_for_word.get(word, None) or self.guess_sy_count(word)
+        return syllables.estimate(word)
 
-    # Code below this point is heavily based on Greg Fast's Perl
-    # module Lingua::EN::Syllables. I chose not to bring in the
-    # Python 'syllables' package for licensing reasons.
-    def guess_sy_count(self, word):
-        mungedword = re.sub('e$','',word.lower())
-        splitword = re.split(r'[^aeiouy]+', mungedword)
-        splitword = [ x for x in splitword if (x != '') ] # hmm
-        syllables = 0
-        for i in self.SUBTRACT_ONE:
-            if re.search(i,mungedword):
-                syllables -= 1
-        for i in self.ADD_ONE:
-            if re.search(i,mungedword):
-                syllables += 1
-        if len(mungedword) == 1: syllables =+ 1
-        syllables += len(splitword)
-        if syllables == 0: syllables = 1
-        return syllables
-
-    SUBTRACT_ONE = [
-        'cial',
-        'tia',
-        'cius',
-        'cious',
-        'giu',              # belgium!
-        'ion',
-        'iou',
-        'sia$',
-        '.ely$',             # absolutely! (but not ely!)
-        ]
-
-    ADD_ONE = [
-        'ia',
-        'riet',
-        'dien',
-        'iu',
-        'io',
-        'ii',
-        '[aeiouym]bl$',     # -Vble, plus -mble
-        '[aeiou]{3}',       # agreeable
-        '^mc',
-        'ism$',             # -isms
-        '([^aeiouy])\1l$',  # middle twiddle battle bottle, etc.
-        '[^l]lien',         # alien, salient [1]
-        '^coa[dglx].',      # [2]
-        '[^gq]ua[^auieo]',  # i think this fixes more than it breaks
-        'dnt$',           # couldn't
-        ]
-
-    def ensurePrefixLoaded(self, prefix):
-        if prefix and not self.loadedPrefixes.get(prefix):
-            self.loadedPrefixes[prefix] = True
-            path = os.path.join(self.syllable_dir, prefix)
-            if os.path.exists(path):
-                syllables = 0
-                for line in open(path):
-                    syllables += 1
-                    words = line.split(' ')
-                    if words and words[-1][-1] == "\n":
-                        words[-1] = words[-1][:-1]
-                    for word in words:
-                        self.syllableCountsByWord[word] = syllables
 
 class ReplaceWords(NeedsWordList):
 
@@ -429,7 +368,6 @@ class EaterCommandLine:
             description="An Eater of Meaning mangles text, or converts it into superficially similar text.")
         parser.add_argument(
             "--demo", help="Demonstrate all eaters on the same piece of input text.",
-            type=bool, default=False
         )
         parser.add_argument(
             '--eater', help="Which eater to use.",
@@ -442,7 +380,6 @@ class EaterCommandLine:
         )
         parser.add_argument(
             "text", nargs="*", help="Text to consume",
-            default=['Now is the time for all good men to come to the aid of their party.'],
         )
         return parser
 
@@ -450,10 +387,14 @@ class EaterCommandLine:
         args = self.parser().parse_args()
         self.text = " ".join(args.text)
         self.url = args.url
-
-        if args.demo:
+        default_text = 'Now is the time for all good men to come to the aid of their party.'
+        if args.demo or (not self.text and not self.url):
             self.url = self.url or "https://www.example.com/"
+            self.text = self.text or default_text
             return self.demo()
+
+        if not self.text:
+            self.text = default_text
 
         eater = Eater.IMPLEMENTATIONS[args.eater]()
 
@@ -465,7 +406,7 @@ class EaterCommandLine:
         print(result)
 
     def demo(self):
-        print("Demo mode activated.")
+        print("Demo mode activated, use --help to see options.\n")
         print(f"Demo text: {self.text}")
         print("Each eater will be demonstrated on this input text.\n")
         for key, eater, in Eater.IMPLEMENTATIONS.items():

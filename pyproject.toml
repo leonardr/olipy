@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "olipy/__init__.py"
+
+[project]
+name = "olipy"
+dynamic = ["version"]
+description = "Library for artistic text generation"
+readme = "README.md"
+license = 'GPL-3.0-or-later'
+requires-python = ">=3.6.0"
+authors = [
+    { name = "Leonard Richardson", email = "leonardr@segfault.org" },
+]
+keywords = [
+"art supplies"
+]
+classifiers=[
+    'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Topic :: Text Processing',
+    'Topic :: Artistic Software',
+]
+dependencies = [
+    'beautifulsoup4',
+    'requests',
+    'textblob',
+    'wordfilter',
+    'syllables',
+]
+
+[project.optional-dependencies]
+internetarchive = [
+    "internetarchive",
+]
+
+[project.urls]
+Homepage = "https://github.com/leonardr/olipy/"
+
+[project.scripts]
+'olipy.apollo' = 'olipy.example:apollo'
+'olipy.board_games' = 'olipy.example:board_games'
+'olipy.corrupt' = 'olipy.example:corrupt'
+'olipy.dinosaurs' = 'olipy.example:dinosaurs'
+'olipy.ebooks' = 'olipy.example:ebooks'
+'olipy.gibberish' = 'olipy.example:gibberish'
+'olipy.mashteroids' = 'olipy.example:mashteroids'
+'olipy.sonnet' = 'olipy.example:sonnet'
+'olipy.typewriter' = 'olipy.example:typewriter'
+'olipy.words' = 'olipy.example:words'
+'olipy.eater' = 'olipy.example:eater'
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/olipy/**/*.py",
+    "/olipy/**/*.json",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "/olipy/**/*.py",
+    "/olipy/**/*.json",
+]
