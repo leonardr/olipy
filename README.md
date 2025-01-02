@@ -47,6 +47,7 @@ virtual environment that has the `olipy` package installed.
   `gibberish.Corruptor` class.
 * `olipy.dinosaurs`: Generates dinosaur names. Demonstrates Queneau
   assembly on parts of a word.
+* `olipy.eater`: A gateway to a large number of simple but devastating text transformations.
 * `olipy.ebooks`: Selects some lines from a public domain text using
   the *_ebooks algorithm. Demonstrates the
   `olipy.gutenberg.ProjectGutenbergText`
@@ -136,6 +137,31 @@ corpora.get_file("animals", "birds_antarctica") # returns dict w/data
 corpora.get_file("words/literature", "shakespeare_words")
 ```
 
+## eater.py
+
+The Eater of Meaning is a module containing a variety of simple but
+devastating text transformations.
+
+```
+from olipy.eater import EatWordEndings
+EatWordEndings()("The Eater of Meaning is a tool for extracting the message from the medium.")
+# 'There Eatable of Meager is a toot forwards exteroceptor thelytocia mess frolicky therapeusis medially.'
+
+from olipy.eater import EatSyllables
+EatSyllables()("Format and presentation are unaffected, but words and letters are subjected to an elaborate nonsensification process")
+# 'Absorbed pinks instigating recourse kalamazoo, loaned traced posts fallen stepper tyranny claimed mace particularly infallibility whimper'
+
+from olipy.eater import ScrambleWordCenters
+ScrambleWordCenters()("that eliminates semantics root and branch.")
+# 'taht eaemiltins scmieants root and bnarch.'
+
+from olipy.eater import URLEater, ReplaceWords
+URLEater(ReplaceWords())("https://www.example.com/")
+# '<!DOCTYPE html>\n\n<html>\n<head>\n<title>Ipsum Dolor</title>\n<meta charset="sit-Amet">...'
+```
+
+This module is an enhanced port of [the original Eater of Meaning CGI script from 2003.](https://www.crummy.com/software/eater/)
+
 ## ebooks.py
 
 A module for incongruously sampling texts in the style of the infamous
@@ -154,12 +180,6 @@ for quote in EbooksQuotes().quotes_in(data['text']):
 # Mrs. Bennet
 # ...
 ```
-
-Example scripts for ebooks.py:
-
-* example.ebooks.py: Selects some lines from a Project Gutenberg
-  text, with a bias towards the keywords you give it as command-line
-  arguments.
 
 ## gibberish.py
 

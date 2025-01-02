@@ -10,7 +10,10 @@ import re
 import string
 import sys
 
+from olipy.gibberish import Corruptor
+from olipy.letterforms import alternate_spelling
 from olipy import corpora
+from olipy import typewriter
 
 class Eater:
     """An Eater of Meaning mangles text, or converts it into
@@ -24,8 +27,8 @@ class Eater:
 
     IMPLEMENTATIONS = dict()
 
-    SPLIT_RE = re.compile("(\w+)")
-    WORD_RE = re.compile("\w", re.I)
+    SPLIT_RE = re.compile(r"(\w+)")
+    WORD_RE = re.compile(r"\w", re.I)
 
     def __call__(self, s):
         if isinstance(s, bytes):
@@ -257,7 +260,7 @@ class EatSyllables(NeedsWordList):
 
     def eat_word(self, word):
         count = self.syllables(word)
-        choices = self.words_by_syllable_count.get(count)
+        choices = self.words_by_syllable_count.get(str(count))
         if choices:
             return self.match_capitalization(word, random.choice(choices))
         else:
@@ -285,8 +288,8 @@ class ReplaceWords(NeedsWordList):
     def clean(self, s):
         "Cleans a string for use in a word list."
         s = s.lower()
-        s = re.compile('[^a-zA-Z0-9 ]').sub('', s)
-        s = re.compile('\W+').sub(' ', s)
+        s = re.compile(r'[^a-zA-Z0-9 ]').sub('', s)
+        s = re.compile(r'\W+').sub(' ', s)
         return s
 
     def eat_word(self, word):
@@ -316,15 +319,31 @@ class PirateEater(Eater):
             return s
         return self.RE.sub(self.arr, s)
 
-#import typewriter
-#class Retype(Eater):
-#    def eat(self, s):
-#        return typewriter.Typewriter(type(s))
+# Provide an Eater interface to some other features of olipy.
 
-# SpamEater and GOPACEater are not ported because they're both more
-# complicated than the other eaters, and woefully out of date with the
-# many improvements in the deceiving-people field made over the last
-# 20 years.
+class Retype(Eater):
+    DESCRIPTION = "Retype on an old typewriter"
+    KEY = "typewriter"
+    def eat(self, s):
+        return typewriter.Typewriter().type(s)
+
+class Corrupt(Eater):
+    DESCRIPTION = "Corrupt text by adding diacritical marks"
+    KEY = "corrupt"
+    def eat(self, s):
+        return Corruptor(5).corrupt(s)
+
+class Reletter(Eater):
+    DESCRIPTION = "Change the shape of letterforms"
+    KEY = "reletter"
+    def eat(self, s):
+        return alternate_spelling(s)
+
+
+# Note to those who remember the old Eater of Meaning: SpamEater and
+# GOPACEater are not ported because they're both more complicated than
+# the other eaters, and woefully out of date with the many
+# improvements in mass-scale deception made over the last 20 years.
 
 class HTMLEater(Eater):
     """Wraps another eater and uses it to eat all of the text (but not
