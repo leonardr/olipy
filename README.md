@@ -436,6 +436,10 @@ which only lists the names of the first 1000 minor planets.
 
 About 5000 English adjectives, sorted roughly by frequency of occurrence.
 
+### `corpora.words.by_syllable_count`
+
+A map of numbers 1-8 to English words with the corresponding number of syllables.
+
 ### `corpora.words.common_nouns`
 
 Lists of English nouns, sorted roughly by frequency of occurrence.
