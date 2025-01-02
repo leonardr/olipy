@@ -1,3 +1,9 @@
+= 1.0.5 (20250102)
+
+* Ported code from one of my old projects, the Eater of Meaning.
+  The eater.py module provides a wide variety of simple but devastating
+  textual transformation functions.
+
 = 1.0.4 (20191230)
 
 * Fixed a Python 2-ism in the Markov chain generator.

@@ -44,10 +44,10 @@ virtual environment that has the `olipy` package installed.
   descriptions. Demonstrates complex Queneau assemblies.
 * `olipy.corrupt` "Corrupts" whatever text is typed in by adding
   increasing numbers of diacritical marks. Demonstrates the
-  `gibberish.Corruptor` class.
+  `olipy.gibberish.Corruptor` class.
 * `olipy.dinosaurs`: Generates dinosaur names. Demonstrates Queneau
   assembly on parts of a word.
-* `olipy.eater`: A gateway to a large number of simple but devastating text transformations.
+* `olipy.eater`: A gateway to a large number of simple but devastating text transformations. Demonstrates the many possibilities of the `olipy.eater` module.
 * `olipy.ebooks`: Selects some lines from a public domain text using
   the *_ebooks algorithm. Demonstrates the
   `olipy.gutenberg.ProjectGutenbergText`
