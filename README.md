@@ -5,7 +5,7 @@ software packages, which have a single, unifying purpose. Olipy is
 more like a set of art supplies. Each module is designed to help you
 achieve a different aesthetic effect.
 
-If you email me about this product, be sure to mention something green.
+If you email me about this project, be sure to mention something green.
 
 # Setup
 
